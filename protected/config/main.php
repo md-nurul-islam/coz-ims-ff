@@ -4,6 +4,7 @@
 // Yii::setPathOfAlias('local','path/to/local-folder');
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
+require_once('dataCon.php');
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
     'name' => 'COZ-IMS',
@@ -57,14 +58,7 @@ return array(
           'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
           ), */
         // uncomment the following to use a MySQL database
-        'db' => array(
-            'connectionString' => 'mysql:host=localhost;dbname=coz_ims_db',
-            'enableParamLogging' => true,
-            'emulatePrepare' => true,
-            'username' => 'root',
-            'password' => '123456',
-            'charset' => 'utf8',
-        ),
+        'db' => $db,
         'errorHandler' => array(
             // use 'site/error' action to display errors
             'errorAction' => 'site/error',
