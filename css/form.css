@@ -243,3 +243,36 @@ div.wide.form .buttons, div.wide.form .hint, div.wide.form .errorMessage
     padding: 10px 0 0 10px;
     width: 100%;
 }
+
+.full-width {
+    width: 100%;
+}
+
+.horizontal {
+    
+}
+.horizontal ul {
+    list-style: none;
+}
+.horizontal ul li {
+    display: inline;
+    float: left;
+    margin: 0 10px;
+    width: 7%;
+}
+.horizontal ul li:first-child {
+    margin-left: 0;
+}
+.horizontal ul li:last-child {
+    margin-right: 0;
+}
+.horizontal ul li input[type=checkbox], input[type=radio] {
+    float: left;
+    height: 10px;
+    width: 10px;
+    margin-right: 5px;
+}
+.horizontal ul li label {
+    float: left;
+    padding: 2px 0;
+}
