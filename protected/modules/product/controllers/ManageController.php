@@ -92,7 +92,7 @@ class ManageController extends Controller {
 
             if ($model->save()) {
                 $product_grades = $_POST['ProductGrade']['grade_id'];
-                
+
                 foreach ($product_grades as $pg) {
                     $obj_pg = new ProductGrade();
                     $obj_pg->product_details_id = $model->id;
@@ -132,6 +132,13 @@ class ManageController extends Controller {
             $store_id = 1;
         }
 
+        $grades = Grade::model()->findAll();
+        
+        $ar_pd = array();
+        foreach ($model->productGrade as $pd) {
+            $ar_pd[] = $pd->grade_id;
+        }
+        
         if (isset($_POST['ProductDetails'])) {
             $category_name = Yii::app()->request->getPost('category_name');
             $supplier_name = Yii::app()->request->getPost('supplier_name');
@@ -170,6 +177,20 @@ class ManageController extends Controller {
                 'status' => $model->status,
                     ), 'id = :id AND store_id = :sid', array(':id' => $id, ':sid' => $model->store_id)
             );
+            
+            $product_grades = $_POST['ProductGrade']['grade_id'];
+            $cnt_product_grades = count($product_grades);
+            $obj_pg = new ProductGrade();
+            if(!empty($product_grades) && $cnt_product_grades > 0) {
+                $i_deleted_rows = $obj_pg->deleteAllByAttributes(array('product_details_id' => $id));
+            }
+            
+            foreach ($product_grades as $pg) {
+                $obj_pg = new ProductGrade();
+                $obj_pg->product_details_id = $model->id;
+                $obj_pg->grade_id = $pg;
+                $obj_pg->insert();
+            }
 
             $this->redirect(array('index'));
         }
@@ -178,6 +199,8 @@ class ManageController extends Controller {
             'model' => $model,
             'category_name' => $category_name,
             'supplier_name' => $supplier_name,
+            'grades' => $grades,
+            'ar_product_id' => $ar_pd,
         ));
     }
 
@@ -306,7 +329,7 @@ class ManageController extends Controller {
         $criteria->compare('t.id', $id);
         $criteria->compare('t.store_id', $store_id);
 
-        $model = ProductDetails::model()->with(array('category', 'supplier'))->find($criteria);
+        $model = ProductDetails::model()->with(array('category', 'supplier', 'productGrade'))->find($criteria);
 
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');

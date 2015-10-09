@@ -11,4 +11,10 @@ $this->menu = Ims_menu::$product_menu;
 
 <h1>Update Product</h1>
 
-<?php $this->renderPartial('_form', array('model'=>$model, 'category_name' => $category_name, 'supplier_name' => $supplier_name,)); ?>
+<?php $this->renderPartial('_form', array(
+    'model'=>$model,
+    'category_name' => $category_name,
+    'supplier_name' => $supplier_name,
+    'grades' => $grades,
+    'ar_product_id' => $ar_product_id,
+    )); ?>

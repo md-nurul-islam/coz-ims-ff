@@ -71,6 +71,7 @@ class ProductDetails extends CActiveRecord {
             ),
             'productStockEntries' => array(self::HAS_MANY, 'ProductStockEntries', 'product_details_id'),
             'productStockSales' => array(self::HAS_MANY, 'ProductStockSales', 'product_details_id'),
+            'productGrade' => array(self::HAS_MANY, 'ProductGrade', 'product_details_id'),
         );
     }
 
