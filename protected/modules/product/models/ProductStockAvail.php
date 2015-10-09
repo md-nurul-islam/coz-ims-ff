@@ -98,13 +98,18 @@ class ProductStockAvail extends CActiveRecord {
         return parent::model($className);
     }
 
-    public function getStockByProdId($prod_id, $store_id = 1) {
+    public function getStockByProdId($prod_id, $store_id = 1, $grade_id = 0) {
 
         $criteria = new CDbCriteria;
 
         $criteria->compare('t.product_details_id', $prod_id);
         
         $criteria->compare('t.store_id', $store_id);
+        
+        if($grade_id > 0) {
+            $criteria->compare('t.grade_id', $grade_id);
+        }
+        
         $criteria->compare('productDetails.store_id', $store_id);
         
         $criteria->order = 't.id DESC';

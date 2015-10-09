@@ -211,7 +211,7 @@ class PurchaseController extends Controller {
             $purchase_id = $this->generatePurchaseId();
             
             $model = new ProductStockEntries;
-
+            
             $model->billnumber = $bill_number;
             $model->purchase_date = $purchase_date;
             $model->supplier_id = (!empty($supplier_id)) ? $supplier_id : NULL;
@@ -223,7 +223,7 @@ class PurchaseController extends Controller {
             $model->note = $note;
             $model->purchase_id = $purchase_id;
             $model->store_id = $store_id;
-
+            
             $model->product_details_id = $_POST['product_details_id'];
             $model->ref_num = $_POST['ref_num'];
             $model->quantity = intval($_POST['quantity']);
@@ -231,10 +231,11 @@ class PurchaseController extends Controller {
             $model->selling_price = $_POST['selling_price'];
             $model->item_subtotal = $_POST['item_subtotal'];
             $model->serial_num = 0;
-
+            $model->grade_id = $_POST['grade'];
+            
             if ($model->validate()) {
 
-                $stock_info = $stock_info->getStockByProdId((int) $model->product_details_id, $store_id);
+                $stock_info = $stock_info->getStockByProdId((int) $model->product_details_id, $store_id, $model->grade_id);
 
                 if (!$stock_info) {
 
@@ -242,6 +243,7 @@ class PurchaseController extends Controller {
                     $stock_info->quantity = $model->quantity;
                     $stock_info->product_details_id = $model->product_details_id;
                     $stock_info->store_id = $store_id;
+                    $stock_info->grade_id = $model->grade_id;
                     $stock_info->insert();
                     
                 } else {
@@ -250,22 +252,23 @@ class PurchaseController extends Controller {
                     $new_stock = $cur_stock + $model->quantity;
 
                     $stock_info->quantity = $new_stock;
+                    $stock_info->grade_id = $model->grade_id;
                     $stock_info->update();
 
                     $criteria = new CDbCriteria;
                     $criteria->compare('t.id', $model->product_details_id);
                     $criteria->compare('t.store_id', $store_id);
 
-                    $prod_details = ProductDetails::model()->find($criteria);
-                    $prod_details->purchase_price = $model->purchase_price;
-                    $prod_details->selling_price = $model->selling_price;
-                    $prod_details->update_date = date('Y-m-d H:i:s', time());
-                    $prod_details->update();
+//                    $prod_details = ProductDetails::model()->find($criteria);
+//                    $prod_details->purchase_price = $model->purchase_price;
+//                    $prod_details->selling_price = $model->selling_price;
+//                    $prod_details->update_date = date('Y-m-d H:i:s', time());
+//                    $prod_details->update();
                 }
-
+                
                 if ($model->insert()) {
                     Yii::app()->user->setFlash('success', 'Products successfully added to stock.');
-                    $this->redirect(array('create'));
+                    $this->redirect(array('createsingle'));
                 }
             }
         }
@@ -420,7 +423,18 @@ class PurchaseController extends Controller {
 
         $model = new ProductStockEntries();
         $model = $model->getProductStockInfo($prod_id, $ref_num);
-
+        
+        $prod_available_grades = new ProductGrade();
+        $obj_prod_available_grades = $prod_available_grades->getGrades($prod_id, 0, TRUE);
+        
+        $ar_grades = array();
+        $i = 0;
+        foreach ($obj_prod_available_grades as $pad) {
+            $ar_grades[$i]['id'] = $pad->grade_id;
+            $ar_grades[$i]['name'] = $pad->grade->name;
+            $i++;
+        }
+        
         if (!empty($model)) {
             $cost = ( empty($model['productDetails']->purchase_price) || ($model['productDetails']->purchase_price <= 0 ) ) ? $model->purchase_price : $model['productDetails']->purchase_price;
             $price = ( empty($model['productDetails']->selling_price) || ($model['productDetails']->selling_price <= 0 ) ) ? $model->selling_price : $model['productDetails']->selling_price;
@@ -430,6 +444,7 @@ class PurchaseController extends Controller {
         $response['cost'] = $cost;
         $response['price'] = $price;
         $response['cur_stock'] = $cur_stock;
+        $response['grades'] = $ar_grades;
 
         echo CJSON::encode($response);
         exit;

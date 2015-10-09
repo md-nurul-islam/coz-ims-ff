@@ -70,6 +70,8 @@ class ManageController extends Controller {
             $store_id = 1;
         }
 
+        $grades = Grade::model()->findAll();
+
         if (isset($_POST['ProductDetails'])) {
             $category_name = Yii::app()->request->getPost('category_name');
             $supplier_name = Yii::app()->request->getPost('supplier_name');
@@ -88,14 +90,24 @@ class ManageController extends Controller {
 
             $model->create_date = date('Y-m-d H:i:s', Settings::getBdLocalTime());
 
-            if ($model->save())
+            if ($model->save()) {
+                $product_grades = $_POST['ProductGrade']['grade_id'];
+                
+                foreach ($product_grades as $pg) {
+                    $obj_pg = new ProductGrade();
+                    $obj_pg->product_details_id = $model->id;
+                    $obj_pg->grade_id = $pg;
+                    $obj_pg->save();
+                }
                 $this->redirect(array('index'));
+            }
         }
 
         $this->render('create', array(
             'model' => $model,
             'category_name' => $category_name,
             'supplier_name' => $supplier_name,
+            'grades' => $grades,
         ));
     }
 
@@ -226,7 +238,7 @@ class ManageController extends Controller {
 
         $modPurchase = new ProductStockEntries();
         $purchaseRecords = $modPurchase->purchaseListForBarcode();
-        
+
         $barcode['filetype'] = 'PNG';
         $barcode['dpi'] = 300;
         $barcode['scale'] = 1;
@@ -235,7 +247,7 @@ class ManageController extends Controller {
         $barcode['font_size'] = 7;
         $barcode['thickness'] = 35;
         $barcode['codetype'] = 'BCGean13';
-        
+
         $mPDF1 = Yii::app()->ePdf->mpdf();
 
         $this->render('barcode', array(
@@ -259,18 +271,18 @@ class ManageController extends Controller {
     }
 
     public function actionBarcodeFileList() {
-        
+
         $webroot = Yii::getPathOfAlias('webroot');
         $pdfs_path = $webroot . DIRECTORY_SEPARATOR . 'barcode_pdfs';
 
         $files = CFileHelper::findFiles($pdfs_path);
-        
+
         $response = array();
         if (!empty($files)) {
             foreach ($files as $file) {
                 $ar_file_name = explode('/', $file);
                 $response[] = end($ar_file_name);
-            }   
+            }
         }
         echo json_encode($response);
         Yii::app()->end();

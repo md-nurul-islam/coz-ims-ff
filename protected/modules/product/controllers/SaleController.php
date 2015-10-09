@@ -128,8 +128,11 @@ class SaleController extends Controller {
                     $ar_serial_num[] = $model->serial_num;
                     $ar_cur_stock[] = $_POST['cur_stock'][$i];
                 } else {
-
-                    $stock_info = $stock_info->getStockByProdId((int) $model->product_details_id, $store_id);
+                    
+                    $mod_pro_entr = new ProductStockEntries();
+                    $obj_pro_entr = $mod_pro_entr->findByAttributes(array('product_details_id' => $model->product_details_id, 'store_id' => $store_id, 'ref_num' => $model->ref_num));
+                    
+                    $stock_info = $stock_info->getStockByProdId((int) $model->product_details_id, $store_id, $obj_pro_entr->grade_id);
 
                     $cur_stock = intval($stock_info->quantity);
 

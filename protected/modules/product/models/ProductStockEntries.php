@@ -312,7 +312,7 @@ class ProductStockEntries extends CActiveRecord {
         }
 
         $criteria = new CDbCriteria;
-        $criteria->select = 't.id, t.purchase_id, t.product_details_id, t.purchase_date, t.quantity, t.selling_price, t.purchase_price';
+        $criteria->select = 't.id, t.purchase_id, t.product_details_id, t.purchase_date, t.quantity, t.selling_price, t.purchase_price, t.grade_id';
         $criteria->with = array(
             'productDetails' => array(
                 'select' => 'productDetails.product_name, productDetails.supplier_id, productDetails.category_id',
@@ -418,7 +418,9 @@ class ProductStockEntries extends CActiveRecord {
         
         foreach ($obj_data as $row) {
             
-            $code_prefix = Settings::$_num_zeros_for_barcode[strlen($row->id)].$row->id;
+            $cp = $row->id.$row->grade_id;
+            
+            $code_prefix = Settings::$_num_zeros_for_barcode[strlen($cp)].$cp;
             
             $_data['id'] = $row->id;
 //            $_data['code'] = $row->purchase_id . $row->product_details_id;

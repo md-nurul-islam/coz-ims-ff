@@ -82,6 +82,25 @@
         <?php echo $form->textField($model, 'product_name', array('size' => 60, 'maxlength' => 255)); ?>
         <?php echo $form->error($model, 'product_name'); ?>
     </div>
+    
+    <div class="clearfix"></div>
+    
+    <div class="row horizontal">
+        
+        <?php echo CHtml::label('Available Qualities', ''); ?>
+        
+        <ul class="checkbox-list full-width">
+        <?php foreach ($grades as $grade) { ?>
+            <li>
+                <?php echo CHtml::checkBox('ProductGrade[grade_id][]', false, array('value' => $grade->id)); ?>
+                <?php echo CHtml::label($grade->name, '', array()); ?>
+            </li>
+        <?php } ?>
+        </ul>
+        
+    </div>
+    
+    <div class="clearfix"></div>
 
     <div class="row">
         <?php echo $form->labelEx($model, 'purchase_price'); ?>
