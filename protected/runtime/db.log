@@ -1,70 +1,1025 @@
-2015/10/07 09:21:58 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_user`
+2015/10/01 00:39:57 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (55)
+in /var/www/coz-ims/index.php (8)
+2015/10/01 00:39:57 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (55)
+in /var/www/coz-ims/index.php (8)
+2015/09/30 18:40:50 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_sales`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (499)
+in /var/www/coz-ims/index.php (8)
+2015/09/30 18:40:50 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_sales`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (499)
+in /var/www/coz-ims/index.php (8)
+2015/09/30 18:40:50 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/09/30 18:40:50 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/09/30 18:40:50 [trace] [system.db.CDbCommand] Querying SQL: SELECT COUNT(*) FROM (SELECT t.sales_id AS id, `t`.`grand_total_payable` AS `t0_c18`, `t`.`id` AS `t0_c0`, GROUP_CONCAT(productDetails.product_name) as product_name, `productDetails`.`id` AS `t1_c0`, `productDetails`.`store_id` AS `t1_c10` FROM `cims_product_stock_sales` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) WHERE (((is_advance !=:ycp0) AND (productDetails.store_id=:ycp1)) AND (t.store_id=:ycp2)) GROUP BY t.sales_id) sq. Bound with :ycp0='1', :ycp1='1', :ycp2='1'
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/09/30 18:40:50 [trace] [system.db.CDbCommand] Querying SQL: SELECT t.sales_id AS id, `t`.`grand_total_payable` AS `t0_c18`, `t`.`id` AS `t0_c0`, GROUP_CONCAT(productDetails.product_name) as product_name, `productDetails`.`id` AS `t1_c0`, `productDetails`.`store_id` AS `t1_c10` FROM `cims_product_stock_sales` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) WHERE (((is_advance !=:ycp0) AND (productDetails.store_id=:ycp1)) AND (t.store_id=:ycp2)) GROUP BY t.sales_id ORDER BY t.id DESC LIMIT 10. Bound with :ycp0='1', :ycp1='1', :ycp2='1'
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/01 00:40:53 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_sales`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (52)
+in /var/www/coz-ims/index.php (8)
+2015/10/01 00:40:53 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_sales`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (52)
+in /var/www/coz-ims/index.php (8)
+2015/09/30 18:41:00 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (576)
+in /var/www/coz-ims/index.php (8)
+2015/09/30 18:41:00 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (576)
+in /var/www/coz-ims/index.php (8)
+2015/09/30 18:41:00 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (210)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (578)
+in /var/www/coz-ims/index.php (8)
+2015/09/30 18:41:00 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (210)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (578)
+in /var/www/coz-ims/index.php (8)
+2015/09/30 18:41:00 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (210)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (578)
+in /var/www/coz-ims/index.php (8)
+2015/09/30 18:41:00 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (210)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (578)
+in /var/www/coz-ims/index.php (8)
+2015/09/30 18:41:00 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`purchase_price` AS `t0_c8`, `t`.`selling_price` AS `t0_c9`, `t`.`product_details_id` AS `t0_c6`, `productDetails`.`id` AS `t1_c0`, `productDetails`.`product_name` AS `t1_c3`, `productDetails`.`purchase_price` AS `t1_c4`, `productDetails`.`selling_price` AS `t1_c5`, `productDetails`.`store_id` AS `t1_c10`, `productStockAvails`.`id` AS `t2_c0`, `productStockAvails`.`quantity` AS `t2_c2` FROM `cims_product_stock_entries` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) INNER JOIN `cims_product_stock_avail` `productStockAvails` ON (`productStockAvails`.`product_details_id`=`productDetails`.`id`) WHERE (((((t.ref_num=:ycp0) AND (productDetails.store_id=:ycp1)) AND (productStockAvails.store_id=:ycp2)) AND (t.store_id=:ycp3)) AND (productDetails.status=:ycp4)) GROUP BY t.product_details_id ORDER BY t.id DESC. Bound with :ycp0='2222', :ycp1='1', :ycp2='1', :ycp3='1', :ycp4='1'
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (210)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (578)
+in /var/www/coz-ims/index.php (8)
+2015/10/02 04:57:18 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_user`
+in /var/www/coz-ims/protected/controllers/SiteController.php (74)
+in /var/www/coz-ims/index.php (8)
+2015/10/02 04:57:18 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_user`
+in /var/www/coz-ims/protected/controllers/SiteController.php (74)
+in /var/www/coz-ims/index.php (8)
+2015/10/02 05:30:30 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_user`
+in /var/www/coz-ims/protected/controllers/SiteController.php (74)
+in /var/www/coz-ims/index.php (8)
+2015/10/02 05:30:30 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_user`
+in /var/www/coz-ims/protected/controllers/SiteController.php (74)
+in /var/www/coz-ims/index.php (8)
+2015/10/02 05:30:30 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_store_details`
+in /var/www/coz-ims/protected/models/User.php (171)
+in /var/www/coz-ims/protected/models/User.php (127)
+in /var/www/coz-ims/protected/controllers/SiteController.php (91)
+2015/10/02 05:30:30 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_store_details`
+in /var/www/coz-ims/protected/models/User.php (171)
+in /var/www/coz-ims/protected/models/User.php (127)
+in /var/www/coz-ims/protected/controllers/SiteController.php (91)
+2015/10/02 05:30:30 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`username` AS `t0_c1`, `t`.`hashed_password` AS `t0_c3`, `t`.`salt` AS `t0_c4`, `t`.`email` AS `t0_c5`, `t`.`store_id` AS `t0_c7`, `t`.`status` AS `t0_c8`, `t`.`user_type` AS `t0_c6`, `t`.`full_name` AS `t0_c2`, `storeInfo`.`id` AS `t1_c0`, `storeInfo`.`name` AS `t1_c1`, `storeInfo`.`log` AS `t1_c2`, `storeInfo`.`type` AS `t1_c3`, `storeInfo`.`address` AS `t1_c4`, `storeInfo`.`place` AS `t1_c5`, `storeInfo`.`city` AS `t1_c6`, `storeInfo`.`phone` AS `t1_c7`, `storeInfo`.`email` AS `t1_c8`, `storeInfo`.`web` AS `t1_c9`, `storeInfo`.`pin` AS `t1_c10` FROM `cims_user` `t`  LEFT OUTER JOIN `cims_store_details` `storeInfo` ON (`t`.`store_id`=`storeInfo`.`id`) WHERE ((username=:ycp0) AND (status=:ycp1)). Bound with :ycp0='masud_admin', :ycp1='1'
+in /var/www/coz-ims/protected/models/User.php (171)
+in /var/www/coz-ims/protected/models/User.php (127)
+in /var/www/coz-ims/protected/controllers/SiteController.php (91)
+2015/10/02 05:30:30 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_sales`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (499)
+in /var/www/coz-ims/index.php (8)
+2015/10/02 05:30:30 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_sales`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (499)
+in /var/www/coz-ims/index.php (8)
+2015/10/02 05:30:30 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/02 05:30:30 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/02 05:30:30 [trace] [system.db.CDbCommand] Querying SQL: SELECT COUNT(*) FROM (SELECT t.sales_id AS id, `t`.`grand_total_payable` AS `t0_c18`, `t`.`id` AS `t0_c0`, GROUP_CONCAT(productDetails.product_name) as product_name, `productDetails`.`id` AS `t1_c0`, `productDetails`.`store_id` AS `t1_c10` FROM `cims_product_stock_sales` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) WHERE (((is_advance !=:ycp0) AND (productDetails.store_id=:ycp1)) AND (t.store_id=:ycp2)) GROUP BY t.sales_id) sq. Bound with :ycp0='1', :ycp1='1', :ycp2='1'
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/02 05:30:30 [trace] [system.db.CDbCommand] Querying SQL: SELECT t.sales_id AS id, `t`.`grand_total_payable` AS `t0_c18`, `t`.`id` AS `t0_c0`, GROUP_CONCAT(productDetails.product_name) as product_name, `productDetails`.`id` AS `t1_c0`, `productDetails`.`store_id` AS `t1_c10` FROM `cims_product_stock_sales` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) WHERE (((is_advance !=:ycp0) AND (productDetails.store_id=:ycp1)) AND (t.store_id=:ycp2)) GROUP BY t.sales_id ORDER BY t.id DESC LIMIT 10. Bound with :ycp0='1', :ycp1='1', :ycp2='1'
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/02 05:32:44 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_sales`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (499)
+in /var/www/coz-ims/index.php (8)
+2015/10/02 05:32:44 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_sales`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (499)
+in /var/www/coz-ims/index.php (8)
+2015/10/02 05:32:44 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/02 05:32:44 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/02 05:32:44 [trace] [system.db.CDbCommand] Querying SQL: SELECT COUNT(*) FROM (SELECT t.sales_id AS id, `t`.`grand_total_payable` AS `t0_c18`, `t`.`id` AS `t0_c0`, GROUP_CONCAT(productDetails.product_name) as product_name, `productDetails`.`id` AS `t1_c0`, `productDetails`.`store_id` AS `t1_c10` FROM `cims_product_stock_sales` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) WHERE (((is_advance !=:ycp0) AND (productDetails.store_id=:ycp1)) AND (t.store_id=:ycp2)) GROUP BY t.sales_id) sq. Bound with :ycp0='1', :ycp1='1', :ycp2='1'
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/02 05:32:44 [trace] [system.db.CDbCommand] Querying SQL: SELECT t.sales_id AS id, `t`.`grand_total_payable` AS `t0_c18`, `t`.`id` AS `t0_c0`, GROUP_CONCAT(productDetails.product_name) as product_name, `productDetails`.`id` AS `t1_c0`, `productDetails`.`store_id` AS `t1_c10` FROM `cims_product_stock_sales` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) WHERE (((is_advance !=:ycp0) AND (productDetails.store_id=:ycp1)) AND (t.store_id=:ycp2)) GROUP BY t.sales_id ORDER BY t.id DESC LIMIT 10. Bound with :ycp0='1', :ycp1='1', :ycp2='1'
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:00 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_user`
+in /var/www/coz-ims/protected/controllers/SiteController.php (74)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:00 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_user`
+in /var/www/coz-ims/protected/controllers/SiteController.php (74)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:04 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_user`
+in /var/www/coz-ims/protected/controllers/SiteController.php (74)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:04 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_user`
+in /var/www/coz-ims/protected/controllers/SiteController.php (74)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:04 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_store_details`
+in /var/www/coz-ims/protected/models/User.php (171)
+in /var/www/coz-ims/protected/models/User.php (127)
+in /var/www/coz-ims/protected/controllers/SiteController.php (91)
+2015/10/03 17:06:04 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_store_details`
+in /var/www/coz-ims/protected/models/User.php (171)
+in /var/www/coz-ims/protected/models/User.php (127)
+in /var/www/coz-ims/protected/controllers/SiteController.php (91)
+2015/10/03 17:06:04 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`username` AS `t0_c1`, `t`.`hashed_password` AS `t0_c3`, `t`.`salt` AS `t0_c4`, `t`.`email` AS `t0_c5`, `t`.`store_id` AS `t0_c7`, `t`.`status` AS `t0_c8`, `t`.`user_type` AS `t0_c6`, `t`.`full_name` AS `t0_c2`, `storeInfo`.`id` AS `t1_c0`, `storeInfo`.`name` AS `t1_c1`, `storeInfo`.`log` AS `t1_c2`, `storeInfo`.`type` AS `t1_c3`, `storeInfo`.`address` AS `t1_c4`, `storeInfo`.`place` AS `t1_c5`, `storeInfo`.`city` AS `t1_c6`, `storeInfo`.`phone` AS `t1_c7`, `storeInfo`.`email` AS `t1_c8`, `storeInfo`.`web` AS `t1_c9`, `storeInfo`.`pin` AS `t1_c10` FROM `cims_user` `t`  LEFT OUTER JOIN `cims_store_details` `storeInfo` ON (`t`.`store_id`=`storeInfo`.`id`) WHERE ((username=:ycp0) AND (status=:ycp1)). Bound with :ycp0='masud_admin', :ycp1='1'
+in /var/www/coz-ims/protected/models/User.php (171)
+in /var/www/coz-ims/protected/models/User.php (127)
+in /var/www/coz-ims/protected/controllers/SiteController.php (91)
+2015/10/03 17:06:04 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_sales`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (499)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:04 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_sales`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (499)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:04 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:04 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:04 [trace] [system.db.CDbCommand] Querying SQL: SELECT COUNT(*) FROM (SELECT t.sales_id AS id, `t`.`grand_total_payable` AS `t0_c18`, `t`.`id` AS `t0_c0`, GROUP_CONCAT(productDetails.product_name) as product_name, `productDetails`.`id` AS `t1_c0`, `productDetails`.`store_id` AS `t1_c10` FROM `cims_product_stock_sales` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) WHERE (((is_advance !=:ycp0) AND (productDetails.store_id=:ycp1)) AND (t.store_id=:ycp2)) GROUP BY t.sales_id) sq. Bound with :ycp0='1', :ycp1='1', :ycp2='1'
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:04 [trace] [system.db.CDbCommand] Querying SQL: SELECT t.sales_id AS id, `t`.`grand_total_payable` AS `t0_c18`, `t`.`id` AS `t0_c0`, GROUP_CONCAT(productDetails.product_name) as product_name, `productDetails`.`id` AS `t1_c0`, `productDetails`.`store_id` AS `t1_c10` FROM `cims_product_stock_sales` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) WHERE (((is_advance !=:ycp0) AND (productDetails.store_id=:ycp1)) AND (t.store_id=:ycp2)) GROUP BY t.sales_id ORDER BY t.id DESC LIMIT 10. Bound with :ycp0='1', :ycp1='1', :ycp2='1'
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:07 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (340)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:07 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (340)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:07 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/views/purchase/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (377)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:07 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/views/purchase/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (377)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:07 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/views/purchase/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (377)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:07 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/views/purchase/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (377)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:07 [trace] [system.db.CDbCommand] Querying SQL: SELECT COUNT(*) FROM (SELECT t.purchase_id AS id, `t`.`grand_total_paid` AS `t0_c15`, `t`.`id` AS `t0_c0`, GROUP_CONCAT(productDetails.product_name) as product_name, `productDetails`.`id` AS `t1_c0`, `productDetails`.`store_id` AS `t1_c10`, `productStockAvails`.`id` AS `t2_c0`, `productStockAvails`.`quantity` AS `t2_c2` FROM `cims_product_stock_entries` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) INNER JOIN `cims_product_stock_avail` `productStockAvails` ON (`productStockAvails`.`product_details_id`=`productDetails`.`id`) WHERE (((productDetails.store_id=:ycp0) AND (productStockAvails.store_id=:ycp1)) AND (t.store_id=:ycp2)) GROUP BY t.purchase_id) sq. Bound with :ycp0='1', :ycp1='1', :ycp2='1'
+in /var/www/coz-ims/protected/modules/product/views/purchase/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (377)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:08 [trace] [system.db.CDbCommand] Querying SQL: SELECT t.purchase_id AS id, `t`.`grand_total_paid` AS `t0_c15`, `t`.`id` AS `t0_c0`, GROUP_CONCAT(productDetails.product_name) as product_name, `productDetails`.`id` AS `t1_c0`, `productDetails`.`store_id` AS `t1_c10`, `productStockAvails`.`id` AS `t2_c0`, `productStockAvails`.`quantity` AS `t2_c2` FROM `cims_product_stock_entries` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) INNER JOIN `cims_product_stock_avail` `productStockAvails` ON (`productStockAvails`.`product_details_id`=`productDetails`.`id`) WHERE (((productDetails.store_id=:ycp0) AND (productStockAvails.store_id=:ycp1)) AND (t.store_id=:ycp2)) GROUP BY t.purchase_id ORDER BY t.id DESC LIMIT 10. Bound with :ycp0='1', :ycp1='1', :ycp2='1'
+in /var/www/coz-ims/protected/modules/product/views/purchase/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (377)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 23:06:21 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (186)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 23:06:21 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (186)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:23 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `product_name`
+FROM `cims_product_details` `pd`
+WHERE pd.product_name like '%a%' AND status = '1' AND pd.store_id = '1' LIMIT 50
+in /var/www/coz-ims/protected/modules/product/controllers/ManageController.php (321)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:30 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:30 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:30 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:30 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:30 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:30 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:06:30 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`purchase_price` AS `t0_c8`, `t`.`selling_price` AS `t0_c9`, `t`.`product_details_id` AS `t0_c6`, `productDetails`.`id` AS `t1_c0`, `productDetails`.`product_name` AS `t1_c3`, `productDetails`.`purchase_price` AS `t1_c4`, `productDetails`.`selling_price` AS `t1_c5`, `productDetails`.`store_id` AS `t1_c10`, `productStockAvails`.`id` AS `t2_c0`, `productStockAvails`.`quantity` AS `t2_c2` FROM `cims_product_stock_entries` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) INNER JOIN `cims_product_stock_avail` `productStockAvails` ON (`productStockAvails`.`product_details_id`=`productDetails`.`id`) WHERE ((((((t.product_details_id=:ycp0) AND (t.ref_num=:ycp1)) AND (productDetails.store_id=:ycp2)) AND (productStockAvails.store_id=:ycp3)) AND (t.store_id=:ycp4)) AND (productDetails.status=:ycp5)) ORDER BY t.id DESC LIMIT 1. Bound with :ycp0='562', :ycp1='2222', :ycp2='1', :ycp3='1', :ycp4='1', :ycp5='1'
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:08:04 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:08:04 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:08:04 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:08:04 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:08:04 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:08:04 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:08:04 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`purchase_price` AS `t0_c8`, `t`.`selling_price` AS `t0_c9`, `t`.`product_details_id` AS `t0_c6`, `productDetails`.`id` AS `t1_c0`, `productDetails`.`product_name` AS `t1_c3`, `productDetails`.`purchase_price` AS `t1_c4`, `productDetails`.`selling_price` AS `t1_c5`, `productDetails`.`store_id` AS `t1_c10`, `productStockAvails`.`id` AS `t2_c0`, `productStockAvails`.`quantity` AS `t2_c2` FROM `cims_product_stock_entries` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) INNER JOIN `cims_product_stock_avail` `productStockAvails` ON (`productStockAvails`.`product_details_id`=`productDetails`.`id`) WHERE ((((((t.product_details_id=:ycp0) AND (t.ref_num=:ycp1)) AND (productDetails.store_id=:ycp2)) AND (productStockAvails.store_id=:ycp3)) AND (t.store_id=:ycp4)) AND (productDetails.status=:ycp5)) ORDER BY t.id DESC LIMIT 1. Bound with :ycp0='562', :ycp1='55555', :ycp2='1', :ycp3='1', :ycp4='1', :ycp5='1'
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:10:02 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `product_name`
+FROM `cims_product_details` `pd`
+WHERE pd.product_name like '%top%' AND status = '1' AND pd.store_id = '1' LIMIT 50
+in /var/www/coz-ims/protected/modules/product/controllers/ManageController.php (321)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:10:07 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `product_name`
+FROM `cims_product_details` `pd`
+WHERE pd.product_name like '%topper%' AND status = '1' AND pd.store_id = '1' LIMIT 50
+in /var/www/coz-ims/protected/modules/product/controllers/ManageController.php (321)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:10:08 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `product_name`
+FROM `cims_product_details` `pd`
+WHERE pd.product_name like '%topper %' AND status = '1' AND pd.store_id = '1' LIMIT 50
+in /var/www/coz-ims/protected/modules/product/controllers/ManageController.php (321)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:10:09 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `product_name`
+FROM `cims_product_details` `pd`
+WHERE pd.product_name like '%topper ba%' AND status = '1' AND pd.store_id = '1' LIMIT 50
+in /var/www/coz-ims/protected/modules/product/controllers/ManageController.php (321)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:10:11 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `product_name`
+FROM `cims_product_details` `pd`
+WHERE pd.product_name like '%topper ball%' AND status = '1' AND pd.store_id = '1' LIMIT 50
+in /var/www/coz-ims/protected/modules/product/controllers/ManageController.php (321)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:10:53 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `product_name`
+FROM `cims_product_details` `pd`
+WHERE pd.product_name like '%goo%' AND status = '1' AND pd.store_id = '1' LIMIT 50
+in /var/www/coz-ims/protected/modules/product/controllers/ManageController.php (321)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:10:54 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `product_name`
+FROM `cims_product_details` `pd`
+WHERE pd.product_name like '%good%' AND status = '1' AND pd.store_id = '1' LIMIT 50
+in /var/www/coz-ims/protected/modules/product/controllers/ManageController.php (321)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:10:54 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `product_name`
+FROM `cims_product_details` `pd`
+WHERE pd.product_name like '%good %' AND status = '1' AND pd.store_id = '1' LIMIT 50
+in /var/www/coz-ims/protected/modules/product/controllers/ManageController.php (321)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:01 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:01 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:01 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:01 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:01 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:01 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:01 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`purchase_price` AS `t0_c8`, `t`.`selling_price` AS `t0_c9`, `t`.`product_details_id` AS `t0_c6`, `productDetails`.`id` AS `t1_c0`, `productDetails`.`product_name` AS `t1_c3`, `productDetails`.`purchase_price` AS `t1_c4`, `productDetails`.`selling_price` AS `t1_c5`, `productDetails`.`store_id` AS `t1_c10`, `productStockAvails`.`id` AS `t2_c0`, `productStockAvails`.`quantity` AS `t2_c2` FROM `cims_product_stock_entries` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) INNER JOIN `cims_product_stock_avail` `productStockAvails` ON (`productStockAvails`.`product_details_id`=`productDetails`.`id`) WHERE ((((((t.product_details_id=:ycp0) AND (t.ref_num=:ycp1)) AND (productDetails.store_id=:ycp2)) AND (productStockAvails.store_id=:ycp3)) AND (t.store_id=:ycp4)) AND (productDetails.status=:ycp5)) ORDER BY t.id DESC LIMIT 1. Bound with :ycp0='991', :ycp1='55555', :ycp2='1', :ycp3='1', :ycp4='1', :ycp5='1'
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:07 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:07 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:07 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:07 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:07 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:07 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:07 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`purchase_price` AS `t0_c8`, `t`.`selling_price` AS `t0_c9`, `t`.`product_details_id` AS `t0_c6`, `productDetails`.`id` AS `t1_c0`, `productDetails`.`product_name` AS `t1_c3`, `productDetails`.`purchase_price` AS `t1_c4`, `productDetails`.`selling_price` AS `t1_c5`, `productDetails`.`store_id` AS `t1_c10`, `productStockAvails`.`id` AS `t2_c0`, `productStockAvails`.`quantity` AS `t2_c2` FROM `cims_product_stock_entries` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) INNER JOIN `cims_product_stock_avail` `productStockAvails` ON (`productStockAvails`.`product_details_id`=`productDetails`.`id`) WHERE ((((((t.product_details_id=:ycp0) AND (t.ref_num=:ycp1)) AND (productDetails.store_id=:ycp2)) AND (productStockAvails.store_id=:ycp3)) AND (t.store_id=:ycp4)) AND (productDetails.status=:ycp5)) ORDER BY t.id DESC LIMIT 1. Bound with :ycp0='991', :ycp1='55555', :ycp2='1', :ycp3='1', :ycp4='1', :ycp5='1'
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:16 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:16 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:16 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:16 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:16 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:16 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:16 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`purchase_price` AS `t0_c8`, `t`.`selling_price` AS `t0_c9`, `t`.`product_details_id` AS `t0_c6`, `productDetails`.`id` AS `t1_c0`, `productDetails`.`product_name` AS `t1_c3`, `productDetails`.`purchase_price` AS `t1_c4`, `productDetails`.`selling_price` AS `t1_c5`, `productDetails`.`store_id` AS `t1_c10`, `productStockAvails`.`id` AS `t2_c0`, `productStockAvails`.`quantity` AS `t2_c2` FROM `cims_product_stock_entries` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) INNER JOIN `cims_product_stock_avail` `productStockAvails` ON (`productStockAvails`.`product_details_id`=`productDetails`.`id`) WHERE ((((((t.product_details_id=:ycp0) AND (t.ref_num=:ycp1)) AND (productDetails.store_id=:ycp2)) AND (productStockAvails.store_id=:ycp3)) AND (t.store_id=:ycp4)) AND (productDetails.status=:ycp5)) ORDER BY t.id DESC LIMIT 1. Bound with :ycp0='991', :ycp1='55555', :ycp2='1', :ycp3='1', :ycp4='1', :ycp5='1'
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:26 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:26 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:26 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:26 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:26 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:26 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:26 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`purchase_price` AS `t0_c8`, `t`.`selling_price` AS `t0_c9`, `t`.`product_details_id` AS `t0_c6`, `productDetails`.`id` AS `t1_c0`, `productDetails`.`product_name` AS `t1_c3`, `productDetails`.`purchase_price` AS `t1_c4`, `productDetails`.`selling_price` AS `t1_c5`, `productDetails`.`store_id` AS `t1_c10`, `productStockAvails`.`id` AS `t2_c0`, `productStockAvails`.`quantity` AS `t2_c2` FROM `cims_product_stock_entries` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) INNER JOIN `cims_product_stock_avail` `productStockAvails` ON (`productStockAvails`.`product_details_id`=`productDetails`.`id`) WHERE ((((((t.product_details_id=:ycp0) AND (t.ref_num=:ycp1)) AND (productDetails.store_id=:ycp2)) AND (productStockAvails.store_id=:ycp3)) AND (t.store_id=:ycp4)) AND (productDetails.status=:ycp5)) ORDER BY t.id DESC LIMIT 1. Bound with :ycp0='991', :ycp1='100000000007', :ycp2='1', :ycp3='1', :ycp4='1', :ycp5='1'
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:40 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `supplier_name`
+FROM `cims_supplier_details` `sd`
+WHERE sd.supplier_name like '%rf%' LIMIT 10
+in /var/www/coz-ims/protected/modules/supplier/controllers/ManageController.php (183)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:43 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (186)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:43 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (186)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:43 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (200)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:43 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (200)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:43 [trace] [system.db.CDbCommand] Querying SQL: SELECT MAX(id) AS id
+FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (440)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (211)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:43 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockAvail.php (114)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (237)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:43 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockAvail.php (114)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (237)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:43 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`product_details_id` AS `t0_c1`, `t`.`quantity` AS `t0_c2`, `t`.`store_id` AS `t0_c3`, `productDetails`.`id` AS `t1_c0`, `productDetails`.`category_id` AS `t1_c1`, `productDetails`.`supplier_id` AS `t1_c2`, `productDetails`.`product_name` AS `t1_c3`, `productDetails`.`purchase_price` AS `t1_c4`, `productDetails`.`selling_price` AS `t1_c5`, `productDetails`.`create_date` AS `t1_c6`, `productDetails`.`update_date` AS `t1_c7`, `productDetails`.`uom` AS `t1_c8`, `productDetails`.`status` AS `t1_c9`, `productDetails`.`store_id` AS `t1_c10` FROM `cims_product_stock_avail` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) WHERE (((t.product_details_id=:ycp0) AND (t.store_id=:ycp1)) AND (productDetails.store_id=:ycp2)) ORDER BY t.id DESC LIMIT 1. Bound with :ycp0='991', :ycp1='1', :ycp2='1'
+in /var/www/coz-ims/protected/modules/product/models/ProductStockAvail.php (114)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (237)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:43 [trace] [system.db.CDbCommand] Executing SQL: UPDATE `cims_product_stock_avail` SET `id`=:yp0, `product_details_id`=:yp1, `quantity`=:yp2, `store_id`=:yp3 WHERE `cims_product_stock_avail`.`id`=2153. Bound with :yp0=2153, :yp1=991, :yp2=1180, :yp3=1
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (253)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:43 [trace] [system.db.CDbCommand] Querying SQL: SELECT * FROM `cims_product_details` `t` WHERE (t.id=:ycp3) AND (t.store_id=:ycp4) LIMIT 1. Bound with :ycp3='991', :ycp4='1'
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (259)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:43 [trace] [system.db.CDbCommand] Executing SQL: UPDATE `cims_product_details` SET `id`=:yp0, `category_id`=:yp1, `supplier_id`=:yp2, `product_name`=:yp3, `purchase_price`=:yp4, `selling_price`=:yp5, `create_date`=:yp6, `update_date`=:yp7, `uom`=:yp8, `status`=:yp9, `store_id`=:yp10 WHERE `cims_product_details`.`id`=991 AND `cims_product_details`.`store_id`=1. Bound with :yp0=991, :yp1=45, :yp2=1, :yp3='Good luck topper pen', :yp4='3.42', :yp5='6.00', :yp6='2014-07-03 16:00:17', :yp7='2015-10-03 17:11:43', :yp8=NULL, :yp9=1, :yp10=1
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (263)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:43 [trace] [system.db.CDbCommand] Executing SQL: INSERT INTO `cims_product_stock_entries` (`ref_num`, `grand_total_balance`, `store_id`, `billnumber`, `purchase_date`, `supplier_id`, `grand_total_payable`, `grand_total_paid`, `due_payment_date`, `payment_type`, `note`, `purchase_id`, `product_details_id`, `quantity`, `purchase_price`, `selling_price`, `item_subtotal`, `serial_num`) VALUES (:yp0, :yp1, :yp2, :yp3, :yp4, :yp5, :yp6, :yp7, :yp8, :yp9, :yp10, :yp11, :yp12, :yp13, :yp14, :yp15, :yp16, :yp17). Bound with :yp0='100000000007', :yp1='0.00', :yp2=1, :yp3='', :yp4='2015-10-03', :yp5=1, :yp6='30.78', :yp7='30.78', :yp8='1970-01-01', :yp9=1, :yp10='', :yp11='PD39794', :yp12=991, :yp13=9, :yp14='3.42', :yp15='6.00', :yp16='30.78', :yp17=0
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (266)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 23:11:43 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (55)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 23:11:43 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (55)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:48 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `product_name`
+FROM `cims_product_details` `pd`
+WHERE pd.product_name like '%g%' AND status = '1' AND pd.store_id = '1' LIMIT 50
+in /var/www/coz-ims/protected/modules/product/controllers/ManageController.php (321)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:48 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `product_name`
+FROM `cims_product_details` `pd`
+WHERE pd.product_name like '%good %' AND status = '1' AND pd.store_id = '1' LIMIT 50
+in /var/www/coz-ims/protected/modules/product/controllers/ManageController.php (321)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:49 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `product_name`
+FROM `cims_product_details` `pd`
+WHERE pd.product_name like '%good l%' AND status = '1' AND pd.store_id = '1' LIMIT 50
+in /var/www/coz-ims/protected/modules/product/controllers/ManageController.php (321)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:53 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:53 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:53 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:53 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:53 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:53 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:11:53 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`purchase_price` AS `t0_c8`, `t`.`selling_price` AS `t0_c9`, `t`.`product_details_id` AS `t0_c6`, `productDetails`.`id` AS `t1_c0`, `productDetails`.`product_name` AS `t1_c3`, `productDetails`.`purchase_price` AS `t1_c4`, `productDetails`.`selling_price` AS `t1_c5`, `productDetails`.`store_id` AS `t1_c10`, `productStockAvails`.`id` AS `t2_c0`, `productStockAvails`.`quantity` AS `t2_c2` FROM `cims_product_stock_entries` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) INNER JOIN `cims_product_stock_avail` `productStockAvails` ON (`productStockAvails`.`product_details_id`=`productDetails`.`id`) WHERE ((((((t.product_details_id=:ycp0) AND (t.ref_num=:ycp1)) AND (productDetails.store_id=:ycp2)) AND (productStockAvails.store_id=:ycp3)) AND (t.store_id=:ycp4)) AND (productDetails.status=:ycp5)) ORDER BY t.id DESC LIMIT 1. Bound with :ycp0='991', :ycp1='100000000007', :ycp2='1', :ycp3='1', :ycp4='1', :ycp5='1'
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:12:47 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:12:47 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:12:47 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:12:47 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:12:47 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:12:47 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:12:47 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`purchase_price` AS `t0_c8`, `t`.`selling_price` AS `t0_c9`, `t`.`product_details_id` AS `t0_c6`, `productDetails`.`id` AS `t1_c0`, `productDetails`.`product_name` AS `t1_c3`, `productDetails`.`purchase_price` AS `t1_c4`, `productDetails`.`selling_price` AS `t1_c5`, `productDetails`.`store_id` AS `t1_c10`, `productStockAvails`.`id` AS `t2_c0`, `productStockAvails`.`quantity` AS `t2_c2` FROM `cims_product_stock_entries` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) INNER JOIN `cims_product_stock_avail` `productStockAvails` ON (`productStockAvails`.`product_details_id`=`productDetails`.`id`) WHERE ((((((t.product_details_id=:ycp0) AND (t.ref_num=:ycp1)) AND (productDetails.store_id=:ycp2)) AND (productStockAvails.store_id=:ycp3)) AND (t.store_id=:ycp4)) AND (productDetails.status=:ycp5)) ORDER BY t.id DESC LIMIT 1. Bound with :ycp0='991', :ycp1='55555', :ycp2='1', :ycp3='1', :ycp4='1', :ycp5='1'
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:13:06 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `supplier_name`
+FROM `cims_supplier_details` `sd`
+WHERE sd.supplier_name like '%rf%' LIMIT 10
+in /var/www/coz-ims/protected/modules/supplier/controllers/ManageController.php (183)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:13:10 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (55)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:13:10 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (55)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:13:10 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (67)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:13:10 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (67)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:13:10 [trace] [system.db.CDbCommand] Querying SQL: SELECT MAX(id) AS id
+FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (440)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (78)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:13:47 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (55)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:13:47 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (55)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:13:47 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (67)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:13:47 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (67)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:13:47 [trace] [system.db.CDbCommand] Querying SQL: SELECT MAX(id) AS id
+FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (440)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (78)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:13:52 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (55)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:13:52 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (55)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:13:52 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (67)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:13:52 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (67)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:13:52 [trace] [system.db.CDbCommand] Querying SQL: SELECT MAX(id) AS id
+FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (442)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (78)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:14:01 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (55)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:14:01 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (55)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:14:01 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (67)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:14:01 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (67)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:14:01 [trace] [system.db.CDbCommand] Querying SQL: SELECT MAX(id) AS id
+FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (442)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (78)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:14:11 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (55)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:14:11 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (55)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:14:11 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (67)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:14:11 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (67)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:14:11 [trace] [system.db.CDbCommand] Querying SQL: SELECT MAX(id) AS id
+FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (442)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (78)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:14:37 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (55)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:14:37 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (55)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:14:37 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (67)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:14:37 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (67)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:14:37 [trace] [system.db.CDbCommand] Querying SQL: SELECT MAX(id) AS id
+FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (444)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (78)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:15:50 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (55)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:15:50 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (55)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:15:50 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (67)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:15:50 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (67)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:15:50 [trace] [system.db.CDbCommand] Querying SQL: SELECT MAX(id) AS id
+FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (444)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (78)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:16:45 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (186)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:16:45 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (186)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:17:20 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (186)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:17:20 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (186)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 23:17:28 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (186)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 23:17:28 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (186)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:17:48 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `product_name`
+FROM `cims_product_details` `pd`
+WHERE pd.product_name like '%good%' AND status = '1' AND pd.store_id = '1' LIMIT 50
+in /var/www/coz-ims/protected/modules/product/controllers/ManageController.php (321)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:17:53 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (425)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:17:53 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (425)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:17:53 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (426)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:17:53 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (426)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:17:53 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (426)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:17:53 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (426)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:17:53 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`purchase_price` AS `t0_c8`, `t`.`selling_price` AS `t0_c9`, `t`.`product_details_id` AS `t0_c6`, `productDetails`.`id` AS `t1_c0`, `productDetails`.`product_name` AS `t1_c3`, `productDetails`.`purchase_price` AS `t1_c4`, `productDetails`.`selling_price` AS `t1_c5`, `productDetails`.`store_id` AS `t1_c10`, `productStockAvails`.`id` AS `t2_c0`, `productStockAvails`.`quantity` AS `t2_c2` FROM `cims_product_stock_entries` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) INNER JOIN `cims_product_stock_avail` `productStockAvails` ON (`productStockAvails`.`product_details_id`=`productDetails`.`id`) WHERE ((((((t.product_details_id=:ycp0) AND (t.ref_num=:ycp1)) AND (productDetails.store_id=:ycp2)) AND (productStockAvails.store_id=:ycp3)) AND (t.store_id=:ycp4)) AND (productDetails.status=:ycp5)) ORDER BY t.id DESC LIMIT 1. Bound with :ycp0='991', :ycp1='55555', :ycp2='1', :ycp3='1', :ycp4='1', :ycp5='1'
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (426)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:18:03 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `supplier_name`
+FROM `cims_supplier_details` `sd`
+WHERE sd.supplier_name like '%rf%' LIMIT 10
+in /var/www/coz-ims/protected/modules/supplier/controllers/ManageController.php (183)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:18:19 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (186)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:18:19 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (186)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:18:19 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (200)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:18:19 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (200)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:18:19 [trace] [system.db.CDbCommand] Querying SQL: SELECT MAX(id) AS id
+FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (444)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (211)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:18:19 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockAvail.php (114)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (239)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:18:19 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockAvail.php (114)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (239)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:18:19 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`product_details_id` AS `t0_c1`, `t`.`quantity` AS `t0_c2`, `t`.`store_id` AS `t0_c3`, `productDetails`.`id` AS `t1_c0`, `productDetails`.`category_id` AS `t1_c1`, `productDetails`.`supplier_id` AS `t1_c2`, `productDetails`.`product_name` AS `t1_c3`, `productDetails`.`purchase_price` AS `t1_c4`, `productDetails`.`selling_price` AS `t1_c5`, `productDetails`.`create_date` AS `t1_c6`, `productDetails`.`update_date` AS `t1_c7`, `productDetails`.`uom` AS `t1_c8`, `productDetails`.`status` AS `t1_c9`, `productDetails`.`store_id` AS `t1_c10` FROM `cims_product_stock_avail` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) WHERE (((t.product_details_id=:ycp0) AND (t.store_id=:ycp1)) AND (productDetails.store_id=:ycp2)) ORDER BY t.id DESC LIMIT 1. Bound with :ycp0='991', :ycp1='1', :ycp2='1'
+in /var/www/coz-ims/protected/modules/product/models/ProductStockAvail.php (114)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (239)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:18:19 [trace] [system.db.CDbCommand] Executing SQL: UPDATE `cims_product_stock_avail` SET `id`=:yp0, `product_details_id`=:yp1, `quantity`=:yp2, `store_id`=:yp3 WHERE `cims_product_stock_avail`.`id`=2153. Bound with :yp0=2153, :yp1=991, :yp2=1190, :yp3=1
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (255)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:18:19 [trace] [system.db.CDbCommand] Querying SQL: SELECT * FROM `cims_product_details` `t` WHERE (t.id=:ycp3) AND (t.store_id=:ycp4) LIMIT 1. Bound with :ycp3='991', :ycp4='1'
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (261)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:18:19 [trace] [system.db.CDbCommand] Executing SQL: UPDATE `cims_product_details` SET `id`=:yp0, `category_id`=:yp1, `supplier_id`=:yp2, `product_name`=:yp3, `purchase_price`=:yp4, `selling_price`=:yp5, `create_date`=:yp6, `update_date`=:yp7, `uom`=:yp8, `status`=:yp9, `store_id`=:yp10 WHERE `cims_product_details`.`id`=991 AND `cims_product_details`.`store_id`=1. Bound with :yp0=991, :yp1=45, :yp2=1, :yp3='Good luck topper pen', :yp4='3.42', :yp5='5.00', :yp6='2014-07-03 16:00:17', :yp7='2015-10-03 17:18:19', :yp8=NULL, :yp9=1, :yp10=1
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (265)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:18:19 [trace] [system.db.CDbCommand] Executing SQL: INSERT INTO `cims_product_stock_entries` (`ref_num`, `grand_total_balance`, `store_id`, `billnumber`, `purchase_date`, `supplier_id`, `grand_total_payable`, `grand_total_paid`, `due_payment_date`, `payment_type`, `note`, `purchase_id`, `product_details_id`, `quantity`, `purchase_price`, `selling_price`, `item_subtotal`, `serial_num`) VALUES (:yp0, :yp1, :yp2, :yp3, :yp4, :yp5, :yp6, :yp7, :yp8, :yp9, :yp10, :yp11, :yp12, :yp13, :yp14, :yp15, :yp16, :yp17). Bound with :yp0='55555', :yp1='0.00', :yp2=1, :yp3='', :yp4='2015-10-03', :yp5=1, :yp6='34.20', :yp7='34.20', :yp8='1970-01-01', :yp9=1, :yp10='', :yp11='PD39795', :yp12=991, :yp13=10, :yp14='3.42', :yp15='5.00', :yp16='34.20', :yp17=0
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (268)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 23:18:19 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (55)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 23:18:19 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (55)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:13 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_sales`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (499)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:13 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_sales`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (499)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:13 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:13 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:13 [trace] [system.db.CDbCommand] Querying SQL: SELECT COUNT(*) FROM (SELECT t.sales_id AS id, `t`.`grand_total_payable` AS `t0_c18`, `t`.`id` AS `t0_c0`, GROUP_CONCAT(productDetails.product_name) as product_name, `productDetails`.`id` AS `t1_c0`, `productDetails`.`store_id` AS `t1_c10` FROM `cims_product_stock_sales` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) WHERE (((is_advance !=:ycp0) AND (productDetails.store_id=:ycp1)) AND (t.store_id=:ycp2)) GROUP BY t.sales_id) sq. Bound with :ycp0='1', :ycp1='1', :ycp2='1'
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:13 [trace] [system.db.CDbCommand] Querying SQL: SELECT t.sales_id AS id, `t`.`grand_total_payable` AS `t0_c18`, `t`.`id` AS `t0_c0`, GROUP_CONCAT(productDetails.product_name) as product_name, `productDetails`.`id` AS `t1_c0`, `productDetails`.`store_id` AS `t1_c10` FROM `cims_product_stock_sales` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) WHERE (((is_advance !=:ycp0) AND (productDetails.store_id=:ycp1)) AND (t.store_id=:ycp2)) GROUP BY t.sales_id ORDER BY t.id DESC LIMIT 10. Bound with :ycp0='1', :ycp1='1', :ycp2='1'
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:16 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_sales`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (499)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:16 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_sales`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (499)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:16 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:16 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:16 [trace] [system.db.CDbCommand] Querying SQL: SELECT COUNT(*) FROM (SELECT t.sales_id AS id, `t`.`grand_total_payable` AS `t0_c18`, `t`.`id` AS `t0_c0`, GROUP_CONCAT(productDetails.product_name) as product_name, `productDetails`.`id` AS `t1_c0`, `productDetails`.`store_id` AS `t1_c10` FROM `cims_product_stock_sales` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) WHERE (((is_advance !=:ycp0) AND (productDetails.store_id=:ycp1)) AND (t.store_id=:ycp2)) GROUP BY t.sales_id) sq. Bound with :ycp0='1', :ycp1='1', :ycp2='1'
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:16 [trace] [system.db.CDbCommand] Querying SQL: SELECT t.sales_id AS id, `t`.`grand_total_payable` AS `t0_c18`, `t`.`id` AS `t0_c0`, GROUP_CONCAT(productDetails.product_name) as product_name, `productDetails`.`id` AS `t1_c0`, `productDetails`.`store_id` AS `t1_c10` FROM `cims_product_stock_sales` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) WHERE (((is_advance !=:ycp0) AND (productDetails.store_id=:ycp1)) AND (t.store_id=:ycp2)) GROUP BY t.sales_id ORDER BY t.id DESC LIMIT 10. Bound with :ycp0='1', :ycp1='1', :ycp2='1'
+in /var/www/coz-ims/protected/modules/product/views/sale/index.php (58)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (532)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 23:19:20 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_sales`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (52)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 23:19:20 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_sales`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (52)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:23 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (576)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:23 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (576)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:23 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (210)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (578)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:23 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (210)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (578)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:23 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (210)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (578)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:23 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (210)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (578)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:23 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`purchase_price` AS `t0_c8`, `t`.`selling_price` AS `t0_c9`, `t`.`product_details_id` AS `t0_c6`, `productDetails`.`id` AS `t1_c0`, `productDetails`.`product_name` AS `t1_c3`, `productDetails`.`purchase_price` AS `t1_c4`, `productDetails`.`selling_price` AS `t1_c5`, `productDetails`.`store_id` AS `t1_c10`, `productStockAvails`.`id` AS `t2_c0`, `productStockAvails`.`quantity` AS `t2_c2` FROM `cims_product_stock_entries` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) INNER JOIN `cims_product_stock_avail` `productStockAvails` ON (`productStockAvails`.`product_details_id`=`productDetails`.`id`) WHERE (((((t.ref_num=:ycp0) AND (productDetails.store_id=:ycp1)) AND (productStockAvails.store_id=:ycp2)) AND (t.store_id=:ycp3)) AND (productDetails.status=:ycp4)) GROUP BY t.product_details_id ORDER BY t.id DESC. Bound with :ycp0='100000000007', :ycp1='1', :ycp2='1', :ycp3='1', :ycp4='1'
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (210)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (578)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:26 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (576)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:26 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (576)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:26 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (210)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (578)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:26 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (210)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (578)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:26 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (210)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (578)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:26 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (210)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (578)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:19:26 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`purchase_price` AS `t0_c8`, `t`.`selling_price` AS `t0_c9`, `t`.`product_details_id` AS `t0_c6`, `productDetails`.`id` AS `t1_c0`, `productDetails`.`product_name` AS `t1_c3`, `productDetails`.`purchase_price` AS `t1_c4`, `productDetails`.`selling_price` AS `t1_c5`, `productDetails`.`store_id` AS `t1_c10`, `productStockAvails`.`id` AS `t2_c0`, `productStockAvails`.`quantity` AS `t2_c2` FROM `cims_product_stock_entries` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) INNER JOIN `cims_product_stock_avail` `productStockAvails` ON (`productStockAvails`.`product_details_id`=`productDetails`.`id`) WHERE ((((((t.product_details_id=:ycp0) AND (t.ref_num=:ycp1)) AND (productDetails.store_id=:ycp2)) AND (productStockAvails.store_id=:ycp3)) AND (t.store_id=:ycp4)) AND (productDetails.status=:ycp5)) ORDER BY t.id DESC. Bound with :ycp0='991', :ycp1='100000000007', :ycp2='1', :ycp3='1', :ycp4='1', :ycp5='1'
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (210)
+in /var/www/coz-ims/protected/modules/product/controllers/SaleController.php (578)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 23:37:13 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (186)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 23:37:13 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (186)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:19 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `product_name`
+FROM `cims_product_details` `pd`
+WHERE pd.product_name like '%g%' AND status = '1' AND pd.store_id = '1' LIMIT 50
+in /var/www/coz-ims/protected/modules/product/controllers/ManageController.php (321)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:19 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `product_name`
+FROM `cims_product_details` `pd`
+WHERE pd.product_name like '%goo%' AND status = '1' AND pd.store_id = '1' LIMIT 50
+in /var/www/coz-ims/protected/modules/product/controllers/ManageController.php (321)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:25 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:25 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:25 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:25 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:25 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:25 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:25 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`purchase_price` AS `t0_c8`, `t`.`selling_price` AS `t0_c9`, `t`.`product_details_id` AS `t0_c6`, `productDetails`.`id` AS `t1_c0`, `productDetails`.`product_name` AS `t1_c3`, `productDetails`.`purchase_price` AS `t1_c4`, `productDetails`.`selling_price` AS `t1_c5`, `productDetails`.`store_id` AS `t1_c10`, `productStockAvails`.`id` AS `t2_c0`, `productStockAvails`.`quantity` AS `t2_c2` FROM `cims_product_stock_entries` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) INNER JOIN `cims_product_stock_avail` `productStockAvails` ON (`productStockAvails`.`product_details_id`=`productDetails`.`id`) WHERE ((((((t.product_details_id=:ycp0) AND (t.ref_num=:ycp1)) AND (productDetails.store_id=:ycp2)) AND (productStockAvails.store_id=:ycp3)) AND (t.store_id=:ycp4)) AND (productDetails.status=:ycp5)) ORDER BY t.id DESC LIMIT 1. Bound with :ycp0='991', :ycp1='55555', :ycp2='1', :ycp3='1', :ycp4='1', :ycp5='1'
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:35 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:35 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:35 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:35 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:35 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:35 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:35 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`purchase_price` AS `t0_c8`, `t`.`selling_price` AS `t0_c9`, `t`.`product_details_id` AS `t0_c6`, `productDetails`.`id` AS `t1_c0`, `productDetails`.`product_name` AS `t1_c3`, `productDetails`.`purchase_price` AS `t1_c4`, `productDetails`.`selling_price` AS `t1_c5`, `productDetails`.`store_id` AS `t1_c10`, `productStockAvails`.`id` AS `t2_c0`, `productStockAvails`.`quantity` AS `t2_c2` FROM `cims_product_stock_entries` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) INNER JOIN `cims_product_stock_avail` `productStockAvails` ON (`productStockAvails`.`product_details_id`=`productDetails`.`id`) WHERE ((((((t.product_details_id=:ycp0) AND (t.ref_num=:ycp1)) AND (productDetails.store_id=:ycp2)) AND (productStockAvails.store_id=:ycp3)) AND (t.store_id=:ycp4)) AND (productDetails.status=:ycp5)) ORDER BY t.id DESC LIMIT 1. Bound with :ycp0='991', :ycp1='2222', :ycp2='1', :ycp3='1', :ycp4='1', :ycp5='1'
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:43 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `supplier_name`
+FROM `cims_supplier_details` `sd`
+WHERE sd.supplier_name like '%r%' LIMIT 10
+in /var/www/coz-ims/protected/modules/supplier/controllers/ManageController.php (183)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:46 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (186)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:46 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (186)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:46 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (200)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:46 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (200)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:46 [trace] [system.db.CDbCommand] Querying SQL: SELECT MAX(id) AS id
+FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (440)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (211)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:46 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockAvail.php (114)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (237)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:46 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockAvail.php (114)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (237)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:46 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`product_details_id` AS `t0_c1`, `t`.`quantity` AS `t0_c2`, `t`.`store_id` AS `t0_c3`, `productDetails`.`id` AS `t1_c0`, `productDetails`.`category_id` AS `t1_c1`, `productDetails`.`supplier_id` AS `t1_c2`, `productDetails`.`product_name` AS `t1_c3`, `productDetails`.`purchase_price` AS `t1_c4`, `productDetails`.`selling_price` AS `t1_c5`, `productDetails`.`create_date` AS `t1_c6`, `productDetails`.`update_date` AS `t1_c7`, `productDetails`.`uom` AS `t1_c8`, `productDetails`.`status` AS `t1_c9`, `productDetails`.`store_id` AS `t1_c10` FROM `cims_product_stock_avail` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) WHERE (((t.product_details_id=:ycp0) AND (t.store_id=:ycp1)) AND (productDetails.store_id=:ycp2)) ORDER BY t.id DESC LIMIT 1. Bound with :ycp0='991', :ycp1='1', :ycp2='1'
+in /var/www/coz-ims/protected/modules/product/models/ProductStockAvail.php (114)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (237)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:46 [trace] [system.db.CDbCommand] Executing SQL: UPDATE `cims_product_stock_avail` SET `id`=:yp0, `product_details_id`=:yp1, `quantity`=:yp2, `store_id`=:yp3 WHERE `cims_product_stock_avail`.`id`=2153. Bound with :yp0=2153, :yp1=991, :yp2=1200, :yp3=1
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (253)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:46 [trace] [system.db.CDbCommand] Querying SQL: SELECT * FROM `cims_product_details` `t` WHERE (t.id=:ycp3) AND (t.store_id=:ycp4) LIMIT 1. Bound with :ycp3='991', :ycp4='1'
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (259)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:46 [trace] [system.db.CDbCommand] Executing SQL: UPDATE `cims_product_details` SET `id`=:yp0, `category_id`=:yp1, `supplier_id`=:yp2, `product_name`=:yp3, `purchase_price`=:yp4, `selling_price`=:yp5, `create_date`=:yp6, `update_date`=:yp7, `uom`=:yp8, `status`=:yp9, `store_id`=:yp10 WHERE `cims_product_details`.`id`=991 AND `cims_product_details`.`store_id`=1. Bound with :yp0=991, :yp1=45, :yp2=1, :yp3='Good luck topper pen', :yp4='3.42', :yp5='5.00', :yp6='2014-07-03 16:00:17', :yp7='2015-10-03 17:37:46', :yp8=NULL, :yp9=1, :yp10=1
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (263)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:46 [trace] [system.db.CDbCommand] Executing SQL: INSERT INTO `cims_product_stock_entries` (`ref_num`, `grand_total_balance`, `store_id`, `billnumber`, `purchase_date`, `supplier_id`, `grand_total_payable`, `grand_total_paid`, `due_payment_date`, `payment_type`, `note`, `purchase_id`, `product_details_id`, `quantity`, `purchase_price`, `selling_price`, `item_subtotal`, `serial_num`) VALUES (:yp0, :yp1, :yp2, :yp3, :yp4, :yp5, :yp6, :yp7, :yp8, :yp9, :yp10, :yp11, :yp12, :yp13, :yp14, :yp15, :yp16, :yp17). Bound with :yp0='2222', :yp1='0.00', :yp2=1, :yp3='', :yp4='2015-10-03', :yp5=1, :yp6='34.20', :yp7='34.20', :yp8='1970-01-01', :yp9=1, :yp10='', :yp11='PD39796', :yp12=991, :yp13=10, :yp14='3.42', :yp15='5.00', :yp16='34.20', :yp17=0
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (266)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 23:37:46 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (186)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 23:37:46 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (186)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:51 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `product_name`
+FROM `cims_product_details` `pd`
+WHERE pd.product_name like '%good %' AND status = '1' AND pd.store_id = '1' LIMIT 50
+in /var/www/coz-ims/protected/modules/product/controllers/ManageController.php (321)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:52 [trace] [system.db.CDbCommand] Querying SQL: SELECT `id`, `product_name`
+FROM `cims_product_details` `pd`
+WHERE pd.product_name like '%good lu%' AND status = '1' AND pd.store_id = '1' LIMIT 50
+in /var/www/coz-ims/protected/modules/product/controllers/ManageController.php (321)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:56 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:56 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_entries`
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (421)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:56 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:56 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:56 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:56 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_avail`
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/03 17:37:56 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`purchase_price` AS `t0_c8`, `t`.`selling_price` AS `t0_c9`, `t`.`product_details_id` AS `t0_c6`, `productDetails`.`id` AS `t1_c0`, `productDetails`.`product_name` AS `t1_c3`, `productDetails`.`purchase_price` AS `t1_c4`, `productDetails`.`selling_price` AS `t1_c5`, `productDetails`.`store_id` AS `t1_c10`, `productStockAvails`.`id` AS `t2_c0`, `productStockAvails`.`quantity` AS `t2_c2` FROM `cims_product_stock_entries` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`) INNER JOIN `cims_product_stock_avail` `productStockAvails` ON (`productStockAvails`.`product_details_id`=`productDetails`.`id`) WHERE ((((((t.product_details_id=:ycp0) AND (t.ref_num=:ycp1)) AND (productDetails.store_id=:ycp2)) AND (productStockAvails.store_id=:ycp3)) AND (t.store_id=:ycp4)) AND (productDetails.status=:ycp5)) ORDER BY t.id DESC LIMIT 1. Bound with :ycp0='991', :ycp1='2222', :ycp2='1', :ycp3='1', :ycp4='1', :ycp5='1'
+in /var/www/coz-ims/protected/modules/product/models/ProductStockEntries.php (208)
+in /var/www/coz-ims/protected/modules/product/controllers/PurchaseController.php (422)
+in /var/www/coz-ims/index.php (8)
+2015/10/08 20:44:56 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_user`
 in /var/www/coz-ims-ff/protected/controllers/SiteController.php (74)
 in /var/www/coz-ims-ff/index.php (8)
-2015/10/07 09:21:58 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_user`
+2015/10/08 20:44:56 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_user`
 in /var/www/coz-ims-ff/protected/controllers/SiteController.php (74)
 in /var/www/coz-ims-ff/index.php (8)
-2015/10/07 09:22:24 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_user`
+2015/10/08 20:45:17 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_user`
 in /var/www/coz-ims-ff/protected/controllers/SiteController.php (74)
 in /var/www/coz-ims-ff/index.php (8)
-2015/10/07 09:22:24 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_user`
+2015/10/08 20:45:17 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_user`
 in /var/www/coz-ims-ff/protected/controllers/SiteController.php (74)
-in /var/www/coz-ims-ff/index.php (8)
-2015/10/07 09:22:33 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_user`
-in /var/www/coz-ims-ff/protected/controllers/SiteController.php (74)
-in /var/www/coz-ims-ff/index.php (8)
-2015/10/07 09:22:33 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_user`
-in /var/www/coz-ims-ff/protected/controllers/SiteController.php (74)
-in /var/www/coz-ims-ff/index.php (8)
-2015/10/07 09:22:33 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_store_details`
-in /var/www/coz-ims-ff/protected/models/User.php (171)
-in /var/www/coz-ims-ff/protected/models/User.php (127)
-in /var/www/coz-ims-ff/protected/controllers/SiteController.php (91)
-2015/10/07 09:22:33 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_store_details`
-in /var/www/coz-ims-ff/protected/models/User.php (171)
-in /var/www/coz-ims-ff/protected/models/User.php (127)
-in /var/www/coz-ims-ff/protected/controllers/SiteController.php (91)
-2015/10/07 09:22:33 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`username` AS `t0_c1`, `t`.`hashed_password` AS `t0_c3`, `t`.`salt` AS `t0_c4`, `t`.`email` AS `t0_c5`, `t`.`store_id` AS `t0_c7`, `t`.`status` AS `t0_c8`, `t`.`user_type` AS `t0_c6`, `t`.`full_name` AS `t0_c2`, `storeInfo`.`id` AS `t1_c0`, `storeInfo`.`name` AS `t1_c1`, `storeInfo`.`log` AS `t1_c2`, `storeInfo`.`type` AS `t1_c3`, `storeInfo`.`address` AS `t1_c4`, `storeInfo`.`place` AS `t1_c5`, `storeInfo`.`city` AS `t1_c6`, `storeInfo`.`phone` AS `t1_c7`, `storeInfo`.`email` AS `t1_c8`, `storeInfo`.`web` AS `t1_c9`, `storeInfo`.`pin` AS `t1_c10` FROM `cims_user` `t`  LEFT OUTER JOIN `cims_store_details` `storeInfo` ON (`t`.`store_id`=`storeInfo`.`id`)  WHERE ((username=:ycp0) AND (status=:ycp1)). Bound with :ycp0='masud_admin', :ycp1='1'
-in /var/www/coz-ims-ff/protected/models/User.php (171)
-in /var/www/coz-ims-ff/protected/models/User.php (127)
-in /var/www/coz-ims-ff/protected/controllers/SiteController.php (91)
-2015/10/07 09:23:02 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_user`
-in /var/www/coz-ims-ff/protected/controllers/SiteController.php (74)
-in /var/www/coz-ims-ff/index.php (8)
-2015/10/07 09:23:02 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_user`
-in /var/www/coz-ims-ff/protected/controllers/SiteController.php (74)
-in /var/www/coz-ims-ff/index.php (8)
-2015/10/07 09:23:02 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_store_details`
-in /var/www/coz-ims-ff/protected/models/User.php (171)
-in /var/www/coz-ims-ff/protected/models/User.php (127)
-in /var/www/coz-ims-ff/protected/controllers/SiteController.php (91)
-2015/10/07 09:23:02 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_store_details`
-in /var/www/coz-ims-ff/protected/models/User.php (171)
-in /var/www/coz-ims-ff/protected/models/User.php (127)
-in /var/www/coz-ims-ff/protected/controllers/SiteController.php (91)
-2015/10/07 09:23:02 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`username` AS `t0_c1`, `t`.`hashed_password` AS `t0_c3`, `t`.`salt` AS `t0_c4`, `t`.`email` AS `t0_c5`, `t`.`store_id` AS `t0_c7`, `t`.`status` AS `t0_c8`, `t`.`user_type` AS `t0_c6`, `t`.`full_name` AS `t0_c2`, `storeInfo`.`id` AS `t1_c0`, `storeInfo`.`name` AS `t1_c1`, `storeInfo`.`log` AS `t1_c2`, `storeInfo`.`type` AS `t1_c3`, `storeInfo`.`address` AS `t1_c4`, `storeInfo`.`place` AS `t1_c5`, `storeInfo`.`city` AS `t1_c6`, `storeInfo`.`phone` AS `t1_c7`, `storeInfo`.`email` AS `t1_c8`, `storeInfo`.`web` AS `t1_c9`, `storeInfo`.`pin` AS `t1_c10` FROM `cims_user` `t`  LEFT OUTER JOIN `cims_store_details` `storeInfo` ON (`t`.`store_id`=`storeInfo`.`id`)  WHERE ((username=:ycp0) AND (status=:ycp1)). Bound with :ycp0='masud_admin', :ycp1='1'
-in /var/www/coz-ims-ff/protected/models/User.php (171)
-in /var/www/coz-ims-ff/protected/models/User.php (127)
-in /var/www/coz-ims-ff/protected/controllers/SiteController.php (91)
-2015/10/07 09:24:03 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_stock_sales`
-in /var/www/coz-ims-ff/protected/modules/product/controllers/SaleController.php (499)
-in /var/www/coz-ims-ff/index.php (8)
-2015/10/07 09:24:03 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_stock_sales`
-in /var/www/coz-ims-ff/protected/modules/product/controllers/SaleController.php (499)
-in /var/www/coz-ims-ff/index.php (8)
-2015/10/07 09:24:03 [trace] [system.db.CDbCommand] Querying SQL: SHOW FULL COLUMNS FROM `cims_product_details`
-in /var/www/coz-ims-ff/protected/modules/product/views/sale/index.php (58)
-in /var/www/coz-ims-ff/protected/modules/product/controllers/SaleController.php (532)
-in /var/www/coz-ims-ff/index.php (8)
-2015/10/07 09:24:03 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `cims_product_details`
-in /var/www/coz-ims-ff/protected/modules/product/views/sale/index.php (58)
-in /var/www/coz-ims-ff/protected/modules/product/controllers/SaleController.php (532)
-in /var/www/coz-ims-ff/index.php (8)
-2015/10/07 09:24:03 [trace] [system.db.CDbCommand] Querying SQL: SELECT COUNT(*) FROM (SELECT t.sales_id AS id, `t`.`grand_total_payable` AS `t0_c18`, `t`.`id` AS `t0_c0`, GROUP_CONCAT(productDetails.product_name) as product_name, `productDetails`.`id` AS `t1_c0`, `productDetails`.`store_id` AS `t1_c10` FROM `cims_product_stock_sales` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`)  WHERE (((is_advance !=:ycp0) AND (productDetails.store_id=:ycp1)) AND (t.store_id=:ycp2)) GROUP BY t.sales_id) sq. Bound with :ycp0='1', :ycp1='1', :ycp2='1'
-in /var/www/coz-ims-ff/protected/modules/product/views/sale/index.php (58)
-in /var/www/coz-ims-ff/protected/modules/product/controllers/SaleController.php (532)
-in /var/www/coz-ims-ff/index.php (8)
-2015/10/07 09:24:03 [trace] [system.db.CDbCommand] Querying SQL: SELECT t.sales_id AS id, `t`.`grand_total_payable` AS `t0_c18`, `t`.`id` AS `t0_c0`, GROUP_CONCAT(productDetails.product_name) as product_name, `productDetails`.`id` AS `t1_c0`, `productDetails`.`store_id` AS `t1_c10` FROM `cims_product_stock_sales` `t`  LEFT OUTER JOIN `cims_product_details` `productDetails` ON (`t`.`product_details_id`=`productDetails`.`id`)  WHERE (((is_advance !=:ycp0) AND (productDetails.store_id=:ycp1)) AND (t.store_id=:ycp2)) GROUP BY t.sales_id ORDER BY t.id DESC LIMIT 10. Bound with :ycp0='1', :ycp1='1', :ycp2='1'
-in /var/www/coz-ims-ff/protected/modules/product/views/sale/index.php (58)
-in /var/www/coz-ims-ff/protected/modules/product/controllers/SaleController.php (532)
 in /var/www/coz-ims-ff/index.php (8)

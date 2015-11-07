@@ -1,3 +1,5 @@
 protected/runtime
 protected/config/dataCon.php
-assets
+assets/
+barcode_pdfs/
+bc_image/
