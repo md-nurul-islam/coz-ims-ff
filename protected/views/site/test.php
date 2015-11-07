@@ -21,10 +21,10 @@
 //exit;
 
 //echo '<img src="/barcodegenerator/generatebarcode?code=123456&codetype=code128">';
-for($i = 0; $i <= 100; $i++){
-    echo '<img src="/product/barcode/generate?filetype=PNG&dpi=72&scale=1&rotation=0&font_family=Arial.ttf&font_size=0&text=192168264595&thickness=30&code=BCGean13">';
-}
-exit;
+//for($i = 0; $i <= 100; $i++){
+//    echo '<img src="/product/barcode/generate?filetype=PNG&dpi=72&scale=1&rotation=0&font_family=Arial.ttf&font_size=0&text=192168264595&thickness=30&code=BCGean13">';
+//}
+//exit;
 
-$this->widget('DataGrid', array('model' => 'ProductDetails', 'pageSize' => 20));
+$this->widget('DataGrid', array('model' => 'ProductDetails', 'controller' => 'site', 'action' => 'getdata'));
 ?>

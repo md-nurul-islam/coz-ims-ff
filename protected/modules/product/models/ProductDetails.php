@@ -71,6 +71,7 @@ class ProductDetails extends CActiveRecord {
             ),
             'productStockEntries' => array(self::HAS_MANY, 'ProductStockEntries', 'product_details_id'),
             'productStockSales' => array(self::HAS_MANY, 'ProductStockSales', 'product_details_id'),
+            'productGrade' => array(self::HAS_MANY, 'ProductGrade', 'product_details_id'),
         );
     }
 
@@ -111,13 +112,21 @@ class ProductDetails extends CActiveRecord {
 
     public function dataGridRows($params = array()) {
         
+//        var_dump($params);exit;
+        
+        $offset = 0;
+        if(isset($params['offset']) && $params['offset'] > 0) {
+            $offset = $params['offset'];
+        }
+        
         $command = Yii::app()->db->createCommand()
-                ->select( 'p.id, p.product_name, p.purchase_price, p.selling_price, p.status, c.category_name, s.supplier_name, ps.quantity' )
+                ->select( 'p.id, p.product_name, p.purchase_price, p.selling_price, p.status, c.category_name, s.supplier_name, ps.quantity, (select count(id) from cims_product_details ) as total_rows' )
                 ->from($this->tableName() . ' p')
                 ->join(CategoryDetails::model()->tableName() . ' c', 'c.id=p.category_id')
                 ->join(SupplierDetails::model()->tableName() . ' s', 's.id=p.supplier_id')
                 ->join(ProductStockAvail::model()->tableName() . ' ps', 'p.id=ps.product_details_id')
-                ->limit(10)
+                ->offset($offset)
+                ->limit($this->pageSize)
                 ;
         
 //                ->where('id=:id', array(':id' => $id))

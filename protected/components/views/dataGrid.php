@@ -25,7 +25,7 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CCl
            autoRowHeight:false,
            striped:true,
            pagination:<?php echo $this->enablePagination; ?>,
-           pageSize:<?php echo $this->pageSize; ?>" url="<?php echo $this->url; ?>" >
+           pageSize:20" url="<?php echo $this->url; ?>" >
         <thead>
             <tr>
                 <?php foreach ($this->headers as $key => $val) { ?>
@@ -43,28 +43,17 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CCl
 </div>
 <script>
 
-    function getData() {
-        var rows = [];
-        rows = <?php echo json_encode($this->rows); ?>;
-        return rows;
-    }
-
     $(function () {
-        var dg = $('#dg').datagrid({
-            data: getData(),
-            onLoadSuccess: function () {
-                $(this).datagrid('enableFilter');
-            }
-        });
+        var dg = $('#dg').datagrid();
         dg.datagrid('getPager').pagination({
-            layout: ['first', 'prev', 'links', 'next', 'last', 'refresh']
+            layout: ['first', 'prev', 'links', 'next', 'last', 'refresh'],
         });
-
-
-
+//        dg.datagrid('enableFilter');
+        
+//        {
+//            onLoadSuccess: function () {
+//                $(this).datagrid('enableFilter');
+//            }
+//        }
     });
-
-//    $(function () {
-//        $('#dg').datagrid('enableFilter');
-//    });
 </script>

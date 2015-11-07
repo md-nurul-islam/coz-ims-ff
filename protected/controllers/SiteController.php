@@ -106,16 +106,37 @@ class SiteController extends Controller {
     }
 
     public function actionTest() {
-//        $this->layout = false;
+        $this->layout = false;
+        $this->render('test');
+    }
+
+    public function actionGetdata() {
+
+        $pageNumber = Yii::app()->request->getParam('page');
+        $pageSize = Yii::app()->request->getParam('rows');
+
+        $rows = array();
+        $offest = ($pageNumber - 1) * $pageSize;
+
+        $productDetails = new ProductDetails();
+        $productDetails->pageSize = 20;
+        $query_params = array(
+            'offset' => $offest,
+        );
+
+        $result['rows'] = $productDetails->dataGridRows($query_params);
+        $result["total"] = $result['rows'][0]['total_rows'];
+        echo CJSON::encode($result);
+        Yii::app()->end();
+    }
+
+    public function actionTest1($param) {
         # mPDF
-        $mPDF1 = Yii::app()->ePdf->mpdf();
-
+//        $mPDF1 = Yii::app()->ePdf->mpdf();
         # You can easily override default constructor's params
-        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A5');
-
+//        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A5');
         # render (full page)
-        $mPDF1->WriteHTML($this->render('test', array(), true));
-
+//        $mPDF1->WriteHTML($this->render('test', array(), true));
         # Load a stylesheet
 //        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot.css') . '/main.css');
 //        $mPDF1->WriteHTML($stylesheet, 1);
@@ -125,9 +146,7 @@ class SiteController extends Controller {
 //        $mPDF1->WriteHTML(CHtml::image(Yii::getPathOfAlias('webroot.css') . '/bg.gif'));
 //        var_dump($mPDF1->Output());exit;
         # Outputs ready PDF
-        $mPDF1->Output();
-
-//        $this->render('test');
+//        $mPDF1->Output();
     }
-    
+
 }
