@@ -133,6 +133,10 @@ class SiteController extends Controller {
         echo CJSON::encode($result);
         Yii::app()->end();
     }
+    
+    public function actionGetStatusComboData() {
+        echo CJSON::encode(ProductDetails::model()->statusComboData());
+    }
 
     public function actionTest1($param) {
         # mPDF

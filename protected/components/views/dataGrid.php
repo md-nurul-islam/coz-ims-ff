@@ -17,22 +17,7 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/jquery.easyui.min.js', CClientS
 $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CClientScript::POS_HEAD);
 ?>
 
-<?php foreach ($this->filters as $key => $val) { ?>
-    <?php
-    if (isset($val['label']) && !empty($val['label'])) {
-        ?>
-
-        <?php // if ($val['class'] != 'easyui-combobox') { ?>
-             field="<?php echo $key; ?>" <?php
-            echo (implode(' ', array_map(function($key) use ($val) {
-                        return $key . '=' . '"' . $val[$key] . '"';
-                    }, array_keys($val))));
-            ?> 
-               <?php // } else { ?>
-            
-               <?php // } ?>
-    <?php } ?>
-<?php } ?>
+<?php $filter_keys = array_keys($this->filters); ?>
 
 <div style="width: 90%">
 
@@ -44,8 +29,6 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CCl
             <a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
             <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true"></a>
         </div>
-
-
 
         <?php
         if (!empty($this->filters)) {
@@ -63,13 +46,12 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CCl
                         ?> />
                            <?php } ?>
                        <?php } ?>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-search">Search</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="doSearch();">Search</a>
             </div>
         <?php } ?>
     </div>
 
-
-    <table id="dg" style="width:80%; height:350px;"
+    <table id="dg" style="width:80%; height:auto;"
            data-options="
            rownumbers:true,
            singleSelect:true,
@@ -97,14 +79,30 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CCl
         </thead>
     </table>
 </div>
-<script>
+
+<script type="text/javascript">
 
     $(function () {
-        var dg = $('#dg').datagrid();
-        dg.datagrid('getPager').pagination({
+    var dg = $('#dg').datagrid();
+            dg.datagrid('getPager').pagination({
             layout: ['first', 'prev', 'links', 'next', 'last', 'refresh']
         });
-
     });
 
+    function doSearch() {
+    $('#dg').datagrid('load', {
+//        category_name: $('#category_name').val(),
+        <?php foreach ($filter_keys as $filter) { ?>
+            <?php echo $filter . ': $("#' . $filter . '").val(),'; ?>
+        <?php } ?>
+        });
+//        $('#dg').datagrid('reload');
+    }
+
 </script>
+
+<style type="text/css">
+    .combo-panel div {
+        cursor: pointer;
+    }
+</style>

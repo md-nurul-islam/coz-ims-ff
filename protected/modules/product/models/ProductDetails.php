@@ -23,7 +23,7 @@
  */
 class ProductDetails extends CActiveRecord {
 
-    public $pageSize = 10;
+    public $pageSize = 20;
     public $current_stock;
     public $main_product_name;
     public $ex_product_name;
@@ -112,34 +112,37 @@ class ProductDetails extends CActiveRecord {
 
     public function dataGridFilters() {
         return array(
-            'category_name' => array('class' => 'easyui-textbox', 'label' => 'Category: ', 'style' => 'width:80px;'),
-            'supplier_name' => array('class' => 'easyui-textbox', 'label' => 'Supplier: ', 'style' => 'width:80px;'),
-            'product_name' => array('class' => 'easyui-textbox', 'label' => 'Product: ', 'style' => 'width:80px;'),
-            'quantity' => array('class' => 'easyui-textbox', 'label' => 'Qty: ', 'style' => 'width:80px;'),
-            'purchase_price' => array('class' => 'easyui-textbox', 'label' => 'Cost: ', 'style' => 'width:80px;'),
-            'selling_price' => array('class' => 'easyui-textbox', 'label' => 'Price: ', 'style' => 'width:80px;'),
-            'status' => array('class' => 'easyui-combobox', 'label' => 'Status',
-                'data-options' => "valueField: 'id', textField: 'text', data:[{id: '1', text: 'Select'}] ",
-                'style' => 'width:80px;'),
+            'category_name' => array('id' => 'category_name', 'class' => 'easyui-textbox', 'label' => 'Category: ', 'style' => 'width:80px;'),
+            'supplier_name' => array('id' => 'supplier_name', 'class' => 'easyui-textbox', 'label' => 'Supplier: ', 'style' => 'width:80px;'),
+            'product_name' => array('id' => 'product_name', 'class' => 'easyui-textbox', 'label' => 'Product: ', 'style' => 'width:80px;'),
+            'quantity' => array('id' => 'quantity', 'class' => 'easyui-textbox', 'label' => 'Qty: ', 'style' => 'width:80px;'),
+            'purchase_price' => array('id' => 'purchase_price', 'class' => 'easyui-textbox', 'label' => 'Cost: ', 'style' => 'width:80px;'),
+            'selling_price' => array('id' => 'selling_price', 'class' => 'easyui-textbox', 'label' => 'Price: ', 'style' => 'width:80px;'),
+            'status' => array('id' => 'status', 'class' => 'easyui-combobox', 'label' => 'Status',
+                'data-options' => "valueField: 'id', textField: 'text', url: '/site/getStatusComboData' ",
+                'panelHeight' => 70,
+                'style' => 'width:80px; cursor: pointer;'),
         );
     }
-
-    public function comboData() {
-        return CJSON::encode(array(
+    
+    public function statusComboData() {
+        
+        return array(
             array(
                 'id' => '',
                 'text' => 'Select',
             ),
             array(
+                'id' => '1',
+                'text' => 'Active',
+            ),
+            array(
                 'id' => '0',
                 'text' => 'Inactive',
             ),
-            array(
-                'id' => '1',
-                'text' => 'Active',
-            )
-        ));
-        exit;
+        );
+        
+//        return "[{id: '', text: 'Select'}, {id: '1', text: 'Active'}, {id: '0', text: 'Inactive'}]";
     }
 
     public function dataGridRows($params = array()) {
