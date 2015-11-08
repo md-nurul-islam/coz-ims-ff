@@ -6,11 +6,10 @@ class DataGrid extends CWidget {
 
     public $model;
     public $headers = array();
+    public $filters = array();
     public $rows = array();
-    public $enableFilter = true;
     public $enablePagination = true;
-    public $pageSize;
-    public $numTotalRows;
+    public $pageSize = 20;
     public $module = '';
     public $controller = '';
     public $action = '';
@@ -19,6 +18,7 @@ class DataGrid extends CWidget {
     public function init() {
         $this->model = new $this->model;
         $this->setHeaders();
+        $this->setFilters();
         $this->setController();
         $this->setAction();
         $this->setUrl();
@@ -32,6 +32,10 @@ class DataGrid extends CWidget {
         if (empty($this->headers)) {
             $this->headers = $this->model->dataGridHeaders();
         }
+    }
+
+    private function setFilters() {
+        $this->filters = (method_exists($this->model, 'dataGridFilters')) ? $this->model->dataGridFilters() : array();
     }
 
     private function setController() {

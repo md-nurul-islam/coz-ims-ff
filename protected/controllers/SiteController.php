@@ -114,6 +114,8 @@ class SiteController extends Controller {
 
         $pageNumber = Yii::app()->request->getParam('page');
         $pageSize = Yii::app()->request->getParam('rows');
+        $order = Yii::app()->request->getParam('order');
+        $sortBy = Yii::app()->request->getParam('sort');
 
         $rows = array();
         $offest = ($pageNumber - 1) * $pageSize;
@@ -122,8 +124,10 @@ class SiteController extends Controller {
         $productDetails->pageSize = 20;
         $query_params = array(
             'offset' => $offest,
+            'order' => $sortBy . ' ' . $order
         );
-
+        
+//        $result['rows'] = $productDetails->comboData();
         $result['rows'] = $productDetails->dataGridRows($query_params);
         $result["total"] = $result['rows'][0]['total_rows'];
         echo CJSON::encode($result);

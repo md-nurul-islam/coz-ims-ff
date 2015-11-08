@@ -1,5 +1,6 @@
 protected/runtime
 protected/config/dataCon.php
+protected/config/dataCon.php
 assets/
 barcode_pdfs/
 bc_image/

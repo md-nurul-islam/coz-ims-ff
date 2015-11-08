@@ -17,15 +17,71 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/jquery.easyui.min.js', CClientS
 $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CClientScript::POS_HEAD);
 ?>
 
+<?php foreach ($this->filters as $key => $val) { ?>
+    <?php
+    if (isset($val['label']) && !empty($val['label'])) {
+        ?>
+
+        <?php // if ($val['class'] != 'easyui-combobox') { ?>
+             field="<?php echo $key; ?>" <?php
+            echo (implode(' ', array_map(function($key) use ($val) {
+                        return $key . '=' . '"' . $val[$key] . '"';
+                    }, array_keys($val))));
+            ?> 
+               <?php // } else { ?>
+            
+               <?php // } ?>
+    <?php } ?>
+<?php } ?>
+
 <div style="width: 90%">
 
-    <table id="dg" title="Client Side Pagination" style="width:80%; height:350px;" data-options="
+    <div id="filters" style="padding:5px; height:auto">
+        <div style="margin-bottom:5px">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true"></a>
+        </div>
+
+
+
+        <?php
+        if (!empty($this->filters)) {
+            ?>
+
+            <div>
+
+                <?php foreach ($this->filters as $key => $val) { ?>
+                    <?php if (isset($val['label']) && !empty($val['label'])) { ?>
+                        <?php echo $val['label']; ?>
+                        <input field="<?php echo $key; ?>" <?php
+                        echo (implode(' ', array_map(function($key) use ($val) {
+                                    return $key . '=' . '"' . $val[$key] . '"';
+                                }, array_keys($val))));
+                        ?> />
+                           <?php } ?>
+                       <?php } ?>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-search">Search</a>
+            </div>
+        <?php } ?>
+    </div>
+
+
+    <table id="dg" style="width:80%; height:350px;"
+           data-options="
            rownumbers:true,
            singleSelect:true,
            autoRowHeight:false,
            striped:true,
            pagination:<?php echo $this->enablePagination; ?>,
-           pageSize:20" url="<?php echo $this->url; ?>" >
+           pageSize:<?php echo $this->pageSize; ?>" url="<?php echo $this->url; ?>" 
+           toolbar="#filters"
+           iconCls="icon-save"
+           fitColumns="true"
+           title="Client Side Pagination"
+           >
         <thead>
             <tr>
                 <?php foreach ($this->headers as $key => $val) { ?>
@@ -46,14 +102,9 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CCl
     $(function () {
         var dg = $('#dg').datagrid();
         dg.datagrid('getPager').pagination({
-            layout: ['first', 'prev', 'links', 'next', 'last', 'refresh'],
+            layout: ['first', 'prev', 'links', 'next', 'last', 'refresh']
         });
-//        dg.datagrid('enableFilter');
-        
-//        {
-//            onLoadSuccess: function () {
-//                $(this).datagrid('enableFilter');
-//            }
-//        }
+
     });
+
 </script>

@@ -110,25 +110,63 @@ class ProductDetails extends CActiveRecord {
         );
     }
 
+    public function dataGridFilters() {
+        return array(
+            'category_name' => array('class' => 'easyui-textbox', 'label' => 'Category: ', 'style' => 'width:80px;'),
+            'supplier_name' => array('class' => 'easyui-textbox', 'label' => 'Supplier: ', 'style' => 'width:80px;'),
+            'product_name' => array('class' => 'easyui-textbox', 'label' => 'Product: ', 'style' => 'width:80px;'),
+            'quantity' => array('class' => 'easyui-textbox', 'label' => 'Qty: ', 'style' => 'width:80px;'),
+            'purchase_price' => array('class' => 'easyui-textbox', 'label' => 'Cost: ', 'style' => 'width:80px;'),
+            'selling_price' => array('class' => 'easyui-textbox', 'label' => 'Price: ', 'style' => 'width:80px;'),
+            'status' => array('class' => 'easyui-combobox', 'label' => 'Status',
+                'data-options' => "valueField: 'id', textField: 'text', data:[{id: '1', text: 'Select'}] ",
+                'style' => 'width:80px;'),
+        );
+    }
+
+    public function comboData() {
+        return CJSON::encode(array(
+            array(
+                'id' => '',
+                'text' => 'Select',
+            ),
+            array(
+                'id' => '0',
+                'text' => 'Inactive',
+            ),
+            array(
+                'id' => '1',
+                'text' => 'Active',
+            )
+        ));
+        exit;
+    }
+
     public function dataGridRows($params = array()) {
-        
+
 //        var_dump($params);exit;
-        
+
         $offset = 0;
-        if(isset($params['offset']) && $params['offset'] > 0) {
+        if (isset($params['offset']) && $params['offset'] > 0) {
             $offset = $params['offset'];
         }
-        
+
+        $order = 'id DESC';
+        if (isset($params['order']) && !empty($params['order'])) {
+            $order = $params['order'];
+        }
+
         $command = Yii::app()->db->createCommand()
-                ->select( 'p.id, p.product_name, p.purchase_price, p.selling_price, p.status, c.category_name, s.supplier_name, ps.quantity, (select count(id) from cims_product_details ) as total_rows' )
+                ->select('p.id, p.product_name, p.purchase_price, p.selling_price, p.status, c.category_name, s.supplier_name, ps.quantity, (select count(id) from cims_product_details ) as total_rows')
                 ->from($this->tableName() . ' p')
                 ->join(CategoryDetails::model()->tableName() . ' c', 'c.id=p.category_id')
                 ->join(SupplierDetails::model()->tableName() . ' s', 's.id=p.supplier_id')
                 ->join(ProductStockAvail::model()->tableName() . ' ps', 'p.id=ps.product_details_id')
                 ->offset($offset)
                 ->limit($this->pageSize)
-                ;
-        
+                ->order($order)
+        ;
+
 //                ->where('id=:id', array(':id' => $id))
         return $command->queryAll();
     }
@@ -172,11 +210,11 @@ class ProductDetails extends CActiveRecord {
         $criteria->together = true;
 
         return new CActiveDataProvider($this, array(
-                    'pagination' => array(
-                        'pageSize' => $this->pageSize,
-                    ),
-                    'criteria' => $criteria,
-                ));
+            'pagination' => array(
+                'pageSize' => $this->pageSize,
+            ),
+            'criteria' => $criteria,
+        ));
     }
 
     /**
