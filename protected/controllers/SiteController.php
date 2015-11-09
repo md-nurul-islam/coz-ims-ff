@@ -112,32 +112,29 @@ class SiteController extends Controller {
 
     public function actionGetdata() {
 
-        $pageNumber = Yii::app()->request->getParam('page');
-        $pageSize = Yii::app()->request->getParam('rows');
-        $order = Yii::app()->request->getParam('order');
-        $sortBy = Yii::app()->request->getParam('sort');
-        
+        foreach (DataGridHelper::$_ar_non_filterable_vars as $nfv_key => $nfv_var_name) {
+            ${$nfv_var_name} = Yii::app()->request->getParam($nfv_key);
+        }
+
         $rows = array();
-        $offest = ($pageNumber - 1) * $pageSize;
+        $offest = (${DataGridHelper::$_ar_non_filterable_vars['page']} - 1) * ${DataGridHelper::$_ar_non_filterable_vars['rows']};
 
         $productDetails = new ProductDetails();
-        
-        $filter_keys = array_keys($productDetails->dataGridFilters());
-        
         
         $productDetails->pageSize = 20;
         $query_params = array(
             'offset' => $offest,
-            'order' => $sortBy . ' ' . $order
+            'order' => ${DataGridHelper::$_ar_non_filterable_vars['sort']} . ' ' . ${DataGridHelper::$_ar_non_filterable_vars['order']},
+            'where' => $_POST,
         );
-        
+
 //        $result['rows'] = $productDetails->comboData();
         $result['rows'] = $productDetails->dataGridRows($query_params);
         $result["total"] = $result['rows'][0]['total_rows'];
         echo CJSON::encode($result);
         Yii::app()->end();
     }
-    
+
     public function actionGetStatusComboData() {
         echo CJSON::encode(ProductDetails::model()->statusComboData());
     }
