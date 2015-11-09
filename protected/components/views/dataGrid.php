@@ -17,8 +17,6 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/jquery.easyui.min.js', CClientS
 $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CClientScript::POS_HEAD);
 ?>
 
-<?php $filter_keys = array_keys($this->filters); ?>
-
 <div style="width: 90%">
 
     <div id="filters" style="padding:5px; height:auto">
@@ -72,9 +70,11 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CCl
                         echo (implode(' ', array_map(function($key) use ($val) {
                                     return $key . '=' . '"' . $val[$key] . '"';
                                 }, array_keys($val))));
-                        ?> ><?php echo $val['label']; ?></th>
-                        <?php } ?>
+                        ?>>
+                            <?php echo $val['label']; ?>
+                        </th>
                     <?php } ?>
+                <?php } ?>
             </tr>
         </thead>
     </table>
@@ -85,18 +85,20 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CCl
     $(function () {
     var dg = $('#dg').datagrid();
             dg.datagrid('getPager').pagination({
-            layout: ['first', 'prev', 'links', 'next', 'last', 'refresh']
+            layout: ['first', 'prev', 'links', 'next', 'last', 'refresh'],
         });
     });
 
     function doSearch() {
-    $('#dg').datagrid('load', {
-//        category_name: $('#category_name').val(),
-        <?php foreach ($filter_keys as $filter) { ?>
-            <?php echo $filter . ': $("#' . $filter . '").val(),'; ?>
-        <?php } ?>
+        $('#dg').datagrid('reload', {
+            <?php foreach ($this->filters as $key => $filter) { ?>
+                <?php if ($filter['class'] != 'easyui-combobox') { ?>
+                    <?php echo $key . ': $("#' . $key . '").val(),'; ?>
+                <?php } else { ?>
+                    <?php echo $key . ': $("#' . $key . '").combobox("getValue"),'; ?>
+                <?php } ?>
+            <?php } ?>
         });
-//        $('#dg').datagrid('reload');
     }
 
 </script>

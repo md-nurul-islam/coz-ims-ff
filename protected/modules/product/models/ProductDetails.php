@@ -160,7 +160,7 @@ class ProductDetails extends CActiveRecord {
         }
 
         $command = Yii::app()->db->createCommand()
-                ->select('p.id, p.product_name, p.purchase_price, p.selling_price, p.status, c.category_name, s.supplier_name, ps.quantity, (select count(id) from cims_product_details ) as total_rows')
+                ->select('p.id, p.product_name, p.purchase_price, p.selling_price, CASE p.status WHEN "1" THEN "Active" ELSE "Inactive" END AS `status`, c.category_name, s.supplier_name, ps.quantity, (select count(id) from cims_product_details ) as total_rows')
                 ->from($this->tableName() . ' p')
                 ->join(CategoryDetails::model()->tableName() . ' c', 'c.id=p.category_id')
                 ->join(SupplierDetails::model()->tableName() . ' s', 's.id=p.supplier_id')

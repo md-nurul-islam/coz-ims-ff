@@ -116,11 +116,15 @@ class SiteController extends Controller {
         $pageSize = Yii::app()->request->getParam('rows');
         $order = Yii::app()->request->getParam('order');
         $sortBy = Yii::app()->request->getParam('sort');
-
+        
         $rows = array();
         $offest = ($pageNumber - 1) * $pageSize;
 
         $productDetails = new ProductDetails();
+        
+        $filter_keys = array_keys($productDetails->dataGridFilters());
+        
+        
         $productDetails->pageSize = 20;
         $query_params = array(
             'offset' => $offest,
