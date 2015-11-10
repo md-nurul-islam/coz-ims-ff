@@ -144,9 +144,7 @@ class ProductDetails extends CActiveRecord {
     }
 
     public function dataGridRows($params = array()) {
-
-//        var_dump($params);exit;
-
+        
         $offset = 0;
         if (isset($params['offset']) && $params['offset'] > 0) {
             $offset = $params['offset'];
@@ -168,21 +166,22 @@ class ProductDetails extends CActiveRecord {
         ;
         
         $sub_command = Yii::app()->db->createCommand()
-                ->select('count(id)')
+                ->select('count(t.id)')
                 ->from($this->tableName() . ' t')
+                ->join(CategoryDetails::model()->tableName() . ' c', 'c.id=t.category_id')
+                ->join(SupplierDetails::model()->tableName() . ' s', 's.id=t.supplier_id')
+                ->join(ProductStockAvail::model()->tableName() . ' ps', 't.id=ps.product_details_id')
         ;
         
         $filter_keys = array_keys($this->dataGridFilters());
         if (isset($params['where']) && !empty($params['where'])) {
-            $command = DataGridHelper::processFilterableVars($command, $params['where'], $filter_keys);
-            $sub_command = DataGridHelper::processFilterableVars($sub_command, $params['where'], $filter_keys);
+            $new_command_objs = DataGridHelper::processFilterableVars($command, $params['where'], $filter_keys, 't', $sub_command);
+            $command = $new_command_objs[0];
+            $sub_command = $new_command_objs[1];
         }
         
-        $command->select('t.id, t.product_name, t.purchase_price, t.selling_price, CASE t.status WHEN "1" THEN "Active" ELSE "Inactive" END AS `status`, c.category_name, s.supplier_name, ps.quantit, (' . $sub_command->getText() . ') AS total_rows');
+        $command->select('t.id, t.product_name, t.purchase_price, t.selling_price, CASE t.status WHEN "1" THEN "Active" ELSE "Inactive" END AS `status`, c.category_name, s.supplier_name, ps.quantity, (' . $sub_command->getText() . ') AS total_rows');
         
-        
-//        exit;
-//                ->where('id=:id', array(':id' => $id))
         return $command->queryAll();
     }
 

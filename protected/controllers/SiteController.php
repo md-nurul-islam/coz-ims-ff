@@ -117,21 +117,28 @@ class SiteController extends Controller {
         }
 
         $rows = array();
-        $offest = (${DataGridHelper::$_ar_non_filterable_vars['page']} - 1) * ${DataGridHelper::$_ar_non_filterable_vars['rows']};
+        $offest = 0;
+
+        if (${DataGridHelper::$_ar_non_filterable_vars['page']} > 1) {
+            $offest = (${DataGridHelper::$_ar_non_filterable_vars['page']} - 1) * ${DataGridHelper::$_ar_non_filterable_vars['rows']};
+        }
 
         $productDetails = new ProductDetails();
-        
+
         $productDetails->pageSize = 20;
         $query_params = array(
             'offset' => $offest,
             'order' => ${DataGridHelper::$_ar_non_filterable_vars['sort']} . ' ' . ${DataGridHelper::$_ar_non_filterable_vars['order']},
             'where' => $_POST,
         );
-
-//        $result['rows'] = $productDetails->comboData();
+        
         $result['rows'] = $productDetails->dataGridRows($query_params);
-        var_dump($result['rows']);exit;
-        $result["total"] = $result['rows'][0]['total_rows'];
+//        var_dump($result['rows']);exit;
+        $result["total"] = 0;
+        
+        if(($result['rows'])) {
+            $result["total"] = $result['rows'][0]['total_rows'];
+        }
         echo CJSON::encode($result);
         Yii::app()->end();
     }
