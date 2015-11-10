@@ -130,6 +130,7 @@ class SiteController extends Controller {
 
 //        $result['rows'] = $productDetails->comboData();
         $result['rows'] = $productDetails->dataGridRows($query_params);
+        var_dump($result['rows']);exit;
         $result["total"] = $result['rows'][0]['total_rows'];
         echo CJSON::encode($result);
         Yii::app()->end();

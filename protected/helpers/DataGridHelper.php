@@ -13,15 +13,18 @@ class DataGridHelper {
 
         foreach ($ar_filterable as $key => $where) {
 
-            if (in_array($key, $ar_filter_keys)) {
-                if (is_numeric($where)) {
-                    $query_object->where($tab_prefix . $key . '=:' . $key, array(':' . $key => $where));
-                }
-                if (!is_numeric($where)) {
-                    $query_object->where(array('like', $key, '%' . $where . '%'));
+            if ($ar_filterable[$key] != '') {
+                if (in_array($key, $ar_filter_keys)) {
+                    if (is_numeric($where)) {
+                        $query_object->andWhere($tab_prefix . '.' . $key . '=:' . $key, array(':' . $key => $where));
+                    }
+                    if (!is_numeric($where)) {
+                        $query_object->andWhere(array('like', $key, '%' . $where . '%'));
+                    }
                 }
             }
         }
+        return $query_object;
     }
 
 }
