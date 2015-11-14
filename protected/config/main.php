@@ -38,6 +38,14 @@ return array(
     ),
     // application components
     'components' => array(
+        'clientScript' => array(
+            'scriptMap' => array(
+                'jquery.js' => '/js/plugins/jQuery/jQuery-2.1.4.min.js',
+//                'jquery.js' => '/js/plugins/jQuery/jQuery-2.1.4.js',
+                'jquery.min.js' => '/js/plugins/jQuery/jQuery-2.1.4.min.js',
+                'jquery-ui.min.js' => '/js/plugins/jQueryUI/jquery-ui.min.js',
+            ),
+        ),
         'user' => array(
             // enable cookie-based authentication
             'allowAutoLogin' => true,
@@ -89,7 +97,7 @@ return array(
                         '_MPDF_TEMP_PATH' => Yii::getPathOfAlias('application.runtime'),
                     ),
                     'class' => 'mpdf', // the literal class filename to be loaded from the vendors folder.
-                'defaultParams'     => array( // More info: http://mpdf1.com/manual/index.php?tid=184
+                    'defaultParams' => array(// More info: http://mpdf1.com/manual/index.php?tid=184
 //                  'mode'              => '', //  This parameter specifies the mode of the new document.
 //                  'format'            => 'A4', // format A4, A5, ...
 //                  'default_font_size' => 0, // Sets the default document font size in points (pt)
@@ -101,7 +109,7 @@ return array(
 //                  'mgh'               => 9, // margin_header
 //                  'mgf'               => 9, // margin_footer
 //                  'orientation'       => 'L', // landscape or portrait orientation
-                  )
+                    )
                 ),
                 'HTML2PDF' => array(
                     'librarySourcePath' => 'application.vendors.html2pdf.*',

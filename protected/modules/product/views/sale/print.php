@@ -1,12 +1,3 @@
-<?php
-$this->breadcrumbs = array(
-    'Product Sales' => array('index'),
-    'Sales List',
-);
-
-$this->menu = Ims_menu::$sale_menu;
-?>
-
 <div class="print" style="margin-left: auto; margin-right: auto; width: 50%;">
 
     <style type="text/css">

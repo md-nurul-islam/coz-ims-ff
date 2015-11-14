@@ -1,15 +1,3 @@
-<?php
-/* @var $this PurchaseController */
-/* @var $model ProductStockEntries */
-
-$this->breadcrumbs = array(
-    'Product Exchange' => array('index'),
-    'Exchange Report',
-);
-
-$this->menu = Ims_menu::$report_menu;
-?>
-
 <?php if (!$model_data) { ?>
 
 <div class="wide form">

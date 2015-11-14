@@ -1,12 +1,4 @@
 <?php
-/* @var $this ManageController */
-/* @var $model CustomerDetails */
-
-$this->breadcrumbs = array(
-    'Customer List' => array('index'),
-);
-
-$this->menu = Ims_menu::$customer_menu;
 
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){

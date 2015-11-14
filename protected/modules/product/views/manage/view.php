@@ -1,16 +1,3 @@
-<?php
-/* @var $this ManageController */
-/* @var $model ProductDetails */
-
-$this->breadcrumbs=array(
-	'Product List'=>array('index'),
-);
-
-$this->menu = Ims_menu::$product_menu;
-?>
-
-<h1>Product Details</h1>
-
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(

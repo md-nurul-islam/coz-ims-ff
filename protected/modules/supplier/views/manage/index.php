@@ -1,14 +1,4 @@
 <?php
-/* @var $this ManageController */
-/* @var $model SupplierDetails */
-
-$this->breadcrumbs = array(
-    'Supplier Details' => array('index'),
-    'Manage',
-);
-
-$this->menu = Ims_menu::$supplier_menu;
-
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
 	$('.search-form').toggle();

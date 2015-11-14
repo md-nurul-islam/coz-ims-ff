@@ -1,14 +1,4 @@
 <?php
-/* @var $this CategoryController */
-/* @var $model CategoryDetails */
-
-$this->breadcrumbs=array(
-	'Category Details'=>array('index'),
-	'List',
-);
-
-$this->menu = Ims_menu::$product_menu;
-
 /* Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
 	$('.search-form').toggle();

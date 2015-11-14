@@ -1,17 +1,3 @@
-<?php
-/* @var $this PurchaseController */
-/* @var $model ProductStockEntries */
-
-$this->breadcrumbs=array(
-	'Product Stock Entries'=>array('index'),
-	$model->id,
-);
-
-$this->menu = Ims_menu::$purchase_menu;
-?>
-
-<h1>View ProductStockEntries #<?php echo $model->id; ?></h1>
-
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(

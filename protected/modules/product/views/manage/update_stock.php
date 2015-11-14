@@ -1,10 +1,3 @@
-<?php
-/* @var $this ProductStockAvailController */
-/* @var $model ProductStockAvail */
-/* @var $form CActiveForm */
-$this->menu = Ims_menu::$product_menu;
-?>
-
 <div class="form">
 
     <?php

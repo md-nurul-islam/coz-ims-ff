@@ -1,18 +1,4 @@
 <?php
-/* @var $this SaleController */
-/* @var $model ProductStockSales */
-
-$this->breadcrumbs = array(
-    'Product Stock Sales' => array('index'),
-    $model->id,
-);
-
-$this->menu = Ims_menu::$sale_menu;
-?>
-
-<h1>View ProductStockSales #<?php echo $model->id; ?></h1>
-
-<?php
 $this->widget('zii.widgets.CDetailView', array(
     'data' => $model,
     'attributes' => array(

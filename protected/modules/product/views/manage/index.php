@@ -1,17 +1,4 @@
 <?php
-/* @var $this ManageController */
-/* @var $model ProductDetails */
-
-$this->breadcrumbs = array(
-    'Product List' => array('index'),
-);
-
-$this->menu = Ims_menu::$product_menu;
-?>
-
-<h1>Product List</h1>
-
-<?php
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'product-details-grid',
     'dataProvider' => $model->search(),

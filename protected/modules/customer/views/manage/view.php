@@ -1,17 +1,4 @@
 <?php
-/* @var $this ManageController */
-/* @var $model CustomerDetails */
-
-$this->breadcrumbs = array(
-    'Customer List' => array('index'),
-);
-
-$this->menu = Ims_menu::$customer_menu;
-?>
-
-<h1>Customer</h1>
-
-<?php
 $this->widget('zii.widgets.CDetailView', array(
     'data' => $model,
     'attributes' => array(

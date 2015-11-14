@@ -1,14 +1,4 @@
 <?php
-/* @var $this PurchaseController */
-/* @var $model ProductStockEntries */
-
-$this->breadcrumbs = array(
-    'Exchange Product' => array('index'),
-    'Exchange List',
-);
-
-$this->menu = Ims_menu::$exchange_menu;
-
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
     $('.search-form').toggle();
