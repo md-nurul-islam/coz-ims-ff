@@ -164,9 +164,9 @@ class User extends CActiveRecord {
         $username = (empty($username)) ? $this->username : $username;
         
         $criteria = new CDbCriteria;
-        $criteria->select = 'id, username, hashed_password, salt, email, store_id, status, user_type, full_name';
-        $criteria->compare('username', $username);
-        $criteria->compare('status', 1);
+        $criteria->select = 't.id, t.username, t.hashed_password, t.salt, t.email, t.store_id, t.status, t.user_type, t.full_name';
+        $criteria->compare('t.username', $username);
+        $criteria->compare('t.status', 1);
         
         $user = $this->with('storeInfo')->find($criteria);
         

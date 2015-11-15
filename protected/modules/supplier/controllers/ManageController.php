@@ -57,7 +57,8 @@ class ManageController extends Controller {
      */
     public function actionCreate() {
         $model = new SupplierDetails;
-
+        
+        $this->pageHeader = 'Add Supplier';
         $this->pageTitle = Yii::app()->name . ' - Add Supplier';
 
         // Uncomment the following line if AJAX validation is needed
@@ -137,7 +138,7 @@ class ManageController extends Controller {
      */
     public function actionIndex() {
         $model = new SupplierDetails('search');
-
+        $this->pageHeader = 'Supplier List';
         $this->pageTitle = Yii::app()->name . ' - Supplier List';
 
         $model->unsetAttributes();  // clear any default values

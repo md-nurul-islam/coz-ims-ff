@@ -55,8 +55,7 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        Advanced Form Elements
-                        <small>Preview</small>
+                        <?php echo $this->pageHeader; ?>
                     </h1>
 
                     <?php if (isset($this->breadcrumbs)): ?>
@@ -81,7 +80,9 @@
                 <!-- /.content -->
 
             </div>
-
+            
+            <div class="clearfix"></div>
+            
             <!-- FOOTER START -->
             <?php include 'footer.php'; ?>
             <!-- FOOTER END -->
