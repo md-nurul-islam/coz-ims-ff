@@ -119,7 +119,7 @@
         <script>
             $(function () {
                 //Initialize Select2 Elements
-                $(".select2").select2();
+                
 
                 //Datemask dd/mm/yyyy
                 $("#datemask").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
@@ -163,8 +163,8 @@
                 });
                 //Flat red color scheme for iCheck
                 $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-                    checkboxClass: 'icheckbox_flat-green',
-                    radioClass: 'iradio_flat-green'
+                    checkboxClass: 'icheckbox_square-blue',
+                    radioClass: 'iradio_square-blue'
                 });
 
                 //Colorpicker
