@@ -58,7 +58,7 @@
                         <?php echo $this->pageHeader; ?>
                     </h1>
 
-                    <?php if (isset($this->breadcrumbs)): ?>
+                    <?php /* if (isset($this->breadcrumbs)) { ?>
                         <?php
                         $this->widget('zii.widgets.CBreadcrumbs', array('tagName' => 'ol',
                             'homeLink' => '<li>' . CHtml::link('<i class="fa fa-dashboard"></i>Home', '/', array()) . '</li>',
@@ -69,7 +69,7 @@
                             'links' => $this->breadcrumbs,
                         ));
                         ?><!-- breadcrumbs -->
-                    <?php endif ?>
+                    <?php } */?>
 
                 </section>
 

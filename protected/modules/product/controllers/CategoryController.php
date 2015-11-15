@@ -45,6 +45,7 @@ class CategoryController extends Controller {
      */
     public function actionView($id) {
         $this->pageTitle = Yii::app()->name . ' - View Category';
+        $this->pageHeader = 'View Category';
 
         $this->render('view', array(
             'model' => $this->loadModel($id),
@@ -59,6 +60,7 @@ class CategoryController extends Controller {
         $model = new CategoryDetails;
 
         $this->pageTitle = Yii::app()->name . ' - Add Category';
+        $this->pageHeader = 'Add Category';
 
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($model);
@@ -88,6 +90,7 @@ class CategoryController extends Controller {
         $model = $this->loadModel($id);
 
         $this->pageTitle = Yii::app()->name . ' - Update Category';
+        $this->pageHeader = 'Update Category';
 
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($model);
@@ -130,6 +133,7 @@ class CategoryController extends Controller {
         $model = new CategoryDetails('search');
 
         $this->pageTitle = Yii::app()->name . ' - Category List';
+        $this->pageHeader = 'Category List';
 
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['CategoryDetails']))

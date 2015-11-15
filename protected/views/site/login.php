@@ -1,59 +1,54 @@
-<?php
-/* @var $this SiteController */
-/* @var $model LoginForm */
-/* @var $form CActiveForm  */
 
-$this->pageTitle=Yii::app()->name . ' - Login';
-$this->breadcrumbs=array(
-	'Login',
-);
-?>
+<div class="login-box-body">
+    <p class="login-box-msg">Sign in</p>
 
-<h1>Login</h1>
+    <?php
+    $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'login-form',
+        'enableClientValidation' => false,
+        'clientOptions' => array(
+            'validateOnSubmit' => true,
+        ),
+    ));
+    ?>
 
-<p>Please fill out the following form with your login credentials:</p>
+    <div class="form-group has-feedback">
+        <?php echo $form->textField($model, 'username', array('placeholder' => 'username', 'class' => 'form-control')); ?>
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+        <?php echo $form->error($model, 'username'); ?>
+    </div>
 
-<div class="form">
-<?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'login-form',
-	'enableClientValidation'=>true,
-	'clientOptions'=>array(
-		'validateOnSubmit'=>true,
-	),
-)); ?>
+    <div class="form-group has-feedback">
+        <?php echo $form->passwordField($model, 'hashed_password', array('placeholder' => 'Password', 'class' => 'form-control')); ?>
+        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        <?php echo $form->error($model, 'hashed_password'); ?>
+    </div>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
-    
-    <?php if (Yii::app()->user->hasFlash('error')) { ?>
-        <div class="errorMessage">
-            <?php echo Yii::app()->user->getFlash('error'); ?>
-        </div>
-    <?php } ?>
-    
-	<div class="row">
-		<?php echo $form->labelEx($model,'username'); ?>
-		<?php echo $form->textField($model,'username'); ?>
-		<?php echo $form->error($model,'username'); ?>
-	</div>
+    <div class="row">
+        <div class="col-xs-8">
+            <div class="checkbox icheck">
+                <label>
+                    <?php echo $form->checkBox($model, 'rememberMe'); ?>
+                    Remember Me
+                </label>
+            </div>
+        </div><!-- /.col -->
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'hashed_password'); ?>
-		<?php echo $form->passwordField($model,'hashed_password'); ?>
-		<?php echo $form->error($model,'hashed_password'); ?>
-		<p class="hint">
-			Hint: You may login with <kbd>demo</kbd>/<kbd>demo</kbd> or <kbd>admin</kbd>/<kbd>admin</kbd>.
-		</p>
-	</div>
+        <div class="col-xs-4">
+            <?php echo CHtml::submitButton('Sign In', array('class' => 'btn btn-primary btn-block btn-flat')); ?>
+        </div><!-- /.col -->
+    </div>
 
-	<div class="row rememberMe">
-		<?php echo $form->checkBox($model,'rememberMe'); ?>
-		<?php echo $form->label($model,'rememberMe'); ?>
-		<?php echo $form->error($model,'rememberMe'); ?>
-	</div>
 
-	<div class="row buttons">
-		<?php echo CHtml::submitButton('Login'); ?>
-	</div>
+    <?php $this->endWidget(); ?>
+    <!--
+        <div class="social-auth-links text-center">
+            <p>- OR -</p>
+            <a href="#" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign in using Facebook</a>
+            <a href="#" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Sign in using Google+</a>
+        </div> /.social-auth-links -->
 
-<?php $this->endWidget(); ?>
-</div><!-- form -->
+    <!--    <a href="#">I forgot my password</a><br>
+        <a href="register.html" class="text-center">Register a new membership</a>-->
+
+</div><!-- /.login-box-body -->

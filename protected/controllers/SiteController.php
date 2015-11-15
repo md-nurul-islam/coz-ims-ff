@@ -71,6 +71,7 @@ class SiteController extends Controller {
      * Displays the login page
      */
     public function actionLogin() {
+        $this->layout = 'login';
         $model = new User;
 
         // if it is ajax validation request

@@ -57,6 +57,7 @@ class ManageController extends Controller {
      */
     public function actionCreate() {
         $this->pageTitle = Yii::app()->name . ' - Add Product';
+        $this->pageHeader = 'Add Product';
 
         $model = new ProductDetails;
         $category_name = '';

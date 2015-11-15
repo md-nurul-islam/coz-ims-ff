@@ -1,9 +1,3 @@
-<?php
-/* @var $this ManageController */
-/* @var $model SupplierDetails */
-/* @var $form CActiveForm */
-?>
-
 <div class="col-lg-12">
 
     <div class="box box-info">

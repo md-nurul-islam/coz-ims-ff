@@ -41,6 +41,7 @@ class ManageController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate() {
+        $this->pageHeader = 'Update Store';
 
         $id = 1;
         if (!Yii::app()->user->isSuperAdmin) {

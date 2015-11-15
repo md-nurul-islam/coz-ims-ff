@@ -45,6 +45,7 @@ class ManageController extends Controller {
      */
     public function actionView($id) {
         $this->pageTitle = Yii::app()->name . ' - Customer Details';
+        $this->pageHeader = 'Customer Details';
         $this->render('view', array(
             'model' => $this->loadModel($id),
         ));
@@ -56,7 +57,8 @@ class ManageController extends Controller {
      */
     public function actionCreate() {
         $model = new CustomerDetails;
-
+        
+        $this->pageHeader = 'Add Customer';
         $this->pageTitle = Yii::app()->name . ' - Add Customer';
 
         // Uncomment the following line if AJAX validation is needed
@@ -88,6 +90,7 @@ class ManageController extends Controller {
         $model = $this->loadModel($id);
 
         $this->pageTitle = Yii::app()->name . ' - Update Customer';
+        $this->pageHeader = 'Update Customer';
 
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($model);
@@ -130,6 +133,7 @@ class ManageController extends Controller {
         $model = new CustomerDetails('search');
 
         $this->pageTitle = Yii::app()->name . ' - Customer List';
+        $this->pageHeader = 'Customer List';
 
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['CustomerDetails']))
