@@ -14,7 +14,7 @@ class Grade extends CActiveRecord {
      * @return string the associated database table name
      */
     public function tableName() {
-        return 'cims_grade';
+        return 'cims_grades';
     }
 
     /**

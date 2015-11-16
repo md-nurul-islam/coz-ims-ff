@@ -186,6 +186,7 @@ class PurchaseController extends Controller {
         $model = new ProductStockEntries;
 
         $this->pageTitle = Yii::app()->name . ' - Purchase Product';
+        $this->pageHeader = 'Purchase Product';
 
         $store_id = 1;
         if (!Yii::app()->user->isSuperAdmin) {
