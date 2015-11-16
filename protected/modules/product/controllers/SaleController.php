@@ -54,6 +54,7 @@ class SaleController extends Controller {
         $model->advance_sale_list = FALSE;
 
         $this->pageTitle = Yii::app()->name . ' - Sale';
+        $this->pageHeader = 'Sale Product';
 
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
