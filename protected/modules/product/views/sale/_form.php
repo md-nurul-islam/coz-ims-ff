@@ -15,7 +15,7 @@
 
     <div class="col-lg-12">
 
-        <div class="col-lg-8">
+        <div class="col-lg-7">
 
             <div class="box box-info">
 
@@ -94,20 +94,6 @@
                     <?php if (!$edit) { ?>
 
                         <div class="form-group">
-                            <?php echo $form->labelEx($model, 'ref_num', array('class' => 'col-sm-2 control-label', 'for' => 'ref_num')); ?>
-                            <div class="col-sm-9">
-                                <?php
-                                echo CHtml::textField('ref_num', '', array(
-                                    'size' => 25,
-                                    'maxlength' => 150,
-                                    'class' => 'form-control',
-                                    'placeholder' => 'Reference Number',
-                                ));
-                                ?>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
                             <?php echo $form->labelEx($model, 'product_details_id', array('class' => 'col-sm-2 control-label', 'for' => 'product_details_id')); ?>
                             <div class="col-sm-9">
                                 <?php echo CHtml::hiddenField('product_details_id', '', array('size' => 30)); ?>
@@ -116,20 +102,6 @@
                                     'size' => 30,
                                     'class' => 'form-control',
                                     'placeholder' => 'Product Name',
-                                ));
-                                ?>
-                                <div id="div_product_list" style="display: none; width: 202px; clear: both;"></div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <?php echo $form->labelEx($model, 'quantity', array('class' => 'col-sm-2 control-label', 'for' => 'quantity')); ?>
-                            <div class="col-sm-9">
-                                <?php
-                                echo CHtml::textField('quantity', '', array(
-                                    'size' => 10,
-                                    'class' => 'form-control',
-                                    'placeholder' => 'Quantity',
                                 ));
                                 ?>
                             </div>
@@ -208,7 +180,6 @@
                         </div>
 
                     <?php } ?>
-
 
                     <?php
                     if (!empty($ar_cart)) {
@@ -372,6 +343,59 @@
             </div>
 
         </div>
+
+
+        <!-- CART -->
+        <div class="col-lg-5">
+
+            <div class="box box-info">
+                <div class="box-body no-border">
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <?php
+                            echo CHtml::textField('ref_num', '', array(
+                                'size' => 25,
+                                'maxlength' => 150,
+                                'class' => 'form-control',
+                                'placeholder' => 'Type Reference Number',
+                            ));
+                            ?>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-12" id="div_product_list">
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="panel panel-default">
+
+                        <table class="table table-hover table-bordered table-responsive table-condensed">
+
+                            <thead>
+                                <tr>
+                                    <th class="col-sm-7">Item</th>
+                                    <th class="col-sm-2">Qty</th>
+                                    <th>Sub</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="cart-row"></tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- CART -->
+
     </div>
 
     <div class="box-footer">
@@ -386,333 +410,78 @@
     <?php $this->endWidget(); ?>
 </div>
 
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
-<script type="text/javascript">
+        <!-- Modal content-->
+        <div class="modal-content">
 
-    var prod_id = '';
-    var prod_name = '';
-    var reference_num = '';
-    var qty = 0;
-    var price = 0.00;
-    var sub_total = 0.00;
-    var cur_stock = 0;
-    var cart_div = 1;
-    var grand_total_1 = 0.00;
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
 
-    function get_subtotal() {
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <?php echo CHtml::label('Price', 'price', array('class' => 'col-sm-2 control-label')); ?>
+                        <div class="col-sm-9">
+                            <?php
+                            echo CHtml::textField('price', '', array(
+                                'class' => 'form-control',
+                                'placeholder' => 'Price',
+                            ));
+                            ?>
+                        </div>
+                    </div>
 
-        if ($('#quantity').val() == '') {
-            alert('Please Provide Quantity.');
-            setTimeout(function () {
-                $('#quantity').focus();
-            }, 1);
-            return false;
-        }
+                    <div class="form-group">
+                        <?php echo CHtml::label('Quanity', 'quanity', array('class' => 'col-sm-2 control-label')); ?>
+                        <div class="col-sm-9">
+                            <?php
+                            echo CHtml::textField('quanity', '', array(
+                                'class' => 'form-control',
+                                'placeholder' => 'Quanity',
+                            ));
+                            ?>
+                        </div>
+                    </div>
+                </form>
 
-        price = parseFloat($('#item_selling_price').val());
-        qty = parseInt($('#quantity').val());
+            </div>
 
-        if (qty <= 0) {
-            alert('Please Provide Quantity.');
-            setTimeout(function () {
-                $('#quantity').focus();
-            }, 1);
-            return false;
-        }
+            <div class="modal-footer">
+                <div class="col-md-11">
+                    <button type="button" class="btn btn-info" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
 
-        sub_total = parseFloat(qty * price).toFixed(2);
-        $('#item_subtotal').val(sub_total);
+    </div>
+</div>
 
-        return true;
+<style type="text/css">
+    .label {
+        font-size: 14px;
     }
-
-    function add_to_cart() {
-
-        prod_id = $('#product_details_id').val();
-
-        prod_name = $('#product_name').val();
-        reference_num = $('#ref_num').val();
-        cur_stock = $('#avail_stock').val();
-
-        var cart_row_html = '<div class="row cart_div" id="' + cart_div + '">' +
-                '<div class="form-group">' +
-                '<input id="ref_num' + cart_div + '" type="text" name="ProductStockSales[ref_num][]" value="' + reference_num + '" maxlength="150" size="25" readonly="readonly" />' +
-                '</div>' +
-                '<div class="form-group">' +
-                '<input id="product_details_id' + cart_div + '" type="hidden" name="ProductStockSales[product_details_id][]" value="' + prod_id + '" />' +
-                '<input id="product_details_name' + cart_div + '" type="text" name="ProductStockSales[product_details_name][]" value=\'' + prod_name + '\' size="30" readonly="readonly" />' +
-                '</div>' +
-                '<div class="left margin-right-30">' +
-                '<input id="quantity' + cart_div + '" type="text" name="ProductStockSales[quantity][]" value="' + qty + '" size="10" readonly="readonly" />' +
-                '</div>' +
-                '<div class="left margin-right-30">' +
-                '<input id="item_selling_price' + cart_div + '" type="text" name="ProductStockSales[item_selling_price][]" value="' + price.toFixed(2) + '" maxlength="12" size="10" readonly="readonly" />' +
-                '</div>' +
-                '<div class="form-group">' +
-                '<input id="cur_stock' + cart_div + '" type="text" name="cur_stock[]" value="' + cur_stock + '" readonly="readonly" size="10" maxlength="12" />' +
-                '</div>' +
-                '<div class="form-group">' +
-                '<input id="item_subtotal' + cart_div + '" class="sub_total" type="text" name="ProductStockSales[item_subtotal][]" value="' + sub_total + '" maxlength="12" readonly="readonly" />' +
-                '</div>' +
-                '<div class="custom-buttons">' +
-                '<img class="edit-button" data="' + cart_div + '" alt="Edit" src="/images/icons/edit.png" width="20" />' +
-                '<img class="delete-button" data="' + cart_div + '" alt="Delete" src="/images/icons/delete.png" width="20" />' +
-                '</div>' +
-                '</div>';
-
-        $('#cart-row').append(cart_row_html);
-        $('#ProductStockSales_grand_total_paid').val(0.00);
-        cart_div += 1;
-        setTimeout(function () {
-            $('#ref_num').focus();
-        }, 1);
-        $('#div_product_list').html('');
-        $('#div_product_list').hide();
-        return true;
+    i.fa-trash-o {
+        color: #CC0000;
+        cursor: pointer;
+        font-size: 18px;
     }
-
-    function reset_fields() {
-        $('#item_selling_price').val('');
-        $('#quantity').val('');
-        $('#product_details_id').val('');
-        $('#product_name').val('');
-        $('#ref_num').val('');
-        $('#avail_stock').val('');
-        $('#item_subtotal').val('');
-
-        return true;
+    #div_product_list {
+        display: none;
     }
-
-    function edit_current_row(cart_div_id) {
-
-        prod_id = $('#product_details_id' + cart_div_id).val();
-        prod_name = $('#product_details_name' + cart_div_id).val();
-        reference_num = $('#ref_num' + cart_div_id).val();
-        qty = $('#quantity' + cart_div_id).val();
-        price = $('#item_selling_price' + cart_div_id).val();
-        cur_stock = $('#cur_stock' + cart_div_id).val();
-        sub_total = $('#item_subtotal' + cart_div_id).val();
-
-        $('#product_details_id').val(prod_id);
-        $('#product_name').val(prod_name);
-        $('#ref_num').val(reference_num);
-        $('#quantity').val(qty);
-        $('#item_selling_price').val(price);
-        $('#avail_stock').val(cur_stock);
-        $('#item_subtotal').val(sub_total);
-
-        return true;
+    #div_product_list .radio-inline label {
+        font-weight: 600;
+        margin-right: 10px;
     }
-
-    function calculate_grand_total() {
-
-        var grand_total = 0.00;
-
-        $('#cart-row').find('input[class="sub_total"]').each(function () {
-            grand_total += parseFloat($(this).val());
-        });
-
-        grand_total = grand_total.toFixed(2);
-        grand_total_1 = grand_total;
-        $('#ProductStockSales_grand_total_payable').val(grand_total);
-        return true;
+    #div_product_list .radio-inline label:last-child {
+        margin-right: 0;
     }
+</style>
 
-    function calculate_balance() {
-        var paid = 0.00;
-        var balance = 0.00;
-        grand_total = parseFloat($('#ProductStockSales_grand_total_payable').val());
-
-        paid = parseFloat($('#ProductStockSales_grand_total_paid').val());
-
-<?php if ($model->advance_sale_list && !$edit) { ?>
-            balance = grand_total - paid;
-<?php } else { ?>
-            balance = paid - grand_total;
-<?php } ?>
-
-        if (paid > grand_total) {
-            $('#balance_lable').text('Return');
-        } else {
-            $('#balance_lable').text('Due');
-        }
-
-        balance = Math.abs(balance);
-        balance = balance.toFixed(2);
-
-        $('#ProductStockSales_grand_total_balance').val(balance);
-        return true;
-    }
-
-    $(document).ready(function () {
-
-        $(document).on('keypress', function (e) {
-
-            if (e.keyCode == 13) {
-                return false;
-            }
-
-        });
-
-<?php if ($edit) { ?>
-            grand_total_1 = $('#ProductStockSales_grand_total_payable').val();
-
-            var dis_cnt = $('#ProductStockSales_dis_amount').val();
-
-            if (dis_cnt != '' && dis_cnt > 0) {
-                var grand_total_2 = 0.00;
-                $('#cart-row').find('input[class="sub_total"]').each(function () {
-                    grand_total_2 += parseFloat($(this).val());
-                });
-                grand_total_1 = grand_total_2;
-            }
-
-<?php } ?>
-
-<?php if (!$edit) { ?>
-            $('#product-stock-entries-form').submit(function () {
-                if ($('#product_details_id').length <= 0 || $('#ProductStockSales_grand_total_paid').val() == '' || parseInt($('#ProductStockSales_grand_total_paid').val()) <= 0) {
-                    return false;
-                }
-            });
-<?php } ?>
-
-        $('#ref_num').blur(function () {
-            var ref_num = $(this).val();
-
-            if (ref_num == '') {
-                return false;
-            }
-
-            $.ajax({
-                url: 'product_stock_info',
-                type: 'post',
-                dataType: "json",
-                data: {ref_num: ref_num},
-                success: function (data) {
-                    var prod_list = '';
-                    if ((data.response != undefined)) {
-                        if ((data.response.length) > 1) {
-                            $.each(data.response, function (k, v) {
-                                prod_list += '<span class="prod-list-span">\n\
-                                                <input class="prod-list-radio" id="prod_' + v.product_id + '" type="radio" value="' + v.product_id + '" name="product_list" />\n\
-                                                <label class="prod-list-label" for="prod_' + v.product_id + '">' + v.product_name + '</label>\n\
-                                                <input type="hidden" id="prod_price_' + v.product_id + '" value="' + v.price + '" >\n\
-                                                <input type="hidden" id="prod_cur_stock_' + v.product_id + '" value="' + v.cur_stock + '" >\n\
-                                            </span>';
-                            });
-                            $('#div_product_list').html('');
-                            $('#div_product_list').html(prod_list);
-                            $('#div_product_list').show();
-                        } else {
-
-                            if (data.response[0].cur_stock <= 0) {
-                                alert('Product: --' + data.response[0].product_name + '-- is out of stock.');
-                                return false;
-                            }
-
-                            $('#div_product_list').html('');
-                            $('#div_product_list').hide();
-                            $('#product_name').val(data.response[0].product_name);
-                            $('#product_details_id').val(data.response[0].product_id);
-                            $('#item_selling_price').val(data.response[0].price);
-                            $('#avail_stock').val(data.response[0].cur_stock);
-                        }
-                    }
-
-                },
-                error: function () {
-
-                }
-            });
-
-        });
-
-        //        $('#quantity').blur(function() {
-        $('#item_selling_price').blur(function () {
-
-            var qty = parseInt($('#quantity').val());
-            //            var qty = parseInt($(this).val());
-            var cur_stock = parseInt($('#avail_stock').val());
-
-            if (qty > cur_stock) {
-                alert('Quantity is more than available stock.');
-                setTimeout(function () {
-                    $('#quantity').focus();
-                }, 1);
-                return false;
-            }
-
-            if (get_subtotal() === true) {
-                if (add_to_cart() === true) {
-                    if (reset_fields()) {
-                        calculate_grand_total();
-                        calculate_balance();
-                    }
-                }
-            }
-        });
-
-        $(document).on('click', '.delete-button', function () {
-            var row_num = $(this).attr('data');
-            $("div[id=" + row_num + "]").remove();
-            calculate_grand_total();
-        });
-
-        $(document).on('click', '.prod-list-radio', function () {
-            var ref_num = $('#ref_num').val();
-            var prod_id = $(this).val();
-
-            $.ajax({
-                url: 'product_stock_info',
-                type: 'post',
-                dataType: "json",
-                data: {prod_id: prod_id, ref_num: ref_num},
-                success: function (data) {
-
-                    if (data.response[0].cur_stock <= 0) {
-                        alert('Product: --' + data.response[0].product_name + '-- is out of stock.');
-                        return false;
-                    }
-
-
-                    $('#product_name').val(data.response[0].product_name);
-                    $('#product_details_id').val(data.response[0].product_id);
-                    $('#item_selling_price').val(data.response[0].price);
-                    $('#avail_stock').val(data.response[0].cur_stock);
-                },
-                error: function () {
-
-                }
-            });
-        });
-
-        $(document).on('click', '.edit-button', function () {
-            var row_num = $(this).attr('data');
-            if (edit_current_row(row_num)) {
-                $("div[id=" + row_num + "]").remove();
-            }
-            calculate_grand_total();
-        });
-
-        $(document).on('keyup', '#ProductStockSales_grand_total_paid', function () {
-            calculate_balance();
-        });
-
-        $(document).on('keyup', '#ProductStockSales_dis_amount', function () {
-
-            if ($(this).val() == '') {
-                $('#ProductStockSales_grand_total_payable').val(grand_total_1);
-            } else {
-                var dis_amnt = parseFloat($(this).val());
-                var total_payable = grand_total_1 - dis_amnt;
-                $('#ProductStockSales_grand_total_payable').val(total_payable.toFixed(2));
-
-<?php if ($edit) { ?>
-                    calculate_balance();
-<?php } ?>
-            }
-
-        });
-    });
-</script>
+<?php
+$cs = Yii::app()->getClientScript();
+$cs->registerScriptFile('/js/custom/cart.js', CClientScript::POS_END);
+?>
