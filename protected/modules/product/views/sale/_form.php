@@ -370,22 +370,29 @@
                         </div>
                     </div>
 
-
-
                     <div class="panel panel-default">
 
                         <table class="table table-hover table-bordered table-responsive table-condensed">
 
                             <thead>
                                 <tr>
-                                    <th class="col-sm-7">Item</th>
+                                    <th class="col-sm-6">Item</th>
+                                    <th class="col-sm-1">Price</th>
                                     <th class="col-sm-2">Qty</th>
-                                    <th>Sub</th>
-                                    <th></th>
+                                    <th class="col-sm-2">Total</th>
+                                    <th class="col-sm-1"></th>
                                 </tr>
                             </thead>
 
                             <tbody id="cart-row"></tbody>
+
+                            <tfoot id="cart-total">
+                                <tr>
+                                    <th colspan="2">Total Items</th>
+                                    <th></th>
+                                    <th colspan="3"></th>
+                                </tr>
+                            </tfoot>
 
                         </table>
 
@@ -423,6 +430,9 @@
 
             <div class="modal-body">
                 <form class="form-horizontal">
+
+                    <input type="hidden" id="cart_row_id_container" value="" />
+
                     <div class="form-group">
                         <?php echo CHtml::label('Price', 'price', array('class' => 'col-sm-2 control-label')); ?>
                         <div class="col-sm-9">
@@ -435,24 +445,13 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <?php echo CHtml::label('Quanity', 'quanity', array('class' => 'col-sm-2 control-label')); ?>
-                        <div class="col-sm-9">
-                            <?php
-                            echo CHtml::textField('quanity', '', array(
-                                'class' => 'form-control',
-                                'placeholder' => 'Quanity',
-                            ));
-                            ?>
-                        </div>
-                    </div>
                 </form>
 
             </div>
 
             <div class="modal-footer">
                 <div class="col-md-11">
-                    <button type="button" class="btn btn-info" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-info" data-dismiss="modal">Update</button>
                 </div>
             </div>
         </div>
@@ -478,6 +477,12 @@
     }
     #div_product_list .radio-inline label:last-child {
         margin-right: 0;
+    }
+    .cart_qty {
+        height: 30px;
+    }
+    #cart-row td {
+        cursor: pointer;
     }
 </style>
 
