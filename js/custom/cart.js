@@ -1,13 +1,4 @@
-var prod_id = '';
-var prod_name = '';
-var reference_num = '';
-var qty = 0;
-var price = 0.00;
-var sub_total = 0.00;
-var cur_stock = 0;
-var cart_row = 1;
-var grand_total_1 = 0.00;
-
+var cart_row = 0;
 function add_to_cart(prod_id, prod_name, cur_stock, price) {
 
     var prod_bg_color_class = 'label label-default';
@@ -25,21 +16,25 @@ function add_to_cart(prod_id, prod_name, cur_stock, price) {
     var cart_row_html = '<tr id="' + cart_row + '">' +
             '<td><div class="' + prod_bg_color_class + ' prod_modal">' + prod_name.trim() + '</div></td>' +
             '<td>' + price + '</td>' +
-            '<td><input type="hidden" class="form-control cart_prod_id" value="' + prod_id + '" /><input type="text" class="form-control cart_qty" value="' + qty + '" /><input type="hidden" class="form-control sell_price" value="' + price + '" /></td>' +
+            '<td>' +
+                '<input type="hidden" class="form-control cart_prod_id" value="' + prod_id + '" />' +
+                '<input type="text" class="form-control cart_qty" value="' + qty + '" />' +
+                '<input type="hidden" class="form-control sell_price" value="' + price + '" />' +
+            '</td>' +
             '<td>' + sub_total.toFixed(2) + '</td>' +
             '<td><i class="fa fa-trash-o"></i></td>' +
             '</tr>';
     $('#cart-row').append(cart_row_html);
     $('#ref_num').val('');
 
-    cart_row += 1;
     setTimeout(function () {
         $('#ref_num').focus();
     }, 1);
-    
+
     $('#div_product_list').html('');
     $('#div_product_list').hide();
     calculate_sub_total(cart_row);
+    cart_row += 1;
     return true;
 }
 
@@ -73,14 +68,48 @@ function edit_current_row(cart_div_id) {
     return true;
 }
 
+var cart_rows = {};
 function calculate_sub_total(cart_row_id) {
+
     var cart_body = $('#cart-row');
-    var price = parseFloat(cart_body.find('tr#' + cart_row_id + ' td:eq(2) .sell_price').val());
+    var item_id = parseFloat(cart_body.find('tr#' + cart_row_id + ' td:eq(2) .cart_prod_id').val());
     var qty = parseInt(cart_body.find('tr#' + cart_row_id + ' td:eq(2) .cart_qty').val());
-    var sub_total = parseFloat(qty * price).toFixed(2);
-    cart_body.find('tr#' + cart_row_id + ' td:eq(3)').text(sub_total);
+    var price = parseFloat(cart_body.find('tr#' + cart_row_id + ' td:eq(2) .sell_price').val());
+    var sub_total = parseFloat(qty * price);
+
+    cart_body.find('tr#' + cart_row_id + ' td:eq(3)').text(sub_total.toFixed(2));
+
+    var cart_item = {
+        item_id: item_id,
+        qty: qty,
+        price: price,
+        sub_total: sub_total,
+    };
+    cart_rows = cart_item;
+    
     calculate_grand_total();
     return true;
+}
+
+function add_cart_items() {
+    var post_data = cart_rows;
+    var cart_id = $('#cart_id').val();
+
+    if (cart_id > 0) {
+        $.ajax({
+            url: '/cart/add_items',
+            type: 'post',
+            dataType: 'json',
+            data: {cart_id: cart_id, post_data: post_data},
+        }).done(function (data) {
+            
+            console.log(data);
+            
+
+        }).fail(function (e) {
+
+        });
+    }
 }
 
 function calculate_grand_total() {
@@ -88,16 +117,52 @@ function calculate_grand_total() {
     var grand_total = 0.00;
     var grand_num_item = 0;
     var grand_qty = 0;
-    
+    var cart_id = $('#cart_id').val();
+    var discount = 0;
+    var post_data = {};
+
     $('#cart-row').find('tr').each(function () {
         grand_total += parseFloat($(this).find('td:eq(3)').text());
         grand_num_item += 1;
         grand_qty += parseInt($(this).find('td:eq(2) .cart_qty').val());
     });
-    
-    $('#cart-total tr th:eq(1)').text(grand_num_item + ' (' +grand_qty+ ')');
+
+    $('#cart-total tr th:eq(1)').text(grand_num_item + ' (' + grand_qty + ')');
     $('#cart-total tr th:eq(2)').text(grand_total.toFixed(2));
-    return true;
+
+    var url_action = (cart_id > 0) ? 'edit' : 'add';
+
+    post_data['cart_id'] = cart_id;
+    post_data['grand_total'] = grand_total;
+    post_data['discount'] = discount;
+    post_data['type'] = 'sale';
+
+    $.ajax({
+        url: '/cart/' + url_action,
+        type: 'post',
+        dataType: 'json',
+        data: post_data,
+    }).done(function (data) {
+        cart_id = data.cart_id;
+        $('#cart_id').val(cart_id);
+        add_cart_items();
+
+//        $.ajax({
+//            url: '/cart/' + url_action,
+//            type: 'post',
+//            dataType: 'json',
+//            data: post_data,
+//        }).done(function (data) {
+//            cart_id = data.cart_id;
+//            $('#cart_id').val(cart_id);
+//        }).fail(function (e) {
+//
+//        });
+
+    }).fail(function (e) {
+
+    });
+    return cart_id;
 }
 
 function calculate_balance() {
@@ -123,7 +188,8 @@ function calculate_balance() {
 }
 
 $(document).ready(function () {
-
+//    var retrievedObject = localStorage.getItem('cart-'+42);
+//console.log( JSON.parse(retrievedObject));
     $('body').addClass('sidebar-collapse');
     $(document).on('keypress', function (e) {
 
@@ -151,9 +217,8 @@ $(document).ready(function () {
                 cart_body.find('tr#' + cart_row_id + ' td:eq(2) .sell_price').val(parseFloat(price).toFixed(2));
 
                 calculate_sub_total(cart_row_id);
-                
+
                 $('.modal-header button.close').click();
-                
             }
         }
     });
@@ -266,85 +331,4 @@ $(document).ready(function () {
 
     /** TILL THIS FIXED **/
 
-    $(document).off('change', '.qty').on('change', '.qty', function () {
-        var cur_qty = parseInt($(this).val());
-        var sell_price = parseInt($(this).siblings('.sell_price').val());
-        $(this).parent('td').parent('tr td:nth-child(3)').text(sell_price + cur_qty);
-    });
-
-    grand_total_1 = $('#ProductStockSales_grand_total_payable').val();
-    var dis_cnt = $('#ProductStockSales_dis_amount').val();
-    if (dis_cnt != '' && dis_cnt > 0) {
-        var grand_total_2 = 0.00;
-        $('#cart-row').find('input[class="sub_total"]').each(function () {
-            grand_total_2 += parseFloat($(this).val());
-        });
-        grand_total_1 = grand_total_2;
-    }
-
-    $('#product-stock-entries-form').submit(function () {
-        if ($('#product_details_id').length <= 0 || $('#ProductStockSales_grand_total_paid').val() == '' || parseInt($('#ProductStockSales_grand_total_paid').val()) <= 0) {
-            return false;
-        }
-    });
-
-
-
-    //        $('#quantity').blur(function() {
-    $('#item_selling_price').blur(function () {
-
-        var qty = parseInt($('#quantity').val());
-        //            var qty = parseInt($(this).val());
-        var cur_stock = parseInt($('#avail_stock').val());
-        if (qty > cur_stock) {
-            alert('Quantity is more than available stock.');
-            setTimeout(function () {
-                $('#quantity').focus();
-            }, 1);
-            return false;
-        }
-
-        if (add_to_cart() === true) {
-            if (reset_fields()) {
-                calculate_grand_total();
-                calculate_balance();
-            }
-        }
-
-    });
-
-    $(document).on('click', '.delete-button', function () {
-        var row_num = $(this).attr('data');
-        $("div[id=" + row_num + "]").remove();
-        calculate_grand_total();
-    });
-
-
-
-    $(document).on('click', '.edit-button', function () {
-        var row_num = $(this).attr('data');
-        if (edit_current_row(row_num)) {
-            $("div[id=" + row_num + "]").remove();
-        }
-        calculate_grand_total();
-    });
-
-    $(document).on('keyup', '#ProductStockSales_grand_total_paid', function () {
-        calculate_balance();
-    });
-
-    $(document).on('keyup', '#ProductStockSales_dis_amount', function () {
-
-        if ($(this).val() == '') {
-            $('#ProductStockSales_grand_total_payable').val(grand_total_1);
-        } else {
-            var dis_amnt = parseFloat($(this).val());
-            var total_payable = grand_total_1 - dis_amnt;
-            $('#ProductStockSales_grand_total_payable').val(total_payable.toFixed(2));
-
-            calculate_balance();
-
-        }
-
-    });
 });

@@ -37,6 +37,22 @@
         <link rel="stylesheet" href="/css/dist/css/skins/_all-skins.min.css" />
 
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>
+
+        <script type="text/javascript">
+            function storageAvailable(type) {
+                try {
+                    var storage = window[type],
+                            x = '__storage_test__';
+                    storage.setItem(x, x);
+                    storage.removeItem(x);
+                    return true;
+                }
+                catch (e) {
+                    return false;
+                }
+            }
+        </script>
+
     </head>
 
     <body class="skin-blue sidebar-mini">
@@ -59,17 +75,17 @@
                     </h1>
 
                     <?php /* if (isset($this->breadcrumbs)) { ?>
-                        <?php
-                        $this->widget('zii.widgets.CBreadcrumbs', array('tagName' => 'ol',
-                            'homeLink' => '<li>' . CHtml::link('<i class="fa fa-dashboard"></i>Home', '/', array()) . '</li>',
-                            'activeLinkTemplate' => '<li><a href="{url}">{label}</a></li>',
-                            'inactiveLinkTemplate' => '<li class="active">{label}</li>',
-                            'htmlOptions' => array('class' => 'breadcrumb'),
-                            'separator' => '',
-                            'links' => $this->breadcrumbs,
-                        ));
-                        ?><!-- breadcrumbs -->
-                    <?php } */?>
+                      <?php
+                      $this->widget('zii.widgets.CBreadcrumbs', array('tagName' => 'ol',
+                      'homeLink' => '<li>' . CHtml::link('<i class="fa fa-dashboard"></i>Home', '/', array()) . '</li>',
+                      'activeLinkTemplate' => '<li><a href="{url}">{label}</a></li>',
+                      'inactiveLinkTemplate' => '<li class="active">{label}</li>',
+                      'htmlOptions' => array('class' => 'breadcrumb'),
+                      'separator' => '',
+                      'links' => $this->breadcrumbs,
+                      ));
+                      ?><!-- breadcrumbs -->
+                      <?php } */ ?>
 
                 </section>
 
@@ -80,9 +96,9 @@
                 <!-- /.content -->
 
             </div>
-            
+
             <div class="clearfix"></div>
-            
+
             <!-- FOOTER START -->
             <?php include 'footer.php'; ?>
             <!-- FOOTER END -->
@@ -119,7 +135,7 @@
         <script>
             $(function () {
                 //Initialize Select2 Elements
-                
+
 
                 //Datemask dd/mm/yyyy
                 $("#datemask").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});

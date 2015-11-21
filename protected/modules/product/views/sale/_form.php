@@ -14,6 +14,8 @@
     ?>
 
     <div class="col-lg-12">
+        
+        <input type="hidden" id="cart_id" value="0" />
 
         <div class="col-lg-7">
 
@@ -88,69 +90,6 @@
                             <?php echo $form->error($model, 'sale_date', array('class' => 'alert alert-danger')); ?>
                         </div>
                     </div>
-
-
-
-                    <?php if (!$edit) { ?>
-
-                        <div class="form-group">
-                            <?php echo $form->labelEx($model, 'product_details_id', array('class' => 'col-sm-2 control-label', 'for' => 'product_details_id')); ?>
-                            <div class="col-sm-9">
-                                <?php echo CHtml::hiddenField('product_details_id', '', array('size' => 30)); ?>
-                                <?php
-                                echo CHtml::textField('product_name', '', array(
-                                    'size' => 30,
-                                    'class' => 'form-control',
-                                    'placeholder' => 'Product Name',
-                                ));
-                                ?>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <?php echo $form->labelEx($model, 'item_selling_price', array('class' => 'col-sm-2 control-label', 'for' => 'item_selling_price')); ?>
-                            <div class="col-sm-9">
-                                <?php
-                                echo CHtml::textField('item_selling_price', '', array(
-                                    'size' => 10,
-                                    'maxlength' => 12,
-                                    'readonly' => false,
-                                    'class' => 'form-control',
-                                    'placeholder' => 'Selling Price',
-                                ));
-                                ?>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <?php echo CHtml::label('Avail Stock', 'avail_stock', array('class' => 'col-sm-2 control-label', 'for' => 'avail_stock')); ?>
-                            <div class="col-sm-9">
-                                <?php
-                                echo CHtml::textField('avail_stock', '', array(
-                                    'maxlength' => 12,
-                                    'size' => 10,
-                                    'readonly' => true,
-                                    'class' => 'form-control',
-                                    'placeholder' => 'Billnumber',
-                                ));
-                                ?>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <?php echo $form->labelEx($model, 'item_subtotal', array('class' => 'col-sm-2 control-label', 'for' => 'item_subtotal')); ?>
-                            <div class="col-sm-9">
-                                <?php
-                                echo CHtml::textField('item_subtotal', '', array(
-                                    'maxlength' => 12,
-                                    'class' => 'form-control',
-                                    'placeholder' => 'Item Subtotal',
-                                ));
-                                ?>
-                            </div>
-                        </div>
-
-                    <?php } ?>
 
                     <?php if ($edit) { ?>
 
@@ -233,7 +172,6 @@
                             <?php echo $form->error($model, 'dis_amount', array('class' => 'alert alert-danger')); ?>
                         </div>
                     </div>
-
 
                     <div class="form-group">
                         <?php echo $form->labelEx($model, 'grand_total_payable', array('class' => 'col-sm-2 control-label')); ?>

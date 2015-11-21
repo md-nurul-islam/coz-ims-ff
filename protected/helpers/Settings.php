@@ -23,6 +23,11 @@ class Settings{
         '3' => 'Sales Operator',
     );
     
+    public static $_cart_types = array(
+        'sale' => '1',
+        'purchase' => '2',
+    );
+    
     public static $_num_zeros_for_barcode = array(
         '0' => '000000',
         '1' => '00000',
