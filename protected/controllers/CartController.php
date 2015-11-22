@@ -91,8 +91,9 @@ class CartController extends Controller {
         if (!Yii::app()->request->isAjaxRequest || $cart_id < 1) {
             throw new CHttpException(400, 'Bad Request.');
         }
-
         $cart_iems = Yii::app()->request->getParam('post_data');
+
+        Yii::app()->db->createCommand()->delete(TmpCartItems::model()->tableName(), 'cart_id=:cart_id AND product_details_id = :item_id', array(':cart_id' => $cart_id, ':item_id' => $cart_iems['item_id']));
         
         $tmp_cart_item = new TmpCartItems;
         $tmp_cart_item->cart_id = $cart_id;

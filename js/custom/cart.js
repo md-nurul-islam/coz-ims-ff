@@ -1,30 +1,43 @@
-var cart_row = 0;
+var cart_row = 1;
 function add_to_cart(prod_id, prod_name, cur_stock, price) {
 
     var prod_bg_color_class = 'label label-default';
-    var qty = 1;
-    var sub_total = parseInt(qty) * parseFloat(price);
+    var cart_row_html = '';
+    var row_exists_id = check_exists(prod_name, prod_id);
 
-    if (cur_stock <= 5) {
-        prod_bg_color_class = 'label label-danger';
-    } else if (cur_stock <= 10) {
-        prod_bg_color_class = 'label label-warning';
-    } else {
-        prod_bg_color_class = 'label label-info';
-    }
+console.log(row_exists_id);
 
-    var cart_row_html = '<tr id="' + cart_row + '">' +
-            '<td><div class="' + prod_bg_color_class + ' prod_modal">' + prod_name.trim() + '</div></td>' +
-            '<td>' + price + '</td>' +
-            '<td>' +
+    if (row_exists_id == 0) {
+
+        var qty = 1;
+        var sub_total = parseInt(qty) * parseFloat(price);
+
+        if (cur_stock <= 5) {
+            prod_bg_color_class = 'label label-danger';
+        } else if (cur_stock <= 10) {
+            prod_bg_color_class = 'label label-warning';
+        } else {
+            prod_bg_color_class = 'label label-info';
+        }
+
+        cart_row_html = '<tr id="' + cart_row + '">' +
+                '<td><div class="' + prod_bg_color_class + ' prod_modal">' + prod_name.trim() + '</div></td>' +
+                '<td>' + price + '</td>' +
+                '<td>' +
                 '<input type="hidden" class="form-control cart_prod_id" value="' + prod_id + '" />' +
                 '<input type="text" class="form-control cart_qty" value="' + qty + '" />' +
                 '<input type="hidden" class="form-control sell_price" value="' + price + '" />' +
-            '</td>' +
-            '<td>' + sub_total.toFixed(2) + '</td>' +
-            '<td><i class="fa fa-trash-o"></i></td>' +
-            '</tr>';
-    $('#cart-row').append(cart_row_html);
+                '</td>' +
+                '<td>' + sub_total.toFixed(2) + '</td>' +
+                '<td><i class="fa fa-trash-o"></i></td>' +
+                '</tr>';
+        $('#cart-row').append(cart_row_html);
+        calculate_sub_total(cart_row);
+        cart_row += 1;
+    } else {
+        calculate_sub_total(row_exists_id);
+    }
+
     $('#ref_num').val('');
 
     setTimeout(function () {
@@ -33,8 +46,7 @@ function add_to_cart(prod_id, prod_name, cur_stock, price) {
 
     $('#div_product_list').html('');
     $('#div_product_list').hide();
-    calculate_sub_total(cart_row);
-    cart_row += 1;
+
     return true;
 }
 
@@ -86,9 +98,35 @@ function calculate_sub_total(cart_row_id) {
         sub_total: sub_total,
     };
     cart_rows = cart_item;
-    
+
     calculate_grand_total();
     return true;
+}
+
+function check_exists(prod_name, prod_id) {
+
+    var cart_tr_id = 0;
+    var cart_rows = $('#cart-row').find('tr');
+    
+    if (cart_rows.length > 0) {
+        
+        cart_rows.each(function (e) {
+            var existing_item_name = $(this).find('td:eq(0) div.prod_modal').text().trim();
+            var existing_item_id = $(this).find('td:eq(2) .cart_prod_id').val();
+            var existing_item_qty = parseInt($(this).find('td:eq(2) .cart_qty').val());
+            
+            if ((existing_item_name == prod_name.trim()) && (existing_item_id == prod_id)) {
+                existing_item_qty += 1;
+                cart_tr_id = parseInt($(this).attr('id'));
+                $(this).find('td:eq(2) .cart_qty').val(0);
+                $(this).find('td:eq(2) .cart_qty').val(existing_item_qty);
+                return false;
+            }
+        });
+    }
+
+    
+    return cart_tr_id;
 }
 
 function add_cart_items() {
@@ -102,9 +140,9 @@ function add_cart_items() {
             dataType: 'json',
             data: {cart_id: cart_id, post_data: post_data},
         }).done(function (data) {
-            
-            console.log(data);
-            
+
+//            console.log(data);
+
 
         }).fail(function (e) {
 
@@ -249,6 +287,7 @@ $(document).ready(function () {
 
     $(document).off('click', 'i.fa-trash-o').on('click', 'i.fa-trash-o', function () {
         $(this).parent('td').parent('tr').remove();
+        calculate_grand_total();
     });
 
     $(document).off('blur', '#ref_num').on('blur', '#ref_num', function () {
