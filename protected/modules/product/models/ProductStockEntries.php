@@ -179,7 +179,7 @@ class ProductStockEntries extends CActiveRecord {
 
         $criteria->with = array(
             'productDetails' => array(
-                'select' => 'productDetails.id, productDetails.product_name, productDetails.purchase_price, productDetails.selling_price',
+                'select' => 'productDetails.id, productDetails.product_name, productDetails.purchase_price, productDetails.selling_price, productDetails.vat, productDetails.discount',
             ),
         );
 

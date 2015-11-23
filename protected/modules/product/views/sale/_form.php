@@ -14,7 +14,7 @@
     ?>
 
     <div class="col-lg-12">
-        
+
         <input type="hidden" id="cart_id" value="0" />
 
         <div class="col-lg-7">
@@ -24,6 +24,11 @@
                 <div class="box-body">
 
                     <?php echo $form->errorSummary($model); ?>
+
+                    <input type="hidden" id="global_vat" name="global_vat" value="<?php echo Settings::$_vat; ?>" />
+                    <input type="hidden" id="global_vat_mode" name="global_vat_mode" value="<?php echo Settings::$_vat_mode; ?>" />
+                    <input type="hidden" id="global_discount" name="global_discount" value="<?php echo Settings::$_discount; ?>" />
+                    <input type="hidden" id="global_discount_mode" name="global_discount_mode" value="<?php echo Settings::$_discount_mode; ?>" />
 
                     <div class="form-group">
                         <div class="col-sm-10">
@@ -326,9 +331,16 @@
 
                             <tfoot id="cart-total">
                                 <tr>
+                                    <th class="vat_cell">Vat</th>
+                                    <th class="vat_cell_val"></th>
+                                    <th class="discount_cell">Discount</th>
+                                    <th class="discount_cell_val"></th>
+                                    <th></th>
+                                </tr>
+                                <tr>
                                     <th colspan="2">Total Items</th>
                                     <th></th>
-                                    <th colspan="3"></th>
+                                    <th colspan="2"></th>
                                 </tr>
                             </tfoot>
 
@@ -355,49 +367,39 @@
     <?php $this->endWidget(); ?>
 </div>
 
-<div id="myModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Modal Header</h4>
-            </div>
-
-            <div class="modal-body">
-                <form class="form-horizontal">
-
-                    <input type="hidden" id="cart_row_id_container" value="" />
-
-                    <div class="form-group">
-                        <?php echo CHtml::label('Price', 'price', array('class' => 'col-sm-2 control-label')); ?>
-                        <div class="col-sm-9">
-                            <?php
-                            echo CHtml::textField('price', '', array(
-                                'class' => 'form-control',
-                                'placeholder' => 'Price',
-                            ));
-                            ?>
-                        </div>
-                    </div>
-
-                </form>
-
-            </div>
-
-            <div class="modal-footer">
-                <div class="col-md-11">
-                    <button type="button" class="btn btn-info" data-dismiss="modal">Update</button>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>
+<?php $this->renderPartial('//modals/_price'); ?>
+<?php $this->renderPartial('//modals/_vat'); ?>
 
 <style type="text/css">
+    label {
+        cursor: pointer;
+    }
+    .vat_options li {
+        margin-right: 20px;
+    }
+    .vat_options li:last-child {
+        margin-right: 0;
+    }
+    .form-horizontal p {
+        margin-top: 3px; 
+        color: #666666; 
+    }
+    .vat_cell, .discount_cell {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+    tfoot#cart-total tr:first-child {
+        background-color: #00c0ef;
+        color: #ffffff;
+    }
+    tfoot#cart-total tr:last-child {
+        background-color: #A4DCCF;
+        color: #666666;
+    }
+    .modal-header {
+        background-color: #3c8dbc;
+        color: #ffffff;
+    }
     .label {
         font-size: 14px;
     }

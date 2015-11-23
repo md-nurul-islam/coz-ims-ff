@@ -608,6 +608,8 @@ class SaleController extends Controller {
             $_data['product_name'] = $row['productDetails']->product_name;
             $_data['price'] = ( empty($row['productDetails']->selling_price) || ($row['productDetails']->selling_price <= 0) ) ? $row->selling_price : $row['productDetails']->selling_price;
             $_data['cur_stock'] = $row['productDetails']['productStockAvails']->quantity;
+            $_data['vat'] = Settings::$_vat;
+            $_data['discount'] = Settings::$_discount;
             $response[] = $_data;
         }
 

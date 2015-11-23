@@ -28,6 +28,11 @@ class Settings{
         'purchase' => '2',
     );
     
+    public static $_vat = 1.5;
+    public static $_vat_mode = '%';
+    public static $_discount = 0;
+    public static $_discount_mode = '%';
+    
     public static $_num_zeros_for_barcode = array(
         '0' => '000000',
         '1' => '00000',

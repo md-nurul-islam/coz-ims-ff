@@ -43,11 +43,13 @@ class CartController extends Controller {
         $grand_total = Yii::app()->request->getParam('grand_total');
         $discount = Yii::app()->request->getParam('discount');
         $type = Yii::app()->request->getParam('type');
+        $vat = Yii::app()->request->getParam('vat');
 
         $tmp_cart = new TmpCart;
         $tmp_cart->grand_total = $grand_total;
         $tmp_cart->cart_type = Settings::$_cart_types[$type];
         $tmp_cart->discount = $discount;
+        $tmp_cart->vat = $vat;
         $tmp_cart->insert();
 
         $response['cart_id'] = $tmp_cart->id;
@@ -64,10 +66,11 @@ class CartController extends Controller {
         if (!Yii::app()->request->isAjaxRequest || $cart_id < 1) {
             throw new CHttpException(400, 'Bad Request.');
         }
-
+        
         $grand_total = Yii::app()->request->getParam('grand_total');
         $discount = Yii::app()->request->getParam('discount');
         $type = Yii::app()->request->getParam('type');
+        $vat = Yii::app()->request->getParam('vat');
 
         $tmp_cart = TmpCart::model()->findByPk($cart_id);
         
@@ -75,6 +78,7 @@ class CartController extends Controller {
             $tmp_cart->grand_total = $grand_total;
             $tmp_cart->cart_type = Settings::$_cart_types[$type];
             $tmp_cart->discount = $discount;
+            $tmp_cart->vat = $vat;
             $tmp_cart->update();
         }
         $response['cart_id'] = $tmp_cart->id;
