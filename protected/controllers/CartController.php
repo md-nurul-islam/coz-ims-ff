@@ -20,7 +20,7 @@ class CartController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('add', 'edit', 'add_items'),
+                'actions' => array('add', 'edit', 'add_items', 'remove_item'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -107,5 +107,30 @@ class CartController extends Controller {
         echo CJSON::encode($response);
         Yii::app()->end();
     }
+    
+    /**
+     * This is the action to handle external exceptions.
+     */
+    public function actionRemove_item() {
+        $cart_id = Yii::app()->request->getParam('cart_id');
+        
+        if (!Yii::app()->request->isAjaxRequest || $cart_id < 1) {
+            throw new CHttpException(400, 'Bad Request.');
+        }
+        $cart_iems = Yii::app()->request->getParam('post_data');
+        
+        if(Yii::app()->db->createCommand()->delete(TmpCartItems::model()->tableName(), 'cart_id=:cart_id AND product_details_id = :item_id', array(':cart_id' => $cart_id, ':item_id' => $cart_iems['item_id']))) {
+            $response['success'] = TRUE;
+            $response['errors'] = [];
+        } else {
+            $response['success'] = FALSE;
+            $response['errors'][] = 'Not Deleted';
+        }
+        
+        echo CJSON::encode($response);
+        Yii::app()->end();
+    }
+    
+    
 
 }
