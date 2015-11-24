@@ -259,18 +259,6 @@ $(document).ready(function () {
         var global_discount_mode = $('#global_discount_mode').val();
         $('#vat').val(global_vat + global_vat_mode);
         $('#discount').val(global_discount + global_discount_mode);
-
-        if (global_vat_mode == '%') {
-
-        }
-//        
-//        var price = parseFloat($(this).parent('td').parent('tr').find('.sell_price').val());
-//        var cart_row_id = $(this).parent('td').parent('tr').attr('id');
-//        var cur_stock = parseInt($(this).parent('td').parent('tr').find('.cart_cur_stock').val());
-//        $('#cart_row_id_container').val(cart_row_id);
-//
-//        $('#price').val(price.toFixed(2));
-//        $('#cur_stock').val(cur_stock);
         $('#vatModal').modal('show');
     });
 
@@ -465,6 +453,10 @@ $(document).ready(function () {
 
             }
         });
+    });
+    
+    $(document).off('click', '.btn-payment').on('click', '.btn-payment', function() {
+        $('#paymentModal').modal('show');
     });
 
     /** TILL THIS FIXED **/

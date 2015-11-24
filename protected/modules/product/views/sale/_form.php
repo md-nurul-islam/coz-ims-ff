@@ -165,6 +165,7 @@
                     }
                     ?>
 
+
                     <div class="form-group">
                         <?php echo $form->labelEx($model, 'dis_amount', array('class' => 'col-sm-2 control-label')); ?>
                         <div class="col-sm-9">
@@ -315,6 +316,8 @@
 
                     <div class="panel panel-default">
 
+
+
                         <table class="table table-hover table-bordered table-responsive table-condensed">
 
                             <thead>
@@ -346,31 +349,80 @@
 
                         </table>
 
+                        <div class="clearfix"></div>
+
+                        <div class="col-md-12" id="div_buttons_wrapper">
+
+                            <div class="col-md-8">
+                                <div class="col-md-6">
+                                    <button type="button" class="btn btn-primary form-control">Save</button>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <button type="button" class="btn btn-warning form-control">Print</button>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button type="button" class="btn btn-danger form-control">Cancel</button>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 pull-right">
+                                <button type="button" class="btn btn-success form-control btn-payment">Payment</button>
+                            </div>
+
+
+                        </div>
+
                     </div>
+
                 </div>
+
             </div>
-
         </div>
-        <!-- CART -->
 
     </div>
+    <!-- CART -->
 
-    <div class="box-footer">
-        <?php
-        echo CHtml::submitButton($model->isNewRecord ? 'Sale' : 'Update', array(
-            'id' => 'btn-submit',
-            'class' => 'btn btn-info pull-right'
-        ));
-        ?>
-    </div>
+</div>
 
-    <?php $this->endWidget(); ?>
+<div class="box-footer">
+    <?php
+    echo CHtml::submitButton($model->isNewRecord ? 'Sale' : 'Update', array(
+        'id' => 'btn-submit',
+        'class' => 'btn btn-info pull-right'
+    ));
+    ?>
+</div>
+
+<?php $this->endWidget(); ?>
 </div>
 
 <?php $this->renderPartial('//modals/_price'); ?>
 <?php $this->renderPartial('//modals/_vat'); ?>
+<?php $this->renderPartial('//modals/_payment'); ?>
 
 <style type="text/css">
+    #div_buttons_wrapper {
+        padding: 0;
+        margin-top: 20px;
+    }
+    #div_buttons_wrapper .col-md-6,
+    #div_buttons_wrapper .col-md-12,
+    #div_buttons_wrapper .col-md-8 {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    #div_buttons_wrapper .col-md-4 {
+        padding-left: 10px;
+        padding-right: 0;
+    }
+    #div_buttons_wrapper .col-md-4 button {
+        height: 68px;
+    }
+    #div_buttons_wrapper button {
+        border-radius: 0;
+    }
     label {
         cursor: pointer;
     }
