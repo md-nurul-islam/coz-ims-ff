@@ -166,18 +166,18 @@ function calculate_grand_total() {
     });
 
     $('#cart-total tr:last-child th:eq(1)').text(grand_num_item + ' (' + grand_qty + ')');
-    
+
     var total_vat = parseFloat($('#cart-total tr:first-child th.vat_cell_val').text().trim());
     var total_discount = parseFloat($('#cart-total tr:first-child th.discount_cell_val').text().trim());
-    
+
     if (total_vat != '' && total_vat > 0) {
         grand_total = grand_total + total_vat;
     }
-    
+
     if (total_discount != '' && total_discount > 0) {
         grand_total = grand_total - total_discount;
     }
-    
+
     $('#cart-total tr:last-child th:eq(2)').text(grand_total.toFixed(2));
 
     var url_action = (cart_id > 0) ? 'edit' : 'add';
@@ -269,9 +269,9 @@ $(document).ready(function () {
 
         var global_vat_mode = $('#global_vat_mode').val();
         var global_discount_mode = $('#global_discount_mode').val();
-        
+
         var grand_total = parseFloat($('#cart-total tr:last-child th:eq(2)').text());
-        
+
         if (global_vat_mode == '%') {
             if ((vat.indexOf("%") > -1)) {
                 vat = vat.slice(0, -1);
@@ -280,9 +280,9 @@ $(document).ready(function () {
             vat = vat.slice(0, -1);
         }
         $('#global_vat').val(vat);
-        
+
         vat = (grand_total * parseFloat(vat)) / 100;
-        
+
         if (global_discount_mode == '%') {
             if ((discount.indexOf("%") > -1)) {
                 discount = discount.slice(0, -1);
@@ -291,14 +291,14 @@ $(document).ready(function () {
             discount = discount.slice(0, -1);
         }
         $('#global_discount').val(discount);
-        
+
         discount = (grand_total * parseFloat(discount)) / 100;
-        
+
         $('th.vat_cell_val').text(vat.toFixed(2));
         $('th.discount_cell_val').text(discount.toFixed(2));
-        
+
         $('#vatModal').modal('hide');
-        
+
         calculate_grand_total();
     });
 
@@ -454,9 +454,53 @@ $(document).ready(function () {
             }
         });
     });
-    
-    $(document).off('click', '.btn-payment').on('click', '.btn-payment', function() {
+
+    $(document).off('click', '.btn-payment').on('click', '.btn-payment', function () {
+        var grand_total = parseFloat($('#cart-total tr:last-child th:eq(2)').text()).toFixed(2);
+        var grand_total_items = $('#cart-total tr:last-child th:eq(1)').text();
+        var cart_id = $('#cart_id').val();
+
+        $('#payment-total-items').text(grand_total_items);
+        $('#payment-total-payable').text(grand_total);
+        $('#payment_cart_row_id_container').val(cart_id);
+
         $('#paymentModal').modal('show');
+    });
+
+    $(document).off('change', '#paymentModal #payment_mode').on('change', '#paymentModal #payment_mode', function (e) {
+        var payment_mode = parseInt($('#paymentModal #payment_mode').val());
+        var grand_total = parseFloat($('#cart-total tr:last-child th:eq(2)').text());
+        var total_balance = 0.00;
+
+        if (payment_mode > 0) {
+            $('.card_information').show('slow');
+            
+            $('#paying_amount').prop('readonly', true);
+            $('#paying_amount').val(grand_total.toFixed(2));
+            $('#payment-total-paying').text(grand_total.toFixed(2));
+            total_balance = grand_total - grand_total;
+            $('#payment-total-balance').text(total_balance.toFixed(2));
+            
+        } else {
+            $('#paying_amount').prop('readonly', false);
+            $('.card_information').hide('slow');
+        }
+    });
+
+    $(document).off('keyup', '#paying_amount').on('keyup', '#paying_amount', function (e) {
+        var er = /^-?[0-9]+$/;
+        var amount = parseFloat($(this).val());
+        var grand_total = parseFloat($('#cart-total tr:last-child th:eq(2)').text());
+        var total_balance = 0.00;
+        
+        if (er.test(amount)) {
+            $('#payment-total-paying').text(amount.toFixed(2));
+            total_balance = amount - grand_total;
+            $('#payment-total-balance').text(total_balance.toFixed(2));
+        } else {
+            alert('Number only.');
+        }
+
     });
 
     /** TILL THIS FIXED **/

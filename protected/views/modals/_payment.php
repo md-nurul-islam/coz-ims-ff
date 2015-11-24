@@ -1,4 +1,5 @@
 <div id="paymentModal" class="modal fade" role="dialog">
+
     <div class="modal-dialog">
 
         <!-- Modal content-->
@@ -12,40 +13,109 @@
             <div class="modal-body">
                 <form class="form-horizontal">
 
-                    <input type="hidden" id="cart_row_id_container" value="" />
+                    <input type="hidden" id="payment_cart_row_id_container" value="" />
+
+                    <div class="col-md-12 panel panel-info">
+                        <table class="payment table table-hover table-bordered table-responsive table-condensed">
+
+                            <tbody id="payment-cart-row">
+                                <tr>
+                                    <th class="col-sm-6">
+                                        <span class="pull-left">Total Items</span>
+                                        <span class="pull-right" id="payment-total-items"></span>
+                                    </th>
+                                    <th class="col-sm-6">
+                                        <span class="pull-left">Total Payable</span>
+                                        <span class="pull-right" id="payment-total-payable"></span>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th class="col-sm-6">
+                                        <span class="pull-left">Total Paying</span>
+                                        <span class="pull-right" id="payment-total-paying"></span>
+                                    </th>
+                                    <th class="col-sm-6">
+                                        <span class="pull-left">Total Change</span>
+                                        <span class="pull-right" id="payment-total-balance"></span>
+                                    </th>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                    
+                    <div class="clearfix"></div>
 
                     <div class="form-group">
-                        <?php echo CHtml::label('Price', 'price', array('class' => 'col-sm-2 control-label')); ?>
-                        <div class="col-sm-9">
+                        <div class="col-lg-12">
                             <?php
-                            echo CHtml::textField('price', '', array(
+                            echo CHtml::textArea('note', '', array(
                                 'class' => 'form-control',
-                                'placeholder' => 'Price',
+                                'placeholder' => 'Note'
                             ));
                             ?>
                         </div>
                     </div>
+                    
+                    <div class="clearfix"></div>
 
                     <div class="form-group">
-                        <?php echo CHtml::label('Current Stock', 'cur_stock', array('class' => 'col-sm-2 control-label')); ?>
-                        <div class="col-sm-9">
+                        <div class="col-lg-6">
                             <?php
-                            echo CHtml::textField('cur_stock', '', array(
+                            echo CHtml::textField('paying_amount', '', array(
                                 'class' => 'form-control',
-                                'placeholder' => 'Current Stock',
-                                'readonly' => TRUE
+                                'placeholder' => 'Amount',
+                                'id' => 'paying_amount'
+                            ));
+                            ?>
+                        </div>
+                        <div class="col-lg-6">
+                            <?php
+                            echo CHtml::dropDownList('paying_mode', '', Settings::$_available_payment_options, array(
+                                'class' => 'form-control select2 col-lg-12',
+                                'id' => 'payment_mode'
                             ));
                             ?>
                         </div>
                     </div>
+                    
+                    <div class="form-group card_information">
+                        
+                        <div class="col-lg-3">
+                            <?php
+                            echo CHtml::dropDownList('paying_mode', '', Settings::$_available_card_options, array(
+                                'class' => 'form-control select2 col-lg-12',
+                                'id' => 'card_option'
+                            ));
+                            ?>
+                        </div>
+                        <div class="col-lg-6">
+                            <?php
+                            echo CHtml::textField('card_number', '', array(
+                                'class' => 'form-control',
+                                'placeholder' => 'Card Number'
+                            ));
+                            ?>
+                        </div>
+                        <div class="col-lg-3">
+                            <?php
+                            echo CHtml::textField('card_cvc', '', array(
+                                'class' => 'form-control',
+                                'placeholder' => 'CVC'
+                            ));
+                            ?>
+                        </div>
+                        
+                    </div>
+
 
                 </form>
 
             </div>
 
             <div class="modal-footer">
-                <div class="col-md-11">
-                    <button type="button" class="btn btn-info" data-dismiss="modal">Update</button>
+                <div class="col-md-12">
+                    <button id="paymetn-btn-paid" type="button" class="btn btn-info col-md-4 pull-right" data-dismiss="modal">Paid</button>
                 </div>
             </div>
         </div>

@@ -42,6 +42,19 @@ class Settings{
         '5' => '0',
         '6' => '',
     );
+    
+    public static $_available_payment_options = array(
+        0 => 'Cache',
+        1 => 'Debit Card',
+        2 => 'Credit Card',
+    );
+    
+    public static $_available_card_options = array(
+        0 => 'Visa',
+        1 => 'Master Card',
+        2 => 'AMEX',
+        3 => 'DBBL Nexus',
+    );
 }
 
 ?>

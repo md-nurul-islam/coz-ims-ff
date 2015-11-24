@@ -165,66 +165,6 @@
                     }
                     ?>
 
-
-                    <div class="form-group">
-                        <?php echo $form->labelEx($model, 'dis_amount', array('class' => 'col-sm-2 control-label')); ?>
-                        <div class="col-sm-9">
-                            <?php
-                            echo $form->textField($model, 'dis_amount', array(
-                                'class' => 'form-control',
-                                'placeholder' => 'Discount',
-                            ));
-                            ?>
-                            <?php echo $form->error($model, 'dis_amount', array('class' => 'alert alert-danger')); ?>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <?php echo $form->labelEx($model, 'grand_total_payable', array('class' => 'col-sm-2 control-label')); ?>
-                        <div class="col-sm-9">
-                            <?php
-                            echo $form->textField($model, 'grand_total_payable', array(
-                                'readonly' => true,
-                                'class' => 'form-control',
-                                'placeholder' => 'Grand Total Payable',
-                            ));
-                            ?>
-                            <?php echo $form->error($model, 'grand_total_payable', array('class' => 'alert alert-danger')); ?>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <?php echo $form->labelEx($model, 'grand_total_paid', array('class' => 'col-sm-2 control-label')); ?>
-                        <div class="col-sm-9">
-                            <?php
-                            echo $form->textField($model, 'grand_total_paid', array(
-                                'size' => 12,
-                                'maxlength' => 12,
-                                'readonly' => ($edit && !$model->advance_sale_list) ? TRUE : FALSE,
-                                'class' => 'form-control',
-                                'placeholder' => 'Grand Total Paid',
-                            ));
-                            ?>
-                            <?php echo $form->error($model, 'grand_total_paid', array('class' => 'alert alert-danger')); ?>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <?php echo $form->labelEx($model, 'grand_total_balance', array('class' => 'col-sm-2 control-label', 'id' => 'balance_lable')); ?>
-                        <div class="col-sm-9">
-                            <?php
-                            echo $form->textField($model, 'grand_total_balance', array(
-                                'size' => 12,
-                                'maxlength' => 12,
-                                'readonly' => true,
-                                'class' => 'form-control',
-                                'placeholder' => 'Grand Total Balance',
-                            ));
-                            ?>
-                            <?php echo $form->error($model, 'grand_total_balance', array('class' => 'alert alert-danger')); ?>
-                        </div>
-                    </div>
-
                     <div class="form-group">
                         <?php echo $form->labelEx($model, 'due_payment_date', array('class' => 'col-sm-2 control-label')); ?>
                         <div class="col-sm-9">
@@ -316,8 +256,6 @@
 
                     <div class="panel panel-default">
 
-
-
                         <table class="table table-hover table-bordered table-responsive table-condensed">
 
                             <thead>
@@ -403,6 +341,17 @@
 <?php $this->renderPartial('//modals/_payment'); ?>
 
 <style type="text/css">
+    .card_information {
+        display: none;
+    }
+    
+    table.payment tr:first-child > th {
+        border-bottom: 1px solid #ccc !important;
+    }
+    table.payment tr th:first-child {
+        border-right: 1px solid #ccc;
+    }
+
     #div_buttons_wrapper {
         padding: 0;
         margin-top: 20px;
@@ -448,7 +397,7 @@
         background-color: #A4DCCF;
         color: #666666;
     }
-    .modal-header {
+    #paymentModal .modal-header, #paymentModal .modal-footer {
         background-color: #3c8dbc;
         color: #ffffff;
     }
@@ -482,3 +431,13 @@
 $cs = Yii::app()->getClientScript();
 $cs->registerScriptFile('/js/custom/cart.js', CClientScript::POS_END);
 ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".select2").select2({
+            minimumResultsForSearch: Infinity,
+            width: '100%'
+        });
+        $(".select2").tooltip();
+        $(".select2").tooltip('disable');
+    });
+</script>
