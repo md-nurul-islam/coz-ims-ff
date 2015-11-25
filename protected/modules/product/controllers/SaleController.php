@@ -26,7 +26,7 @@ class SaleController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'advance_sale', 'advance_sale_list', 'view', 'create', 'update', 'product_stock_info', 'print'),
+                'actions' => array('index', 'advance_sale', 'advance_sale_list', 'view', 'create', 'update', 'product_stock_info', 'print', 'getdata', 'getStatusComboData'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -129,10 +129,10 @@ class SaleController extends Controller {
                     $ar_serial_num[] = $model->serial_num;
                     $ar_cur_stock[] = $_POST['cur_stock'][$i];
                 } else {
-                    
+
                     $mod_pro_entr = new ProductStockEntries();
                     $obj_pro_entr = $mod_pro_entr->findByAttributes(array('product_details_id' => $model->product_details_id, 'store_id' => $store_id, 'ref_num' => $model->ref_num));
-                    
+
                     $stock_info = $stock_info->getStockByProdId((int) $model->product_details_id, $store_id, $obj_pro_entr->grade_id);
 
                     $cur_stock = intval($stock_info->quantity);
@@ -327,7 +327,7 @@ class SaleController extends Controller {
             $model->store_id = 1;
         }
         $model->advance_sale_list = TRUE;
-        
+
         $this->render('index', array(
             'model' => $model,
             'pageSize' => $pageSize,
@@ -366,13 +366,13 @@ class SaleController extends Controller {
         $model_data = $model->getSalesInfo(NULL, $id);
         $edit = TRUE;
         $model->isNewRecord = FALSE;
-        
+
         $cur_date = strtotime(date('Y-m-d', Settings::getBdLocalTime()));
         $sale_date = strtotime($model_data[0]->sale_date);
-        
+
         $model->advance_sale_list = FALSE;
-        
-        if($sale_date > $cur_date) {
+
+        if ($sale_date > $cur_date) {
             $model->advance_sale_list = TRUE;
         }
 
@@ -481,7 +481,7 @@ class SaleController extends Controller {
             'edit' => $edit,
         ));
     }
-    
+
     /**
      * Deletes a particular model.
      * If deletion is successful, the browser will be redirected to the 'admin' page.
@@ -500,40 +500,41 @@ class SaleController extends Controller {
      */
     public function actionIndex() {
 
-        $model = new ProductStockSales();
-        $pageSize = 0;
+//        $model = new ProductStockSales();
+//        $pageSize = 0;
+//
+//        $model->unsetAttributes();  // clear any default values
+//        if (isset($_GET['ProductStockSales'])) {
+//            if (isset($_GET['ProductStockSales']['id']) && !empty($_GET['ProductStockSales']['id'])) {
+//                $model->sales_id = $_GET['ProductStockSales']['id'];
+//            }
+//
+//            if (isset($_GET['ProductStockSales']['product_name']) && !empty($_GET['ProductStockSales']['product_name'])) {
+//                $model->product_name = $_GET['ProductStockSales']['product_name'];
+//            }
+//
+//            if (isset($_GET['ProductStockSales']['grand_total_paid']) && !empty($_GET['ProductStockSales']['grand_total_paid'])) {
+//                $model->grand_total_paid = $_GET['ProductStockSales']['grand_total_paid'];
+//            }
+//        }
+//
+//        if (isset($_GET['pageSize'])) {
+//            $pageSize = (int) $_GET['pageSize'];
+//            $model->pageSize = $pageSize;
+//            unset($_GET['pageSize']);
+//        }
+//
+//        if (!Yii::app()->user->isSuperAdmin) {
+//            $model->store_id = Yii::app()->user->storeId;
+//        } else {
+//            $model->store_id = 1;
+//        }
 
-        $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['ProductStockSales'])) {
-            if (isset($_GET['ProductStockSales']['id']) && !empty($_GET['ProductStockSales']['id'])) {
-                $model->sales_id = $_GET['ProductStockSales']['id'];
-            }
-
-            if (isset($_GET['ProductStockSales']['product_name']) && !empty($_GET['ProductStockSales']['product_name'])) {
-                $model->product_name = $_GET['ProductStockSales']['product_name'];
-            }
-
-            if (isset($_GET['ProductStockSales']['grand_total_paid']) && !empty($_GET['ProductStockSales']['grand_total_paid'])) {
-                $model->grand_total_paid = $_GET['ProductStockSales']['grand_total_paid'];
-            }
-        }
-
-        if (isset($_GET['pageSize'])) {
-            $pageSize = (int) $_GET['pageSize'];
-            $model->pageSize = $pageSize;
-            unset($_GET['pageSize']);
-        }
-
-        if (!Yii::app()->user->isSuperAdmin) {
-            $model->store_id = Yii::app()->user->storeId;
-        } else {
-            $model->store_id = 1;
-        }
-
-        $this->render('index', array(
-            'model' => $model,
-            'pageSize' => $pageSize,
-        ));
+//        $this->render('index', array(
+//            'model' => $model,
+//            'pageSize' => $pageSize,
+//        ));
+        $this->render('index');
     }
 
     /**
@@ -614,6 +615,47 @@ class SaleController extends Controller {
         }
 
         return $response;
+    }
+
+    /*
+     * Grid functions
+     */
+
+    public function actionGetdata() {
+
+        foreach (DataGridHelper::$_ar_non_filterable_vars as $nfv_key => $nfv_var_name) {
+            ${$nfv_var_name} = Yii::app()->request->getParam($nfv_key);
+        }
+
+        $rows = array();
+        $offest = 0;
+
+        if (${DataGridHelper::$_ar_non_filterable_vars['page']} > 1) {
+            $offest = (${DataGridHelper::$_ar_non_filterable_vars['page']} - 1) * ${DataGridHelper::$_ar_non_filterable_vars['rows']};
+        }
+
+        $ProductStockSales = new ProductStockSales();
+
+        $ProductStockSales->pageSize = 20;
+        $query_params = array(
+            'offset' => $offest,
+            'order' => ${DataGridHelper::$_ar_non_filterable_vars['sort']} . ' ' . ${DataGridHelper::$_ar_non_filterable_vars['order']},
+            'where' => $_POST,
+        );
+
+        $result['rows'] = $ProductStockSales->dataGridRows($query_params);
+//        var_dump($result['rows']);exit;
+        $result["total"] = 0;
+
+        if (($result['rows'])) {
+            $result["total"] = $result['rows'][0]['total_rows'];
+        }
+        echo CJSON::encode($result);
+        Yii::app()->end();
+    }
+
+    public function actionGetStatusComboData() {
+        echo CJSON::encode(ProductStockSales::model()->statusComboData());
     }
 
 }

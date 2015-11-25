@@ -1,22 +1,24 @@
 <?php
 
 /**
- * This is the model class for table "cims_tmp_cart".
+ * This is the model class for table "cims_tmp_cart_items".
  *
- * The followings are the available columns in table 'cims_tmp_cart':
+ * The followings are the available columns in table 'cims_tmp_cart_items':
  * @property integer $id
- * @property string $grand_total
- * @property integer $cart_type
+ * @property string $cart_id
+ * @property integer $product_details_id
+ * @property integer $quantity
+ * @property string $sub_total
  * @property string $discount
  * @property string $vat
  */
-class TmpCart extends CActiveRecord {
+class CartItems extends CActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return 'cims_tmp_cart';
+        return 'cims_cart_items';
     }
 
     /**
@@ -26,12 +28,13 @@ class TmpCart extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('grand_total', 'required'),
-            array('cart_type', 'numerical', 'integerOnly' => true),
-            array('grand_total, discount, vat', 'length', 'max' => 13),
+            array('cart_id, product_details_id, quantity, sub_total', 'required'),
+            array('product_details_id, quantity', 'numerical', 'integerOnly' => true),
+            array('cart_id', 'length', 'max' => 10),
+            array('sub_total, discount, vat', 'length', 'max' => 13),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, grand_total, cart_type, discount, vat', 'safe', 'on' => 'search'),
+            array('id, cart_id, product_details_id, quantity, sub_total, discount, vat', 'safe', 'on' => 'search'),
         );
     }
 
@@ -51,8 +54,10 @@ class TmpCart extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'grand_total' => 'Grand Total',
-            'cart_type' => 'Cart Type',
+            'cart_id' => 'Cart',
+            'product_details_id' => 'Product Details',
+            'quantity' => 'Quantity',
+            'sub_total' => 'Sub Total',
             'discount' => 'Discount',
             'vat' => 'Vat',
         );
@@ -76,8 +81,10 @@ class TmpCart extends CActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
-        $criteria->compare('grand_total', $this->grand_total, true);
-        $criteria->compare('cart_type', $this->cart_type);
+        $criteria->compare('cart_id', $this->cart_id, true);
+        $criteria->compare('product_details_id', $this->product_details_id);
+        $criteria->compare('quantity', $this->quantity);
+        $criteria->compare('sub_total', $this->sub_total, true);
         $criteria->compare('discount', $this->discount, true);
         $criteria->compare('vat', $this->vat, true);
 
@@ -90,27 +97,10 @@ class TmpCart extends CActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return TmpCart the static model class
+     * @return TmpCartItems the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
-    }
-
-    public function getCart($id = 0, $type = 1) {
-
-        $command = Yii::app()->db->createCommand()
-                ->from($this->tableName() . ' t')
-                ->join(TmpCartItems::model()->tableName() . ' ci', 't.id = ci.cart_id');
-        
-        if($id > 0) {
-            $command->andWhere('t.id = :cid', array(':cid' => $id));
-        }
-        
-        if($type > 0) {
-            $command->andWhere('t.cart_type = :ctype', array(':ctype' => $type));
-        }
-        
-        return $command->queryAll();
     }
 
 }

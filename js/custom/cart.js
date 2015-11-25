@@ -474,13 +474,13 @@ $(document).ready(function () {
 
         if (payment_mode > 0) {
             $('.card_information').show('slow');
-            
+
             $('#paying_amount').prop('readonly', true);
             $('#paying_amount').val(grand_total.toFixed(2));
             $('#payment-total-paying').text(grand_total.toFixed(2));
             total_balance = grand_total - grand_total;
             $('#payment-total-balance').text(total_balance.toFixed(2));
-            
+
         } else {
             $('#paying_amount').prop('readonly', false);
             $('.card_information').hide('slow');
@@ -492,7 +492,7 @@ $(document).ready(function () {
         var amount = parseFloat($(this).val());
         var grand_total = parseFloat($('#cart-total tr:last-child th:eq(2)').text());
         var total_balance = 0.00;
-        
+
         if (er.test(amount)) {
             $('#payment-total-paying').text(amount.toFixed(2));
             total_balance = amount - grand_total;
@@ -500,6 +500,32 @@ $(document).ready(function () {
         } else {
             alert('Number only.');
         }
+
+    });
+
+    $(document).off('click', '#paymetn-btn-paid').on('click', '#paymetn-btn-paid', function (e) {
+        e.preventDefault();
+        var cart_id = $('#payment_cart_row_id_container').val();
+        var note = $('#note').val();
+        var payment_method = $('#payment_mode').val();
+        var post_data = {};
+        
+        post_data['type'] = 'sale';
+        post_data['note'] = note;
+        post_data['payment_method'] = payment_method;
+
+        $.ajax({
+            url: '/cart/payment',
+            type: 'post',
+            dataType: 'json',
+            data: {cart_id: cart_id, post_data: post_data},
+        }).done(function (data) {
+            window.location.reload();
+        }).fail(function (e) {
+            console.log(e);
+        });
+        
+        return false;
 
     });
 

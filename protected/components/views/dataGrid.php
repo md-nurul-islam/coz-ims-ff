@@ -17,7 +17,9 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/jquery.easyui.min.js', CClientS
 $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CClientScript::POS_HEAD);
 ?>
 
-<div style="width: 90%">
+<div class="clearfix"></div>
+
+<div class="col-lg-12">
 
     <div id="filters" style="padding:5px; height:auto">
         <div style="margin-bottom:5px">
@@ -49,7 +51,7 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CCl
         <?php } ?>
     </div>
 
-    <table id="dg" style="width:80%; height:auto;"
+    <table id="dg" class="table table-bordered table-hover" style="height:auto;"
            data-options="
            rownumbers:true,
            singleSelect:true,
@@ -60,7 +62,6 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CCl
            toolbar="#filters"
            iconCls="icon-save"
            fitColumns="true"
-           title="Client Side Pagination"
            >
         <thead>
             <tr>

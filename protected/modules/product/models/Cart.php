@@ -10,13 +10,13 @@
  * @property string $discount
  * @property string $vat
  */
-class TmpCart extends CActiveRecord {
+class Cart extends CActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return 'cims_tmp_cart';
+        return 'cims_cart';
     }
 
     /**
@@ -27,7 +27,6 @@ class TmpCart extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('grand_total', 'required'),
-            array('cart_type', 'numerical', 'integerOnly' => true),
             array('grand_total, discount, vat', 'length', 'max' => 13),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -52,7 +51,6 @@ class TmpCart extends CActiveRecord {
         return array(
             'id' => 'ID',
             'grand_total' => 'Grand Total',
-            'cart_type' => 'Cart Type',
             'discount' => 'Discount',
             'vat' => 'Vat',
         );
@@ -77,7 +75,6 @@ class TmpCart extends CActiveRecord {
 
         $criteria->compare('id', $this->id);
         $criteria->compare('grand_total', $this->grand_total, true);
-        $criteria->compare('cart_type', $this->cart_type);
         $criteria->compare('discount', $this->discount, true);
         $criteria->compare('vat', $this->vat, true);
 
@@ -94,23 +91,6 @@ class TmpCart extends CActiveRecord {
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
-    }
-
-    public function getCart($id = 0, $type = 1) {
-
-        $command = Yii::app()->db->createCommand()
-                ->from($this->tableName() . ' t')
-                ->join(TmpCartItems::model()->tableName() . ' ci', 't.id = ci.cart_id');
-        
-        if($id > 0) {
-            $command->andWhere('t.id = :cid', array(':cid' => $id));
-        }
-        
-        if($type > 0) {
-            $command->andWhere('t.cart_type = :ctype', array(':ctype' => $type));
-        }
-        
-        return $command->queryAll();
     }
 
 }

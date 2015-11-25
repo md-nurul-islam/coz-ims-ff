@@ -48,7 +48,7 @@ class DataGrid extends CWidget {
 
     private function setUrl() {
         $this->url = '/';
-        $this->url .= (!empty($this->module)) ? $this->module . '/' : $this->controller . '/' . $this->action;
+        $this->url .= (!empty($this->module)) ? $this->module . '/' . $this->controller . '/' . $this->action : $this->controller . '/' . $this->action;
     }
 
 }

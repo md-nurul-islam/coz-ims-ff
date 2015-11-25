@@ -39,7 +39,7 @@
 class ProductStockSales extends CActiveRecord {
 
     public $product_name;
-    public $pageSize;
+    public $pageSize = 20;
     public $advance_sale_list = FALSE;
     
     /**
@@ -410,6 +410,91 @@ class ProductStockSales extends CActiveRecord {
         }
         
         return $model;
+    }
+    
+    /**
+     * @return array for Data Grid Headers customized attribute labels (name=>label)
+     * remove the attributes don't needed in the Grid
+     */
+    public function dataGridHeaders() {
+        return array(
+            'id' => array('label' => 'ID', 'sortable' => 'true', 'width' => 50),
+            'billnumber' => array('label' => 'Bill Number', 'sortable' => 'true', 'width' => 50),
+            'product_name' => array('label' => 'Product Name', 'sortable' => 'true', 'width' => 180),
+            'grand_total' => array('label' => 'Total', 'sortable' => 'true', 'width' => 50),
+            'discount' => array('label' => 'Discount', 'sortable' => 'true', 'width' => 50),
+            'vat' => array('label' => 'Vat', 'sortable' => 'true', 'width' => 50),
+        );
+    }
+
+    public function dataGridFilters() {
+        return array(
+            'billnumber' => array('id' => 'billnumber', 'class' => 'easyui-textbox', 'label' => 'Bill Number: ', 'style' => 'width:80px;'),
+            'product_name' => array('id' => 'product_name', 'class' => 'easyui-textbox', 'label' => 'Product: ', 'style' => 'width:80px;'),
+            'quantity' => array('id' => 'quantity', 'class' => 'easyui-textbox', 'label' => 'Qty: ', 'style' => 'width:80px;'),
+        );
+    }
+
+    public function statusComboData() {
+
+        return array(
+            array(
+                'id' => '',
+                'text' => 'Select',
+            ),
+            array(
+                'id' => '1',
+                'text' => 'Active',
+            ),
+            array(
+                'id' => '0',
+                'text' => 'Inactive',
+            ),
+        );
+    }
+
+    public function dataGridRows($params = array()) {
+        
+        $offset = 0;
+        if (isset($params['offset']) && $params['offset'] > 0) {
+            $offset = $params['offset'];
+        }
+
+        $order = 'id DESC';
+        if (isset($params['order']) && !empty($params['order'])) {
+            $order = $params['order'];
+        }
+        
+        $command = Yii::app()->db->createCommand()
+                ->from($this->tableName() . ' t')
+                ->join(Cart::model()->tableName() . ' c', 'c.id = t.cart_id')
+                ->join(CartItems::model()->tableName() . ' ci', 'c.id = ci.cart_id')
+                ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = ci.product_details_id')
+                ->offset($offset)
+                ->limit($this->pageSize)
+                ->order($order)
+                ->group('t.cart_id')
+        ;
+        
+        $sub_command = Yii::app()->db->createCommand()
+                ->select('count( DISTINCT t.cart_id )')
+                ->from($this->tableName() . ' t')
+                ->join(Cart::model()->tableName() . ' c', 'c.id = t.cart_id')
+                ->join(CartItems::model()->tableName() . ' ci', 'c.id = ci.cart_id')
+                ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = ci.product_details_id')
+                ->where('t.cart_id IS NOT NULL')
+        ;
+        
+        $filter_keys = array_keys($this->dataGridFilters());
+        if (isset($params['where']) && !empty($params['where'])) {
+            $new_command_objs = DataGridHelper::processFilterableVars($command, $params['where'], $filter_keys, 't', $sub_command);
+            $command = $new_command_objs[0];
+            $sub_command = $new_command_objs[1];
+        }
+        
+        $command->select('t.id, GROUP_CONCAT(pd.product_name) as product_name, c.grand_total, c.discount, c.vat, (' . $sub_command->getText() . ') AS total_rows');
+        
+        return $command->queryAll();
     }
     
 }
