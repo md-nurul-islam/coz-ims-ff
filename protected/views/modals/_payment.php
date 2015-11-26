@@ -83,9 +83,8 @@
                         
                         <div class="col-lg-3">
                             <?php
-                            echo CHtml::dropDownList('paying_mode', '', Settings::$_available_card_options, array(
+                            echo CHtml::dropDownList('card_option', '', Settings::$_available_card_options, array(
                                 'class' => 'form-control select2 col-lg-12',
-                                'id' => 'card_option'
                             ));
                             ?>
                         </div>

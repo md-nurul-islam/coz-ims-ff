@@ -146,7 +146,7 @@ class CartController extends Controller {
         $post_data = Yii::app()->request->getParam('post_data');
         $cart_type = $post_data['type'];
 
-        $data = call_user_func_array(array($this, 'proccess' . $cart_type), array($cart_id));
+        $data = call_user_func_array(array($this, 'proccess' . $cart_type), array($cart_id, $post_data));
 
         if ($data) {
             $respons['success'] = TRUE;
@@ -160,7 +160,7 @@ class CartController extends Controller {
         Yii::app()->end();
     }
 
-    private function proccessSale($cart_id) {
+    private function proccessSale($cart_id, $post_data) {
 
         $tmp_cart = new TmpCart;
         $tmp_cart_data = $tmp_cart->getCart($cart_id);
@@ -169,6 +169,17 @@ class CartController extends Controller {
         $cart->grand_total = $tmp_cart_data[0]['grand_total'];
         $cart->discount = $tmp_cart_data[0]['discount'];
         $cart->vat = $tmp_cart_data[0]['vat'];
+        
+        $sales = new ProductStockSales;
+        $sales->cart_id = $cart->id;
+        $sales->billnumber = $tmp_cart_data[0]['discount'];
+        $sales->customer_id = $tmp_cart_data[0]['vat'];
+        $sales->sale_date = $tmp_cart_data[0]['vat'];
+        $sales->due_payment_date = $tmp_cart_data[0]['vat'];
+        $sales->payment_method = $tmp_cart_data[0]['vat'];
+        $sales->store_id = $tmp_cart_data[0]['vat'];
+        $sales->is_advance = $tmp_cart_data[0]['vat'];
+        $sales->card_type = $tmp_cart_data[0]['vat'];
 
         if ($cart->insert()) {
             Yii::app()->db->createCommand()
@@ -186,7 +197,6 @@ class CartController extends Controller {
             $cart_item->insert();
             $i++;
         }
-
 
         Yii::app()->db->createCommand()
                 ->delete(TmpCartItems::model()->tableName(), 'cart_id = :cid', array(':cid' => $cart_id));
