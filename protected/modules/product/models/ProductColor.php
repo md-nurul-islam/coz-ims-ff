@@ -1,21 +1,21 @@
 <?php
 
 /**
- * This is the model class for table "cims_uom_details".
+ * This is the model class for table "cims_product_color".
  *
- * The followings are the available columns in table 'cims_uom_details':
+ * The followings are the available columns in table 'cims_product_color':
  * @property integer $id
- * @property string $name
- * @property string $spec
+ * @property integer $product_details_id
+ * @property integer $color_id
  */
-class UomDetails extends CActiveRecord
+class ProductColor extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'cims_uom_details';
+		return 'cims_product_color';
 	}
 
 	/**
@@ -26,11 +26,11 @@ class UomDetails extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, spec', 'required'),
-			array('name, spec', 'length', 'max'=>120),
+			array('product_details_id, color_id', 'required'),
+			array('product_details_id, color_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, name, spec', 'safe', 'on'=>'search'),
+			array('id, product_details_id, color_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -52,8 +52,8 @@ class UomDetails extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'name' => 'Name',
-			'spec' => 'Spec',
+			'product_details_id' => 'Product Details',
+			'color_id' => 'Color',
 		);
 	}
 
@@ -76,8 +76,8 @@ class UomDetails extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('spec',$this->spec,true);
+		$criteria->compare('product_details_id',$this->product_details_id);
+		$criteria->compare('color_id',$this->color_id);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -88,7 +88,7 @@ class UomDetails extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return UomDetails the static model class
+	 * @return ProductColor the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

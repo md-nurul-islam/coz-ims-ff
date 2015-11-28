@@ -41,7 +41,7 @@ class ProductStockSales extends CActiveRecord {
     public $product_name;
     public $pageSize = 20;
     public $advance_sale_list = FALSE;
-    
+
     /**
      * @return string the associated database table name
      */
@@ -56,16 +56,13 @@ class ProductStockSales extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('sales_id, quantity, item_selling_price, serial_num, sale_date, item_subtotal, grand_total_payable, grand_total_paid, grand_total_balance', 'required'),
-            array('transaction_id, customer_id, supplier_id, category_id, product_details_id, quantity, serial_num, payment_method', 'numerical', 'integerOnly' => true),
-            array('sales_id', 'length', 'max' => 15),
-            array('billnumber', 'length', 'max' => 150),
-            array('ref_num', 'length', 'max' => 255),
-            array('item_selling_price, item_subtotal, discount_percentage, dis_amount, tax, grand_total_payable, grand_total_paid, grand_total_balance', 'length', 'max' => 12),
-            array('tax_dis, note', 'safe'),
+            array('billnumber, payment_method, cart_id', 'required'),
+            array('billnumber, customer_id, payment_method, cart_id', 'numerical', 'integerOnly' => true),
+            array('billnumber', 'length', 'max' => 11),
+            array('note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, sales_id, transaction_id, billnumber, customer_id, supplier_id, category_id, ref_num, product_details_id, quantity, item_selling_price, serial_num, sale_date, item_subtotal, discount_percentage, dis_amount, tax, tax_dis, grand_total_payable, grand_total_paid, grand_total_balance, due_payment_date, payment_method, note', 'safe', 'on' => 'search'),
+            array('billnumber, payment_method, customer_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -78,9 +75,6 @@ class ProductStockSales extends CActiveRecord {
         return array(
             'transaction' => array(self::BELONGS_TO, 'Transactions', 'transaction_id'),
             'customer' => array(self::BELONGS_TO, 'CustomerDetails', 'customer_id'),
-            'supplier' => array(self::BELONGS_TO, 'SupplierDetails', 'supplier_id'),
-            'category' => array(self::BELONGS_TO, 'CategoryDetails', 'category_id'),
-            'productDetails' => array(self::BELONGS_TO, 'ProductDetails', 'product_details_id'),
         );
     }
 
@@ -90,29 +84,14 @@ class ProductStockSales extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'sales_id' => 'Sales',
-            'transaction_id' => 'Transaction',
             'billnumber' => 'Billnumber',
             'customer_id' => 'Customer',
-            'supplier_id' => 'Supplier',
-            'category_id' => 'Category',
-            'ref_num' => 'Ref Num',
-            'product_details_id' => 'Item',
-            'quantity' => 'Qty',
-            'item_selling_price' => 'Price',
-            'serial_num' => 'Serial Num',
-            'sale_date' => 'Sale Date',
-            'item_subtotal' => 'Total',
-            'discount_percentage' => 'Discount Percentage',
-            'dis_amount' => 'Discount',
-            'tax' => 'Tax',
-            'tax_dis' => 'Tax Dis',
-            'grand_total_payable' => 'Grand Total',
-            'grand_total_paid' => 'Paid',
-            'grand_total_balance' => ($this->advance_sale_list) ?  'Due' : 'Return',
             'due_payment_date' => 'Due Date',
             'payment_method' => 'Payment Type',
             'note' => 'Note',
+            'store_id' => 'Store',
+            'is_advance' => 'Is Advanced',
+            'card_type' => 'Card',
         );
     }
 
@@ -130,45 +109,28 @@ class ProductStockSales extends CActiveRecord {
      */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
-        
+
         $store_id = 1;
-        
+
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
         }
-        
+
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
-        $criteria->compare('sales_id', $this->sales_id, true);
-        $criteria->compare('transaction_id', $this->transaction_id);
         $criteria->compare('billnumber', $this->billnumber, true);
         $criteria->compare('customer_id', $this->customer_id);
-        $criteria->compare('supplier_id', $this->supplier_id);
-        $criteria->compare('category_id', $this->category_id);
-        $criteria->compare('ref_num', $this->ref_num, true);
-        $criteria->compare('product_details_id', $this->product_details_id);
-        $criteria->compare('quantity', $this->quantity);
-        $criteria->compare('item_selling_price', $this->item_selling_price, true);
-        $criteria->compare('serial_num', $this->serial_num);
         $criteria->compare('sale_date', $this->sale_date, true);
-        $criteria->compare('item_subtotal', $this->item_subtotal, true);
-        $criteria->compare('discount_percentage', $this->discount_percentage, true);
-        $criteria->compare('dis_amount', $this->dis_amount, true);
-        $criteria->compare('tax', $this->tax, true);
-        $criteria->compare('tax_dis', $this->tax_dis, true);
-        $criteria->compare('grand_total_payable', $this->grand_total_payable, true);
-        $criteria->compare('grand_total_paid', $this->grand_total_paid, true);
-        $criteria->compare('grand_total_balance', $this->grand_total_balance, true);
         $criteria->compare('due_payment_date', $this->due_payment_date, true);
         $criteria->compare('payment_method', $this->payment_method);
-        
+
         if (!Yii::app()->user->isSuperAdmin) {
             $criteria->compare('t.store_id', $store_id);
         }
-        
+
         $criteria->compare('note', $this->note, true);
-        
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));
@@ -185,9 +147,9 @@ class ProductStockSales extends CActiveRecord {
     }
 
     public function getSales($id) {
-        
+
         $store_id = 1;
-        
+
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
         }
@@ -196,12 +158,12 @@ class ProductStockSales extends CActiveRecord {
 
         $criteria->with = array('productDetails');
         $criteria->compare('sales_id', $id);
-        
+
         if (!Yii::app()->user->isSuperAdmin) {
             $criteria->compare('productDetails.store_id', $store_id);
             $criteria->compare('t.store_id', $store_id);
         }
-        
+
         $criteria->order = 't.id DESC';
 
         $data = $this->findAll($criteria);
@@ -242,11 +204,11 @@ class ProductStockSales extends CActiveRecord {
     public function saleList() {
         // @todo Please modify the following code to remove attributes that should not be searched.
         $store_id = 1;
-        
+
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
         }
-        
+
         $criteria = new CDbCriteria;
         //var_dump($this->id);exit;
         $criteria->select = 't.sales_id AS id, t.grand_total_payable';
@@ -259,18 +221,18 @@ class ProductStockSales extends CActiveRecord {
         $criteria->compare('t.sales_id', $this->sales_id, true);
         $criteria->compare('product_name', $this->product_name, true);
         $criteria->compare('t.grand_total_payable', $this->grand_total_payable, true);
-        
-        if($this->advance_sale_list) {
+
+        if ($this->advance_sale_list) {
             $criteria->compare('is_advance', 1);
         } else {
             $criteria->compare('is_advance !', 1);
         }
-        
+
         if (!Yii::app()->user->isSuperAdmin) {
             $criteria->compare('productDetails.store_id', $store_id);
             $criteria->compare('t.store_id', $store_id);
         }
-        
+
         $criteria->together = true;
         $criteria->group = 't.sales_id';
         $criteria->order = 't.id DESC';
@@ -282,18 +244,18 @@ class ProductStockSales extends CActiveRecord {
             'criteria' => $criteria,
         ));
     }
-    
+
     public function saleReportData($from_date, $to_date) {
-        
+
         $store_id = 1;
-        
+
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
         }
-        
+
         $from_date = (!empty($from_date)) ? $from_date : date('Y-m-d', Settings::getBdLocalTime());
         $to_date = (!empty($to_date)) ? $to_date : date('Y-m-d', Settings::getBdLocalTime());
-        
+
         $criteria = new CDbCriteria;
         //var_dump($this->id);exit;
         $criteria->select = 't.id, t.sales_id, t.ref_num, t.quantity, t.serial_num, t.item_selling_price, t.item_subtotal, t.dis_amount, t.grand_total_paid, t.grand_total_balance, t.grand_total_payable, t.is_advance';
@@ -306,66 +268,119 @@ class ProductStockSales extends CActiveRecord {
 
         $criteria->compare('DATE(t.sale_date) >', $from_date);
         $criteria->compare('DATE(t.sale_date) <', $to_date);
-        
-        if($this->advance_sale_list) {
+
+        if ($this->advance_sale_list) {
             $criteria->compare('is_advance', 1);
         }
-        
+
         if (!Yii::app()->user->isSuperAdmin) {
             $criteria->compare('productDetails.store_id', $store_id);
             $criteria->compare('t.store_id', $store_id);
         }
-        
+
         $criteria->together = true;
         $criteria->order = 't.id DESC';
-        
+
         $data = $this->findAll($criteria);
-        
+
         return (!empty($data)) ? $this->formatSaleReportData($data) : FALSE;
     }
-    
+
     private function formatSaleReportData($obj_data) {
-        
+
         $formatted_data = array();
-        
+
         foreach ($obj_data as $row) {
             $sale_ids[] = $row->sales_id;
         }
-        
+
         $sale_ids = array_unique($sale_ids);
-        
-        foreach ($sale_ids as $sale_id){
-            
+
+        foreach ($sale_ids as $sale_id) {
+
             $_data = array();
             foreach ($obj_data as $row) {
-                
-                if ($sale_id == $row->sales_id){
-                    
+
+                if ($sale_id == $row->sales_id) {
+
                     $_data['bill_total'] = ( empty($row->grand_total_payable) || ($row->grand_total_payable <= 0) ) ? 0.00 : $row->grand_total_payable;
                     $_data['amount_given'] = ( empty($row->grand_total_paid) || ($row->grand_total_paid <= 0) ) ? 0.00 : $row->grand_total_paid;
                     $_data['discount'] = ( empty($row->dis_amount) || ($row->dis_amount <= 0) ) ? 0.00 : $row->dis_amount;
                     $_data['balance'] = ( empty($row->grand_total_balance) || ($row->grand_total_balance <= 0) ) ? 0.00 : $row->grand_total_balance;
-                    
+
                     $cart['prod_name'] = $row->productDetails->product_name;
                     $cart['is_advance'] = $row->is_advance;
                     $cart['ref_num'] = $row->ref_num;
                     $cart['qty'] = $row->quantity;
                     $cart['price'] = $row->item_selling_price;
                     $cart['item_sub_total'] = $row->item_subtotal;
-                    
+
                     $_data[] = $cart;
                 }
-                
             }
-            
+
             $formatted_data[$sale_id][] = $_data;
-            
         }
-        
+
         return $formatted_data;
     }
 
     public function getSalesInfo($id = NULL, $sale_id = NULL, $ref_num = NULL, $prod_id = NULL) {
+
+        $store_id = 1;
+
+        if (!Yii::app()->user->isSuperAdmin) {
+            $store_id = Yii::app()->user->storeId;
+        }
+
+        $criteria = new CDbCriteria();
+
+        if (!empty($id)) {
+            $criteria->compare('t.id', $id);
+        }
+
+        if (!empty($sale_id)) {
+            $criteria->compare('t.sales_id', $sale_id);
+        }
+
+        if (!empty($ref_num)) {
+            $criteria->compare('t.ref_num', $ref_num);
+        }
+
+        if (!empty($prod_id)) {
+            $criteria->compare('t.product_details_id', $prod_id);
+        }
+
+        $criteria->with = array(
+            'productDetails' => array(
+                'select' => 'productDetails.id, productDetails.product_name',
+                'joinType' => 'INNER JOIN',
+            ),
+        );
+
+        if (!Yii::app()->user->isSuperAdmin) {
+            $criteria->compare('productDetails.store_id', $store_id);
+            $criteria->compare('t.store_id', $store_id);
+        }
+
+        if ((!empty($sale_id) && !empty($ref_num) && !empty($prod_id)) || (!empty($id))) {
+            $model = $this->find($criteria);
+        } else {
+            $model = $this->findAll($criteria);
+        }
+
+        return $model;
+    }
+
+    /**
+     * NEW CODES
+     */
+
+    /**
+     * @param integer id, if not set then fetch all sales information
+     * @return assocciative array of sale and related data
+     */
+    public function getSaleData($id = 0) {
         
         $store_id = 1;
         
@@ -373,45 +388,29 @@ class ProductStockSales extends CActiveRecord {
             $store_id = Yii::app()->user->storeId;
         }
         
-        $criteria = new CDbCriteria();
+        $command = Yii::app()->db->createCommand()
+                ->from($this->tableName() . ' t')
+                ->join(Cart::model()->tableName() . ' c', 'c.id = t.cart_id')
+                ->join(CartItems::model()->tableName() . ' ci', 'c.id = ci.cart_id')
+                ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = ci.product_details_id')
+        ;
         
-        if(!empty($id)){
-            $criteria->compare('t.id', $id);
+        $command->andWhere('t.store_id = :store_id', array(':store_id' => $store_id));
+        
+        if($id > 0) {
+            $command->andWhere('t.id = :id', array(':id' => $id));
         }
         
-        if(!empty($sale_id)){
-            $criteria->compare('t.sales_id', $sale_id);
-        }
+        $command->select('t.id, t.billnumber, t.sale_date, t.store_id , c.discount, c.vat, c.grand_total, c.discount, c.vat, ci.price, ci.quantity, ci.sub_total, pd.product_name');
         
-        if(!empty($ref_num)){
-            $criteria->compare('t.ref_num', $ref_num);
-        }
-        
-        if(!empty($prod_id)){
-            $criteria->compare('t.product_details_id', $prod_id);
-        }
-        
-        $criteria->with = array(
-            'productDetails' => array(
-                'select' => 'productDetails.id, productDetails.product_name',
-                'joinType' => 'INNER JOIN',
-            ),
-        );
-        
-        if (!Yii::app()->user->isSuperAdmin) {
-            $criteria->compare('productDetails.store_id', $store_id);
-            $criteria->compare('t.store_id', $store_id);
-        }
-        
-        if( (!empty($sale_id) && !empty($ref_num) && !empty($prod_id)) || (!empty($id)) ){
-            $model = $this->find($criteria);
-        }  else {
-            $model = $this->findAll($criteria);
-        }
-        
-        return $model;
+        $data = $command->queryAll();
+        return $data;
     }
     
+    /**
+     * NEW CODES
+     */
+
     /**
      * @return array for Data Grid Headers customized attribute labels (name=>label)
      * remove the attributes don't needed in the Grid
@@ -454,7 +453,7 @@ class ProductStockSales extends CActiveRecord {
     }
 
     public function dataGridRows($params = array()) {
-        
+
         $offset = 0;
         if (isset($params['offset']) && $params['offset'] > 0) {
             $offset = $params['offset'];
@@ -464,7 +463,7 @@ class ProductStockSales extends CActiveRecord {
         if (isset($params['order']) && !empty($params['order'])) {
             $order = $params['order'];
         }
-        
+
         $command = Yii::app()->db->createCommand()
                 ->from($this->tableName() . ' t')
                 ->join(Cart::model()->tableName() . ' c', 'c.id = t.cart_id')
@@ -475,7 +474,7 @@ class ProductStockSales extends CActiveRecord {
                 ->order($order)
                 ->group('t.cart_id')
         ;
-        
+
         $sub_command = Yii::app()->db->createCommand()
                 ->select('count( DISTINCT t.cart_id )')
                 ->from($this->tableName() . ' t')
@@ -484,17 +483,17 @@ class ProductStockSales extends CActiveRecord {
                 ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = ci.product_details_id')
                 ->where('t.cart_id IS NOT NULL')
         ;
-        
+
         $filter_keys = array_keys($this->dataGridFilters());
         if (isset($params['where']) && !empty($params['where'])) {
             $new_command_objs = DataGridHelper::processFilterableVars($command, $params['where'], $filter_keys, 't', $sub_command);
             $command = $new_command_objs[0];
             $sub_command = $new_command_objs[1];
         }
-        
+
         $command->select('t.id, GROUP_CONCAT(pd.product_name) as product_name, c.grand_total, c.discount, c.vat, (' . $sub_command->getText() . ') AS total_rows');
-        
+
         return $command->queryAll();
     }
-    
+
 }

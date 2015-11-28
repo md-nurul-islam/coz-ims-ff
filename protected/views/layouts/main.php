@@ -15,7 +15,7 @@
         <!--<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css" />-->
         <!--<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" />-->
 
-        <link rel="stylesheet" href="/css/bootstrap/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/css/bootstrap/css/bootstrap.min.css" media="all" />
         <!-- Font Awesome -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
         <!-- Ionicons -->

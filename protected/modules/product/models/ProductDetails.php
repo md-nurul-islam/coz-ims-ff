@@ -48,7 +48,6 @@ class ProductDetails extends CActiveRecord {
             array('purchase_price, selling_price', 'numerical'),
             array('product_name', 'length', 'max' => 255),
             array('purchase_price, selling_price', 'length', 'max' => 12),
-            array('uom', 'length', 'max' => 120),
             array('update_date', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -88,7 +87,6 @@ class ProductDetails extends CActiveRecord {
             'selling_price' => 'Current Selling Price',
             'create_date' => 'Created Date',
             'update_date' => 'Last Update Date',
-            'uom' => 'Uom',
             'status' => 'Status',
         );
     }
@@ -103,9 +101,12 @@ class ProductDetails extends CActiveRecord {
             'category_name' => array('label' => 'Category Name', 'sortable' => 'true', 'width' => 80),
             'supplier_name' => array('label' => 'Supplier Name', 'sortable' => 'true', 'width' => 80),
             'product_name' => array('label' => 'Product Name', 'sortable' => 'true', 'width' => 180),
-            'quantity' => array('label' => 'Current Stock', 'sortable' => 'true', 'width' => 50),
-            'purchase_price' => array('label' => 'Last Purchase Price', 'sortable' => 'true', 'width' => 50),
-            'selling_price' => array('label' => 'Current Selling Price', 'sortable' => 'true', 'width' => 50),
+            'color_name' => array('label' => 'Color', 'sortable' => 'true', 'width' => 80),
+            'grade_name' => array('label' => 'Grade', 'sortable' => 'true', 'width' => 80),
+            'size_name' => array('label' => 'Size', 'sortable' => 'true', 'width' => 80),
+            'quantity' => array('label' => 'Stock', 'sortable' => 'true', 'width' => 50),
+            'purchase_price' => array('label' => 'Cost', 'sortable' => 'true', 'width' => 50),
+            'selling_price' => array('label' => 'Price', 'sortable' => 'true', 'width' => 50),
             'status' => array('label' => 'Status', 'sortable' => 'true', 'width' => 80)
         );
     }
@@ -115,11 +116,14 @@ class ProductDetails extends CActiveRecord {
             'category_name' => array('id' => 'category_name', 'class' => 'easyui-textbox', 'label' => 'Category: ', 'style' => 'width:80px;'),
             'supplier_name' => array('id' => 'supplier_name', 'class' => 'easyui-textbox', 'label' => 'Supplier: ', 'style' => 'width:80px;'),
             'product_name' => array('id' => 'product_name', 'class' => 'easyui-textbox', 'label' => 'Product: ', 'style' => 'width:80px;'),
+            'color_name' => array('id' => 'color_name', 'class' => 'easyui-textbox', 'label' => 'Color: ', 'style' => 'width:80px;'),
+            'grade_name' => array('id' => 'grade_name', 'class' => 'easyui-textbox', 'label' => 'Grade: ', 'style' => 'width:80px;'),
+            'size_name' => array('id' => 'size_name', 'class' => 'easyui-textbox', 'label' => 'Size: ', 'style' => 'width:80px;'),
             'quantity' => array('id' => 'quantity', 'class' => 'easyui-textbox', 'label' => 'Qty: ', 'style' => 'width:80px;'),
             'purchase_price' => array('id' => 'purchase_price', 'class' => 'easyui-textbox', 'label' => 'Cost: ', 'style' => 'width:80px;'),
             'selling_price' => array('id' => 'selling_price', 'class' => 'easyui-textbox', 'label' => 'Price: ', 'style' => 'width:80px;'),
             'status' => array('id' => 'status', 'class' => 'easyui-combobox', 'label' => 'Status',
-                'data-options' => "valueField: 'id', textField: 'text', url: '/site/getStatusComboData' ",
+                'data-options' => "valueField: 'id', textField: 'text', url: '/product/manage/getStatusComboData' ",
                 'panelHeight' => 70,
                 'style' => 'width:80px; cursor: pointer;'),
         );
@@ -157,9 +161,15 @@ class ProductDetails extends CActiveRecord {
 
         $command = Yii::app()->db->createCommand()
                 ->from($this->tableName() . ' t')
-                ->join(CategoryDetails::model()->tableName() . ' c', 'c.id=t.category_id')
-                ->join(SupplierDetails::model()->tableName() . ' s', 's.id=t.supplier_id')
-                ->join(ProductStockAvail::model()->tableName() . ' ps', 't.id=ps.product_details_id')
+                ->join(CategoryDetails::model()->tableName() . ' c', 'c.id = t.category_id')
+                ->join(SupplierDetails::model()->tableName() . ' s', 's.id = t.supplier_id')
+                ->join(ProductStockAvail::model()->tableName() . ' ps', 't.id = ps.product_details_id')
+                ->join(ProductColor::model()->tableName() . ' pc', 't.id = pc.product_details_id')
+                ->join(Color::model()->tableName() . ' cl', 'pc.color_id = cl.id')
+                ->join(ProductGrade::model()->tableName() . ' pg', 't.id = pg.product_details_id')
+                ->join(Grade::model()->tableName() . ' gr', 'pg.grade_id = gr.id')
+                ->join(ProductSize::model()->tableName() . ' psz', 't.id = psz.product_details_id')
+                ->join(Sizes::model()->tableName() . ' sz', 'psz.size_id = sz.id')
                 ->offset($offset)
                 ->limit($this->pageSize)
                 ->order($order)
@@ -171,6 +181,12 @@ class ProductDetails extends CActiveRecord {
                 ->join(CategoryDetails::model()->tableName() . ' c', 'c.id=t.category_id')
                 ->join(SupplierDetails::model()->tableName() . ' s', 's.id=t.supplier_id')
                 ->join(ProductStockAvail::model()->tableName() . ' ps', 't.id=ps.product_details_id')
+                ->join(ProductColor::model()->tableName() . ' pc', 't.id = pc.product_details_id')
+                ->join(Color::model()->tableName() . ' cl', 'pc.color_id = cl.id')
+                ->join(ProductGrade::model()->tableName() . ' pg', 't.id = pg.product_details_id')
+                ->join(Grade::model()->tableName() . ' gr', 'pg.grade_id = gr.id')
+                ->join(ProductSize::model()->tableName() . ' psz', 't.id = psz.product_details_id')
+                ->join(Sizes::model()->tableName() . ' sz', 'psz.size_id = sz.id')
         ;
         
         $filter_keys = array_keys($this->dataGridFilters());
@@ -180,7 +196,20 @@ class ProductDetails extends CActiveRecord {
             $sub_command = $new_command_objs[1];
         }
         
-        $command->select('t.id, t.product_name, t.purchase_price, t.selling_price, CASE t.status WHEN "1" THEN "Active" ELSE "Inactive" END AS `status`, c.category_name, s.supplier_name, ps.quantity, (' . $sub_command->getText() . ') AS total_rows');
+        $command->select(
+            't.id,
+            t.product_name,
+            t.purchase_price,
+            t.selling_price,
+            CASE t.status WHEN "1" THEN "Active" ELSE "Inactive" END AS `status`,
+            c.category_name,
+            s.supplier_name,
+            ps.quantity,
+            (' . $sub_command->getText() . ') AS total_rows,
+            cl.name as color_name,
+            gr.name as grade_name,
+            sz.name as size_name'
+        );
         
         return $command->queryAll();
     }

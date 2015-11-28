@@ -26,7 +26,7 @@ class PurchaseController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'print', 'view', 'create', 'update', 'product_stock_info', 'createsingle'),
+                'actions' => array('getlatestprice', 'getproductcolorgradesize', 'index', 'print', 'view', 'create', 'update', 'product_stock_info', 'createsingle', 'autocomplete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -183,7 +183,9 @@ class PurchaseController extends Controller {
     }
 
     public function actionCreatesingle() {
+
         $model = new ProductStockEntries;
+        $now = date('Y-m-d');
 
         $this->pageTitle = Yii::app()->name . ' - Purchase Product';
         $this->pageHeader = 'Purchase Product';
@@ -195,82 +197,52 @@ class PurchaseController extends Controller {
 
         $ar_cart = array();
 
-//        var_dump($_POST['ProductStockEntries']);exit;
-        
         if (isset($_POST['ProductStockEntries'])) {
-            $stock_info = new ProductStockAvail;
 
-            $bill_number = $_POST['ProductStockEntries']['billnumber'];
-            $purchase_date = date('Y-m-d', strtotime($_POST['ProductStockEntries']['purchase_date']));
-            $supplier_id = $_POST['ProductStockEntries']['supplier_id'];
-            $grand_total_payable = $_POST['ProductStockEntries']['grand_total_payable'];
-            $grand_total_paid = $_POST['ProductStockEntries']['grand_total_paid'];
-            $grand_total_balance = $_POST['ProductStockEntries']['grand_total_balance'];
-            $due_payment_date = date('Y-m-d', strtotime($_POST['ProductStockEntries']['due_payment_date']));
-            $payment_type = $_POST['ProductStockEntries']['payment_type'];
+            $product_id = $_POST['product_details_id'];
+            $new_cost = $_POST['n_cost'];
+            $new_price = $_POST['n_price'];
+
+            $stock_info = ProductStockAvail::model()->findByAttributes(array(
+                'product_details_id' => $product_id
+            ));
+
+            $bill_number = (empty($_POST['ProductStockEntries']['billnumber'])) ? Settings::getToken(8, FALSE) : $_POST['ProductStockEntries']['billnumber'];
+            $purchase_date = $now;
+            $due_payment_date = (empty($_POST['ProductStockEntries']['due_payment_date'])) ? $now : date('Y-m-d', strtotime($_POST['ProductStockEntries']['due_payment_date']));
+            $payment_method = $_POST['ProductStockEntries']['payment_method'];
             $note = $_POST['ProductStockEntries']['note'];
-            $purchase_id = $this->generatePurchaseId();
-            
-            $model = new ProductStockEntries;
-            
+
+            $purchase_cart = new PurchaseCart;
+            $purchase_cart->grand_total = $_POST['total'];
+            $purchase_cart->insert();
+
             $model->billnumber = $bill_number;
             $model->purchase_date = $purchase_date;
-            $model->supplier_id = (!empty($supplier_id)) ? $supplier_id : NULL;
-            $model->grand_total_payable = $grand_total_payable;
-            $model->grand_total_paid = $grand_total_paid;
-            $model->grand_total_balance = $grand_total_balance;
             $model->due_payment_date = $due_payment_date;
-            $model->payment_type = $payment_type;
+            $model->payment_method = $payment_method;
             $model->note = $note;
-            $model->purchase_id = $purchase_id;
             $model->store_id = $store_id;
-            
-            $model->product_details_id = $_POST['product_details_id'];
-            $model->ref_num = $_POST['ref_num'];
-            $model->quantity = intval($_POST['quantity']);
-            $model->purchase_price = $_POST['purchase_price'];
-            $model->selling_price = $_POST['selling_price'];
-            $model->item_subtotal = $_POST['item_subtotal'];
-            $model->serial_num = 0;
-            $model->grade_id = $_POST['grade'];
-            
-            if ($model->validate()) {
+            $model->purchase_cart_id = $purchase_cart->id;
+            $model->insert();
 
-                $stock_info = $stock_info->getStockByProdId((int) $model->product_details_id, $store_id, $model->grade_id);
+            $purchase_cart_items = new PurchaseCartItems;
+            $purchase_cart_items->cart_id = $purchase_cart->id;
+            $purchase_cart_items->product_details_id = $product_id;
+            $purchase_cart_items->cost = $new_cost;
+            $purchase_cart_items->price = $new_price;
+            $purchase_cart_items->quantity = $_POST['quantity'];
+            $purchase_cart_items->sub_total = $purchase_cart->grand_total;
+            $purchase_cart_items->product_color_id = $stock_info->product_color_id;
+            $purchase_cart_items->product_size_id = $stock_info->product_size_id;
+            $purchase_cart_items->product_grade_id = $stock_info->product_grade_id;
+            $purchase_cart_items->insert();
 
-                if (!$stock_info) {
+            $stock_info->quantity = ((int) $stock_info->quantity + (int) $_POST['quantity']);
 
-                    $stock_info = new ProductStockAvail;
-                    $stock_info->quantity = $model->quantity;
-                    $stock_info->product_details_id = $model->product_details_id;
-                    $stock_info->store_id = $store_id;
-                    $stock_info->grade_id = $model->grade_id;
-                    $stock_info->insert();
-                    
-                } else {
-
-                    $cur_stock = intval($stock_info->quantity);
-                    $new_stock = $cur_stock + $model->quantity;
-
-                    $stock_info->quantity = $new_stock;
-                    $stock_info->grade_id = $model->grade_id;
-                    $stock_info->update();
-
-                    $criteria = new CDbCriteria;
-                    $criteria->compare('t.id', $model->product_details_id);
-                    $criteria->compare('t.store_id', $store_id);
-
-//                    $prod_details = ProductDetails::model()->find($criteria);
-//                    $prod_details->purchase_price = $model->purchase_price;
-//                    $prod_details->selling_price = $model->selling_price;
-//                    $prod_details->update_date = date('Y-m-d H:i:s', time());
-//                    $prod_details->update();
-                }
-                
-                if ($model->insert()) {
-                    Yii::app()->user->setFlash('success', 'Products successfully added to stock.');
-                    $this->redirect(array('createsingle'));
-                }
+            if ($stock_info->update()) {
+                Yii::app()->user->setFlash('success', 'Products successfully added to stock.');
+                $this->redirect(array('createsingle'));
             }
         }
 
@@ -396,6 +368,136 @@ class PurchaseController extends Controller {
     }
 
     /**
+     * Performs Autocomplte.
+     * @param CategoryDetails $model the model to be validated
+     */
+    public function actionAutocomplete() {
+
+        if (isset($_GET['term'])) {
+            $term = $_GET['term'];
+
+            $ar_result = array();
+
+            $store_id = 1;
+            if (!Yii::app()->user->isSuperAdmin) {
+                $store_id = Yii::app()->user->storeId;
+            }
+
+            if ((!Yii::app()->user->isGuest) && (Yii::app()->request->isAjaxRequest) && !empty($term)) {
+
+                $command = Yii::app()->db->createCommand()
+                        ->from(ProductDetails::model()->tableName() . ' t')
+                        ->join(SupplierDetails::model()->tableName() . ' s', 's.id = t.supplier_id')
+                        ->join(ProductColor::model()->tableName() . ' pc', 't.id = pc.product_details_id')
+                        ->join(Color::model()->tableName() . ' cl', 'pc.color_id = cl.id')
+                        ->join(ProductGrade::model()->tableName() . ' pg', 't.id = pg.product_details_id')
+                        ->join(Grade::model()->tableName() . ' gr', 'pg.grade_id = gr.id')
+                        ->join(ProductSize::model()->tableName() . ' psz', 't.id = psz.product_details_id')
+                        ->join(Sizes::model()->tableName() . ' sz', 'psz.size_id = sz.id')
+                        ->limit(50)
+                ;
+            }
+
+            $command->select('t.id, t.product_name, cl.name AS color_name, gr.name AS grade_name, sz.name AS size_name, s.supplier_name');
+
+            $command->andWhere('t.store_id = :sid', array(':sid' => $store_id));
+            $command->andWhere('t.product_name LIKE :p_name', array(':p_name' => '%' . $term . '%'));
+
+            $ar_result = $command->queryAll();
+
+            $return_array = array();
+            foreach ($ar_result as $result) {
+                $return_array[] = array(
+                    'id' => $result['id'],
+                    'value' => $result['product_name'] . '-' . $result['color_name'] . '-' . $result['grade_name'] . '-' . $result['size_name'] . '-' . $result['supplier_name'],
+                );
+            }
+
+            echo CJSON::encode($return_array);
+        }
+    }
+
+    public function actionGetlatestprice() {
+
+        $store_id = 1;
+        if (!Yii::app()->user->isSuperAdmin) {
+            $store_id = Yii::app()->user->storeId;
+        }
+
+        if (isset($_POST['product_details_id'])) {
+            $product_details_id = $_POST['product_details_id'];
+
+            if ((!Yii::app()->user->isGuest) && (Yii::app()->request->isAjaxRequest) && !empty($product_details_id)) {
+                $command = Yii::app()->db->createCommand()
+                        ->from(ProductDetails::model()->tableName() . ' t')
+                        ->join(ProductStockAvail::model()->tableName() . ' psa', 't.id = psa.product_details_id')
+                        ->limit(1)
+                ;
+            }
+
+            $command->select('t.id, t.purchase_price , t.selling_price, psa.quantity');
+
+            if (!Yii::app()->user->isSuperAdmin) {
+                $command->andWhere('t.store_id = :sid', array(':sid' => $store_id));
+            }
+
+            $command->andWhere('t.id = :pid', array(':pid' => $product_details_id));
+
+            $data = $command->queryRow();
+
+            $response['stock'] = $data['quantity'];
+            $response['cost'] = $data['purchase_price'];
+            $response['price'] = $data['selling_price'];
+
+            echo CJSON::encode($response);
+            Yii::app()->end();
+        }
+    }
+
+    public function actionGetproductcolorgradesize() {
+
+        $store_id = 1;
+        if (!Yii::app()->user->isSuperAdmin) {
+            $store_id = Yii::app()->user->storeId;
+        }
+
+        if (isset($_POST['product_details_id'])) {
+            $product_details_id = $_POST['product_details_id'];
+
+            if ((!Yii::app()->user->isGuest) && (Yii::app()->request->isAjaxRequest) && !empty($product_details_id)) {
+                $command = Yii::app()->db->createCommand()
+                        ->from(ProductDetails::model()->tableName() . ' t')
+                        ->join(SupplierDetails::model()->tableName() . ' s', 's.id = t.supplier_id')
+                        ->join(ProductStockAvail::model()->tableName() . ' ps', 't.id = ps.product_details_id')
+                        ->join(ProductColor::model()->tableName() . ' pc', 't.id = pc.product_details_id')
+                        ->join(Color::model()->tableName() . ' cl', 'pc.color_id = cl.id')
+                        ->join(ProductGrade::model()->tableName() . ' pg', 't.id = pg.product_details_id')
+                        ->join(Grade::model()->tableName() . ' gr', 'pg.grade_id = gr.id')
+                        ->join(ProductSize::model()->tableName() . ' psz', 't.id = psz.product_details_id')
+                        ->join(Sizes::model()->tableName() . ' sz', 'psz.size_id = sz.id')
+                        ->limit(1)
+                ;
+            }
+
+            if (!Yii::app()->user->isSuperAdmin) {
+                $command->andWhere('t.store_id = :sid', array(':sid' => $store_id));
+            }
+
+            $command->andWhere('t.id = :pid', array(':pid' => $product_details_id));
+
+            $data['data'] = $command->queryAll();
+
+            $response['stock'] = '';
+            $response['supplier']['name'] = '';
+            $response['supplier']['id'] = '';
+            $response['color_grade_size_html'] = $this->renderPartial('_color_grade_size', $data, TRUE, FALSE);
+
+            echo CJSON::encode($html);
+            Yii::app()->end();
+        }
+    }
+
+    /**
      * Performs the AJAX validation.
      * @param ProductStockEntries $model the model to be validated
      */
@@ -424,10 +526,10 @@ class PurchaseController extends Controller {
 
         $model = new ProductStockEntries();
         $model = $model->getProductStockInfo($prod_id, $ref_num);
-        
+
         $prod_available_grades = new ProductGrade();
         $obj_prod_available_grades = $prod_available_grades->getGrades($prod_id, 0, TRUE);
-        
+
         $ar_grades = array();
         $i = 0;
         foreach ($obj_prod_available_grades as $pad) {
@@ -435,7 +537,7 @@ class PurchaseController extends Controller {
             $ar_grades[$i]['name'] = $pad->grade->name;
             $i++;
         }
-        
+
         if (!empty($model)) {
             $cost = ( empty($model['productDetails']->purchase_price) || ($model['productDetails']->purchase_price <= 0 ) ) ? $model->purchase_price : $model['productDetails']->purchase_price;
             $price = ( empty($model['productDetails']->selling_price) || ($model['productDetails']->selling_price <= 0 ) ) ? $model->selling_price : $model['productDetails']->selling_price;

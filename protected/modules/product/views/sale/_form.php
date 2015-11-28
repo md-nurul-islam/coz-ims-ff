@@ -96,75 +96,6 @@
                         </div>
                     </div>
 
-                    <?php if ($edit) { ?>
-
-                        <div class="form-group">
-                            <?php echo $form->labelEx($model, 'ref_num', array('class' => 'col-sm-2 control-label', 'for' => 'ref_num')); ?>
-                            <div class="clear"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <?php echo $form->labelEx($model, 'product_details_id', array('class' => 'col-sm-2 control-label', 'for' => 'product_details_id')); ?>
-                            <div class="clear"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <?php echo $form->labelEx($model, 'quantity', array('class' => 'col-sm-2 control-label', 'for' => 'quantity')); ?>
-                            <div class="clear"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <?php echo $form->labelEx($model, 'item_selling_price', array('class' => 'col-sm-2 control-label', 'for' => 'item_selling_price')); ?>
-                            <div class="clear"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <?php echo $form->labelEx($model, 'item_subtotal', array('class' => 'col-sm-2 control-label', 'for' => 'item_subtotal')); ?>
-                            <div class="clear"></div>
-                        </div>
-
-                    <?php } ?>
-
-                    <?php
-                    if (!empty($ar_cart)) {
-                        for ($i = 0; $i < sizeof($ar_cart['product_details_id']); $i++) {
-                            ?>
-                            <div class="cart_div" id="<?php echo $i; ?>">
-                                <div class="form-group">
-                                    <input id="ref_num<?php echo $i; ?>" type="text" name="ProductStockSales[ref_num][]" value='<?php echo $ar_cart['ref_num'][$i]; ?>' maxlength="150" size="25" readonly="readonly" />
-                                </div>
-                                <div class="form-group">
-                                    <input id="product_details_id<?php echo $i; ?>" type="hidden" name="ProductStockSales[product_details_id][]" value="<?php echo $ar_cart['product_details_id'][$i]; ?>" />
-                                    <input id="product_details_name<?php echo $i; ?>" type="text" name="ProductStockSales[product_details_name][]" value='<?php echo "{$ar_cart['product_details_name'][$i]}"; ?>' size="30" readonly="readonly" />
-                                </div>
-                                <div class="left margin-right-30">
-                                    <input id="quantity<?php echo $i; ?>" type="text" name="ProductStockSales[quantity][]" value="<?php echo $ar_cart['quantity'][$i]; ?>" size="10" readonly="readonly" />
-                                </div>
-                                <div class="left margin-right-30">
-                                    <input id="item_selling_price<?php echo $i; ?>" type="text" name="ProductStockSales[item_selling_price][]" value="<?php echo $ar_cart['selling_price'][$i]; ?>" maxlength="12" size="10" readonly="readonly" />
-                                </div>
-
-                                <?php if (!$edit) { ?>
-                                    <div class="form-group">
-                                        <input id="cur_stock<?php echo $i; ?>" type="text" name="cur_stock[]" value="<?php echo $ar_cart['cur_stock'][$i]; ?>" readonly="readonly" size="10" maxlength="12" />
-                                    </div>
-                                <?php } ?>
-
-                                <div class="form-group">
-                                    <input id="item_subtotal<?php echo $i; ?>" class="sub_total" type="text" name="ProductStockSales[item_subtotal][]" value="<?php echo $ar_cart['item_subtotal'][$i]; ?>" maxlength="12" readonly="readonly" />        		
-                                </div>
-                                <?php if (!$edit) { ?>
-                                    <div class="custom-buttons">
-                                        <img class="edit-button" data="<?php echo $i; ?>" alt="Edit" src="/images/icons/edit.png" width="20" />
-                                        <img class="delete-button" data="<?php echo $i; ?>" alt="Delete" src="/images/icons/delete.png" width="20" />
-                                    </div>
-                                <?php } ?>
-                            </div>
-                            <?php
-                        }
-                    }
-                    ?>
-
                     <div class="form-group">
                         <?php echo $form->labelEx($model, 'due_payment_date', array('class' => 'col-sm-2 control-label')); ?>
                         <div class="col-sm-9">
@@ -191,34 +122,6 @@
                             ));
                             ?>
                             <?php echo $form->error($model, 'due_payment_date', array('class' => 'alert alert-danger')); ?>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <?php echo $form->labelEx($model, 'payment_method', array('class' => 'col-sm-2 control-label')); ?>
-                        <div class="col-sm-9">
-                            <?php
-                            echo $form->dropDownList($model, 'payment_method', Settings::$_payment_types, array(
-                                'style' => 'width: 100%;',
-                                'class' => 'form-control select2'
-                            ));
-                            ?>
-                            <?php echo $form->error($model, 'payment_method', array('class' => 'alert alert-danger')); ?>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <?php echo $form->labelEx($model, 'note', array('class' => 'col-sm-2 control-label')); ?>
-                        <div class="col-sm-9">
-                            <?php
-                            echo $form->textArea($model, 'note', array(
-                                'rows' => 6,
-                                'cols' => 50,
-                                'class' => 'form-control',
-                                'placeholder' => 'Billnumber',
-                            ));
-                            ?>
-                            <?php echo $form->error($model, 'note', array('class' => 'alert alert-danger')); ?>
                         </div>
                     </div>
 
@@ -256,36 +159,39 @@
 
                     <div class="panel panel-default">
 
-                        <table class="table table-hover table-bordered table-responsive table-condensed">
+                        <div class="printable">
+                            <table class="table table-hover table-bordered table-responsive table-condensed">
 
-                            <thead>
-                                <tr>
-                                    <th class="col-sm-6">Item</th>
-                                    <th class="col-sm-1">Price</th>
-                                    <th class="col-sm-2">Qty</th>
-                                    <th class="col-sm-2">Total</th>
-                                    <th class="col-sm-1"></th>
-                                </tr>
-                            </thead>
+                                <thead>
+                                    <tr>
+                                        <th class="col-sm-6">Item</th>
+                                        <th class="col-sm-1">Price</th>
+                                        <th class="col-sm-2">Qty</th>
+                                        <th class="col-sm-2">Total</th>
+                                        <th class="col-sm-1"></th>
+                                    </tr>
+                                </thead>
 
-                            <tbody id="cart-row"></tbody>
+                                <tbody id="cart-row"></tbody>
 
-                            <tfoot id="cart-total">
-                                <tr>
-                                    <th class="vat_cell">Vat</th>
-                                    <th class="vat_cell_val"></th>
-                                    <th class="discount_cell">Discount</th>
-                                    <th class="discount_cell_val"></th>
-                                    <th></th>
-                                </tr>
-                                <tr>
-                                    <th colspan="2">Total Items</th>
-                                    <th></th>
-                                    <th colspan="2"></th>
-                                </tr>
-                            </tfoot>
+                                <tfoot id="cart-total">
+                                    <tr>
+                                        <th class="vat_cell">Vat</th>
+                                        <th class="vat_cell_val">0.00</th>
+                                        <th class="discount_cell">Discount</th>
+                                        <th class="discount_cell_val">0.00</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="2">Total Items</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
 
-                        </table>
+                            </table>
+                        </div>
 
                         <div class="clearfix"></div>
 
@@ -297,7 +203,7 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <button type="button" class="btn btn-warning form-control">Print</button>
+                                    <button type="button" class="btn btn-warning form-control cart-print">Print</button>
                                 </div>
 
                                 <div class="col-md-12">
@@ -324,14 +230,6 @@
 
 </div>
 
-<div class="box-footer">
-    <?php
-    echo CHtml::submitButton($model->isNewRecord ? 'Sale' : 'Update', array(
-        'id' => 'btn-submit',
-        'class' => 'btn btn-info pull-right'
-    ));
-    ?>
-</div>
 
 <?php $this->endWidget(); ?>
 </div>
@@ -339,12 +237,13 @@
 <?php $this->renderPartial('//modals/_price'); ?>
 <?php $this->renderPartial('//modals/_vat'); ?>
 <?php $this->renderPartial('//modals/_payment'); ?>
+<?php $this->renderPartial('//print/print'); ?>
 
 <style type="text/css">
     .card_information {
         display: none;
     }
-    
+
     table.payment tr:first-child > th {
         border-bottom: 1px solid #ccc !important;
     }
@@ -430,6 +329,7 @@
 <?php
 $cs = Yii::app()->getClientScript();
 $cs->registerScriptFile('/js/custom/cart.js', CClientScript::POS_END);
+$cs->registerScriptFile('/js/custom/print.js', CClientScript::POS_END);
 ?>
 <script type="text/javascript">
     $(document).ready(function () {

@@ -48,16 +48,13 @@ class ProductStockEntries extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('purchase_id, supplier_id, product_details_id, quantity, purchase_price, selling_price, purchase_date, payment_type, item_subtotal, grand_total_payable, grand_total_paid, grand_total_balance, serial_num', 'required'),
-            array('supplier_id, category_id, product_details_id, quantity, payment_type, serial_num', 'numerical', 'integerOnly' => true),
-            array('purchase_id', 'length', 'max' => 15),
-            array('billnumber', 'length', 'max' => 120),
-            array('ref_num', 'length', 'max' => 150),
-            array('purchase_price, selling_price, item_subtotal, grand_total_paid, grand_total_balance', 'length', 'max' => 12),
+            array('purchase_date, payment_method', 'required'),
+            array('payment_method, billnumber', 'numerical', 'integerOnly' => true),
+            array('billnumber', 'length', 'max' => 11),
             array('note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, purchase_id, billnumber, ref_num, supplier_id, category_id, product_details_id, quantity, purchase_price, selling_price, purchase_date, payment_type, item_subtotal, note, grand_total_payable, grand_total_paid, grand_total_balance, due_payment_date, serial_num', 'safe', 'on' => 'search'),
+            array('billnumber, purchase_date', 'safe', 'on' => 'search'),
         );
     }
 
@@ -84,24 +81,11 @@ class ProductStockEntries extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'purchase_id' => 'Purchase ID',
             'billnumber' => 'Billnumber',
-            'ref_num' => 'Ref Num',
-            'supplier_id' => 'Supplier',
-            'category_id' => 'Category',
-            'product_details_id' => 'Item',
-            'quantity' => 'Qty',
-            'purchase_price' => 'Cost',
-            'selling_price' => 'Sale',
             'purchase_date' => 'Date',
-            'payment_type' => 'Payment Type',
-            'item_subtotal' => 'Total',
-            'note' => 'Note',
-            'grand_total_payable' => 'Grand Total',
-            'grand_total_paid' => 'Paid',
-            'grand_total_balance' => 'Balance',
             'due_payment_date' => 'Due Date',
-            'serial_num' => 'Serial Num',
+            'payment_method' => 'Payment Method',
+            'note' => 'Note',
         );
     }
 

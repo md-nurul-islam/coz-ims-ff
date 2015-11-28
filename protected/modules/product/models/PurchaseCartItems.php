@@ -1,23 +1,30 @@
 <?php
 
 /**
- * This is the model class for table "cims_product_stock_avail".
+ * This is the model class for table "cims_purchase_cart_items".
  *
- * The followings are the available columns in table 'cims_product_stock_avail':
+ * The followings are the available columns in table 'cims_purchase_cart_items':
  * @property integer $id
+ * @property string $cart_id
  * @property integer $product_details_id
- * @property string $quantity
- *
- * The followings are the available model relations:
- * @property ProductDetails $productDetails
+ * @property integer $reference_number
+ * @property string $cost
+ * @property string $price
+ * @property integer $quantity
+ * @property string $sub_total
+ * @property integer $product_color_id
+ * @property integer $product_size_id
+ * @property integer $product_grade_id
+ * @property string $discount
+ * @property string $vat
  */
-class ProductStockAvail extends CActiveRecord {
+class PurchaseCartItems extends CActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return 'cims_product_stock_avail';
+        return 'cims_purchase_cart_items';
     }
 
     /**
@@ -27,12 +34,13 @@ class ProductStockAvail extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('product_details_id, quantity', 'required'),
-            array('product_details_id', 'numerical', 'integerOnly' => true),
-            array('quantity', 'numerical', 'min' => 1),
+            array('cart_id, product_details_id, cost, price, quantity, product_color_id, product_size_id, product_grade_id', 'required'),
+            array('product_details_id, reference_number, quantity, product_color_id, product_size_id, product_grade_id', 'numerical', 'integerOnly' => true),
+            array('cart_id', 'length', 'max' => 10),
+            array('cost, price, sub_total, discount, vat', 'length', 'max' => 13),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, product_details_id, quantity', 'safe', 'on' => 'search'),
+            array('id, cart_id, product_details_id, reference_number, cost, price, quantity, sub_total, product_color_id, product_size_id, product_grade_id, discount, vat', 'safe', 'on' => 'search'),
         );
     }
 
@@ -43,7 +51,6 @@ class ProductStockAvail extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'productDetails' => array(self::BELONGS_TO, 'ProductDetails', 'product_details_id'),
         );
     }
 
@@ -53,8 +60,18 @@ class ProductStockAvail extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
+            'cart_id' => 'Cart',
             'product_details_id' => 'Product Details',
+            'reference_number' => 'Reference Number',
+            'cost' => 'Cost',
+            'price' => 'Price',
             'quantity' => 'Quantity',
+            'sub_total' => 'Sub Total',
+            'product_color_id' => 'Product Color',
+            'product_size_id' => 'Product Size',
+            'product_grade_id' => 'Product Grade',
+            'discount' => 'Discount',
+            'vat' => 'Vat',
         );
     }
 
@@ -76,12 +93,18 @@ class ProductStockAvail extends CActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
+        $criteria->compare('cart_id', $this->cart_id, true);
         $criteria->compare('product_details_id', $this->product_details_id);
-        $criteria->compare('quantity', $this->quantity, true);
-        
-        if (!Yii::app()->user->isSuperAdmin) {
-            $criteria->compare('t.store_id', Yii::app()->user->storeId);
-        }
+        $criteria->compare('reference_number', $this->reference_number);
+        $criteria->compare('cost', $this->cost, true);
+        $criteria->compare('price', $this->price, true);
+        $criteria->compare('quantity', $this->quantity);
+        $criteria->compare('sub_total', $this->sub_total, true);
+        $criteria->compare('product_color_id', $this->product_color_id);
+        $criteria->compare('product_size_id', $this->product_size_id);
+        $criteria->compare('product_grade_id', $this->product_grade_id);
+        $criteria->compare('discount', $this->discount, true);
+        $criteria->compare('vat', $this->vat, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -92,32 +115,10 @@ class ProductStockAvail extends CActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return ProductStockAvail the static model class
+     * @return PurchaseCartItems the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
-    }
-
-    public function getStockByProdId($prod_id, $store_id = 1, $grade_id = 0) {
-
-        $criteria = new CDbCriteria;
-
-        $criteria->compare('t.product_details_id', $prod_id);
-        
-        $criteria->compare('t.store_id', $store_id);
-        
-        if($grade_id > 0) {
-            $criteria->compare('t.grade_id', $grade_id);
-        }
-        
-        $criteria->compare('productDetails.store_id', $store_id);
-        
-        $criteria->order = 't.id DESC';
-        $criteria->limit = 1;
-        $criteria->with = array('productDetails');
-
-        $data = $this->find($criteria);
-        return (!empty($data)) ? $data : FALSE;
     }
 
 }

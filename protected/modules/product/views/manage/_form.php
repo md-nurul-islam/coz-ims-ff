@@ -117,7 +117,7 @@
                                 }
                                 ?>
                                 <?php
-                                echo CHtml::checkBox('ProductGrade[grade_id][]', $checked, array(
+                                echo CHtml::radioButton('ProductGrade[grade_id]', $checked, array(
                                     'value' => $grade->id,
                                     'id' => strtolower($grade->name),
                                     'class' => 'flat-red'
@@ -132,50 +132,114 @@
             </div>
 
             <div class="form-group">
-                <?php echo $form->labelEx($model, 'purchase_price', array('class' => 'col-sm-2 control-label')); ?>
+
+                <?php echo CHtml::label('Available Sizes', '', array('class' => 'col-sm-2 control-label')); ?>
+
                 <div class="col-sm-10">
-                    <?php
-                    echo $form->textField($model, 'purchase_price', array(
-                        'size' => 10,
-                        'maxlength' => 10,
-                        'class' => 'form-control',
-                        'placeholder' => 'Purchase Price',
-                    ));
-                    ?>
-                    <?php echo $form->error($model, 'purchase_price', array('class' => 'alert alert-danger')); ?>
+                    <ul class="list-inline">
+                        <?php foreach ($sizes as $size) { ?>
+                            <li>
+                                <?php
+                                $checked = FALSE;
+                                if (isset($ar_product_id)) {
+                                    if (in_array($size->id, $ar_product_id)) {
+                                        $checked = TRUE;
+                                    }
+                                }
+                                ?>
+                                <?php
+                                echo CHtml::radioButton('ProductSize[size_id]', $checked, array(
+                                    'value' => $size->id,
+                                    'id' => strtolower($size->name),
+                                    'class' => 'flat-red'
+                                ));
+                                ?>
+                                <?php echo CHtml::label($size->name, strtolower($size->name), array('class' => 'control-label')); ?>
+                            </li>
+                        <?php } ?>
+                    </ul>
                 </div>
+
             </div>
 
             <div class="form-group">
-                <?php echo $form->labelEx($model, 'selling_price', array('class' => 'col-sm-2 control-label')); ?>
+
+                <?php echo CHtml::label('Available Colors', '', array('class' => 'col-sm-2 control-label')); ?>
+
                 <div class="col-sm-10">
-                    <?php
-                    echo $form->textField($model, 'selling_price', array(
-                        'size' => 10,
-                        'maxlength' => 10,
-                        'placeholder' => 'Selling Price',
-                        'class' => 'form-control',
-                    ));
-                    ?>
-                    <?php echo $form->error($model, 'selling_price', array('class' => 'alert alert-danger')); ?>
+                    <ul class="list-inline">
+                        <?php foreach ($colors as $color) { ?>
+                            <li>
+                                <?php
+                                $checked = FALSE;
+                                if (isset($ar_product_id)) {
+                                    if (in_array($colors->id, $ar_product_id)) {
+                                        $checked = TRUE;
+                                    }
+                                }
+                                ?>
+                                <?php
+                                echo CHtml::radioButton('ProductColor[color_id]', $checked, array(
+                                    'value' => $color->id,
+                                    'id' => strtolower($color->name),
+                                    'class' => 'flat-red'
+                                ));
+                                ?>
+                                <?php echo CHtml::label($color->name, strtolower($color->name), array('class' => 'control-label')); ?>
+                            </li>
+                        <?php } ?>
+                    </ul>
                 </div>
+
             </div>
 
-            <div class="form-group">
-                <?php
-                $data = array('0' => 'Inactive', '1' => 'Active');
-                ?>
-                <?php echo $form->labelEx($model, 'status', array('class' => 'col-sm-2 control-label')); ?>
-                <div class="col-sm-10">
-                    <?php
-                    echo $form->dropDownList($model, 'status', $data, array(
-                        'class' => 'select2',
-                        'style' => 'width: 100%;'
-                    ));
-                    ?>
-                    <?php echo $form->error($model, 'status', array('class' => 'alert alert-danger')); ?>
+            <?php if (!$model->isNewRecord) { ?>
+                <div class="form-group">
+                    <?php echo $form->labelEx($model, 'purchase_price', array('class' => 'col-sm-2 control-label')); ?>
+                    <div class="col-sm-10">
+                        <?php
+                        echo $form->textField($model, 'purchase_price', array(
+                            'size' => 10,
+                            'maxlength' => 10,
+                            'class' => 'form-control',
+                            'placeholder' => 'Purchase Price',
+                        ));
+                        ?>
+                        <?php echo $form->error($model, 'purchase_price', array('class' => 'alert alert-danger')); ?>
+                    </div>
                 </div>
-            </div>
+
+                <div class="form-group">
+                    <?php echo $form->labelEx($model, 'selling_price', array('class' => 'col-sm-2 control-label')); ?>
+                    <div class="col-sm-10">
+                        <?php
+                        echo $form->textField($model, 'selling_price', array(
+                            'size' => 10,
+                            'maxlength' => 10,
+                            'placeholder' => 'Selling Price',
+                            'class' => 'form-control',
+                        ));
+                        ?>
+                        <?php echo $form->error($model, 'selling_price', array('class' => 'alert alert-danger')); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <?php
+                    $data = array('0' => 'Inactive', '1' => 'Active');
+                    ?>
+                    <?php echo $form->labelEx($model, 'status', array('class' => 'col-sm-2 control-label')); ?>
+                    <div class="col-sm-10">
+                        <?php
+                        echo $form->dropDownList($model, 'status', $data, array(
+                            'class' => 'select2',
+                            'style' => 'width: 100%;'
+                        ));
+                        ?>
+                        <?php echo $form->error($model, 'status', array('class' => 'alert alert-danger')); ?>
+                    </div>
+                </div>
+            <?php } ?>
 
             <div class="box-footer">
                 <?php echo CHtml::submitButton(($model->isNewRecord) ? 'Add' : 'Update', array('id' => 'btn-submit', 'class' => 'btn btn-info pull-right')); ?>

@@ -1,20 +1,20 @@
 <?php
 
 /**
- * This is the model class for table "cims_product_grade".
+ * This is the model class for table "cims_sizes".
  *
- * The followings are the available columns in table 'cims_product_grade':
+ * The followings are the available columns in table 'cims_sizes':
  * @property integer $id
- * @property integer $product_details_id
- * @property integer $grade_id
+ * @property string $name
+ * @property integer $status
  */
-class ProductGrade extends CActiveRecord {
+class Sizes extends CActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return 'cims_product_grade';
+        return 'cims_sizes';
     }
 
     /**
@@ -24,11 +24,12 @@ class ProductGrade extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('product_details_id, grade_id', 'required'),
-            array('product_details_id, grade_id', 'numerical', 'integerOnly' => true),
+            array('name', 'required'),
+            array('status', 'numerical', 'integerOnly' => true),
+            array('name', 'length', 'max' => 120),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, product_details_id, grade_id', 'safe', 'on' => 'search'),
+            array('id, name, status', 'safe', 'on' => 'search'),
         );
     }
 
@@ -39,8 +40,6 @@ class ProductGrade extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'productDetails' => array(self::BELONGS_TO, 'ProductDetails', 'product_details_id'),
-            'grade' => array(self::BELONGS_TO, 'Grade', 'grade_id'),
         );
     }
 
@@ -50,8 +49,8 @@ class ProductGrade extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'product_details_id' => 'Product Details',
-            'grade_id' => 'Grade',
+            'name' => 'Name',
+            'status' => 'Status',
         );
     }
 
@@ -73,8 +72,8 @@ class ProductGrade extends CActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
-        $criteria->compare('product_details_id', $this->product_details_id);
-        $criteria->compare('grade_id', $this->grade_id);
+        $criteria->compare('name', $this->name, true);
+        $criteria->compare('status', $this->status);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -85,39 +84,10 @@ class ProductGrade extends CActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return ProductGrade the static model class
+     * @return Sizes the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
-    }
-    
-    public function getGrades($prod_id = 0, $grade_id = 0, $all = TRUE) {
-        // @todo Please modify the following code to remove attributes that should not be searched.
-
-        $criteria = new CDbCriteria;
-        
-        $criteria->with = array(
-            'grade' => array(
-                'select' => 'grade.id, grade.name',
-            ),
-        );
-        
-        if ($prod_id > 0){
-            $criteria->compare('t.product_details_id', $prod_id);
-        }
-        if ($grade_id > 0){
-            $criteria->compare('t.grade_id', $grade_id);
-        }
-        
-        if (!$all) {
-            $criteria->limit = 1;
-            $data = $this->find($criteria);
-        } else {
-            $data = $this->findAll($criteria);
-        }
-        
-        return (!empty($data)) ? $data : FALSE;
-
     }
 
 }

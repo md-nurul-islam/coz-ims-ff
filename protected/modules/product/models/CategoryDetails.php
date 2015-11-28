@@ -15,6 +15,7 @@
  */
 class CategoryDetails extends CActiveRecord {
 
+    public $pageSize = 20;
     /**
      * @return string the associated database table name
      */
@@ -103,6 +104,91 @@ class CategoryDetails extends CActiveRecord {
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
+    }
+
+    /**
+     * @return array for Data Grid Headers customized attribute labels (name=>label)
+     * remove the attributes don't needed in the Grid
+     */
+    public function dataGridHeaders() {
+        return array(
+            'id' => array('label' => 'ID', 'sortable' => 'true', 'width' => 50),
+            'category_name' => array('label' => 'Category Name', 'sortable' => 'true', 'width' => 50),
+            'category_description' => array('label' => 'Description', 'sortable' => 'true', 'width' => 180),
+            'status' => array('label' => 'Status', 'sortable' => 'true', 'width' => 80)
+        );
+    }
+
+    public function dataGridFilters() {
+        return array(
+            'category_name' => array('id' => 'billnumber', 'class' => 'easyui-textbox', 'label' => 'Category Name: ', 'style' => 'width:80px;'),
+            'status' => array('id' => 'status', 'class' => 'easyui-combobox', 'label' => 'Status',
+                'data-options' => "valueField: 'id', textField: 'text', url: '/product/category/getStatusComboData' ",
+                'panelHeight' => 70,
+                'style' => 'width:80px; cursor: pointer;'),
+        );
+    }
+
+    public function statusComboData() {
+
+        return array(
+            array(
+                'id' => '',
+                'text' => 'Select',
+            ),
+            array(
+                'id' => '1',
+                'text' => 'Active',
+            ),
+            array(
+                'id' => '0',
+                'text' => 'Inactive',
+            ),
+        );
+    }
+
+    public function dataGridRows($params = array()) {
+        
+        $store_id = 1;
+        
+        if(!Yii::app()->user->isSuperAdmin) {
+            $store_id = Yii::app()->user->storeId;
+        }
+
+        $offset = 0;
+        if (isset($params['offset']) && $params['offset'] > 0) {
+            $offset = $params['offset'];
+        }
+
+        $order = 'id DESC';
+        if (isset($params['order']) && !empty($params['order'])) {
+            $order = $params['order'];
+        }
+
+        $command = Yii::app()->db->createCommand()
+                ->from($this->tableName() . ' t')
+                ->offset($offset)
+                ->limit($this->pageSize)
+                ->order($order)
+                ->andWhere('store_id = :sid', array(':sid' => $store_id))
+        ;
+
+        $sub_command = Yii::app()->db->createCommand()
+                ->select('count( DISTINCT t.id )')
+                ->from($this->tableName() . ' t')
+                ->andWhere('store_id = :sid', array(':sid' => $store_id))
+        ;
+        
+        $filter_keys = array_keys($this->dataGridFilters());
+        if (isset($params['where']) && !empty($params['where'])) {
+            $new_command_objs = DataGridHelper::processFilterableVars($command, $params['where'], $filter_keys, 't', $sub_command);
+            $command = $new_command_objs[0];
+            $sub_command = $new_command_objs[1];
+        }
+
+        $command->select('t.id, t.category_name, t.category_description, CASE t.status WHEN "1" THEN "Active" ELSE "Inactive" END AS `status`, (' . $sub_command->getText() . ') AS total_rows');
+
+        return $command->queryAll();
     }
 
 }

@@ -24,6 +24,7 @@ function add_to_cart(prod_id, prod_name, cur_stock, price, vat, discount) {
                 '<td>' +
                 '<input type="hidden" class="form-control cart_prod_id" value="' + prod_id + '" />' +
                 '<input type="text" class="form-control cart_qty" value="' + qty + '" />' +
+                '<label style="display: none;" class="cart_qty_lbl">' + qty + '</label>' +
                 '<input type="hidden" class="form-control sell_price" value="' + price + '" />' +
                 '<input type="hidden" class="form-control cart_cur_stock" value="' + cur_stock + '" />' +
                 '<input type="hidden" class="form-control cart_vat" value="' + vat + '" >' +
@@ -51,36 +52,6 @@ function add_to_cart(prod_id, prod_name, cur_stock, price, vat, discount) {
     return true;
 }
 
-function reset_fields() {
-    $('#item_selling_price').val('');
-    $('#quantity').val('');
-    $('#product_details_id').val('');
-    $('#product_name').val('');
-    $('#ref_num').val('');
-    $('#avail_stock').val('');
-    $('#item_subtotal').val('');
-    return true;
-}
-
-function edit_current_row(cart_div_id) {
-
-    prod_id = $('#product_details_id' + cart_div_id).val();
-    prod_name = $('#product_details_name' + cart_div_id).val();
-    reference_num = $('#ref_num' + cart_div_id).val();
-    qty = $('#quantity' + cart_div_id).val();
-    price = $('#item_selling_price' + cart_div_id).val();
-    cur_stock = $('#cur_stock' + cart_div_id).val();
-    sub_total = $('#item_subtotal' + cart_div_id).val();
-    $('#product_details_id').val(prod_id);
-    $('#product_name').val(prod_name);
-    $('#ref_num').val(reference_num);
-    $('#quantity').val(qty);
-    $('#item_selling_price').val(price);
-    $('#avail_stock').val(cur_stock);
-    $('#item_subtotal').val(sub_total);
-    return true;
-}
-
 var cart_rows = {};
 function calculate_sub_total(cart_row_id) {
 
@@ -89,6 +60,8 @@ function calculate_sub_total(cart_row_id) {
     var qty = parseInt(cart_body.find('tr#' + cart_row_id + ' td:eq(2) .cart_qty').val());
     var price = parseFloat(cart_body.find('tr#' + cart_row_id + ' td:eq(2) .sell_price').val());
     var sub_total = parseFloat(qty * price);
+
+    cart_body.find('tr#' + cart_row_id + ' td:eq(2) .cart_qty_lbl').text(qty);
 
     cart_body.find('tr#' + cart_row_id + ' td:eq(3)').text(sub_total.toFixed(2));
 
@@ -488,12 +461,12 @@ $(document).ready(function () {
     });
 
     $(document).off('keyup', '#paying_amount').on('keyup', '#paying_amount', function (e) {
-        var er = /^-?[0-9]+$/;
+
         var amount = parseFloat($(this).val());
         var grand_total = parseFloat($('#cart-total tr:last-child th:eq(2)').text());
         var total_balance = 0.00;
 
-        if (er.test(amount)) {
+        if (!isNaN(amount)) {
             $('#payment-total-paying').text(amount.toFixed(2));
             total_balance = amount - grand_total;
             $('#payment-total-balance').text(total_balance.toFixed(2));
@@ -508,11 +481,25 @@ $(document).ready(function () {
         var cart_id = $('#payment_cart_row_id_container').val();
         var note = $('#note').val();
         var payment_method = $('#payment_mode').val();
+        var payment_amount = $('#paying_amount').val();
+        var card_number = $('#card_number').val();
+        var card_cvc = $('#card_cvc').val();
+        var card_type = $('#card_option').val();
+        var bill_number = $('#ProductStockSales_billnumber').val();
+        var sale_date = $('#ProductStockSales_sale_date').val();
+        var due_payment_date = $('#ProductStockSales_due_payment_date').val();
         var post_data = {};
-        
+
         post_data['type'] = 'sale';
         post_data['note'] = note;
         post_data['payment_method'] = payment_method;
+        post_data['payment_amount'] = payment_amount;
+        post_data['card_number'] = card_number;
+        post_data['card_cvc'] = card_cvc;
+        post_data['card_type'] = card_type;
+        post_data['bill_number'] = bill_number;
+        post_data['sale_date'] = sale_date;
+        post_data['due_payment_date'] = due_payment_date;
 
         $.ajax({
             url: '/cart/payment',
@@ -520,12 +507,67 @@ $(document).ready(function () {
             dataType: 'json',
             data: {cart_id: cart_id, post_data: post_data},
         }).done(function (data) {
+
+            if (data.html != '') {
+
+                if ($('.print').length > 0) {
+
+                    if ($('.print .print-wrapper').find('table').length > 0) {
+                        $('.print .print-wrapper').find('table').remove();
+                    }
+                    $('.print .print-wrapper').append(data.html);
+                    
+                    var bill_number = $('.print .hidden_bill_number').text().trim();
+                    var sale_date = $('.print .hidden_sale_date').text().trim();
+                    
+                    $('.print .bill-date span').html('');
+                    $('.print .bill-date span').html(sale_date);
+                    
+                    $('.print .bill-number span').html('');
+                    $('.print .bill-number span').html(bill_number);
+
+                    $('.print').find('table').attr('cellspacing', '0');
+                    $('.print .bill-date span').html(sale_date);
+
+                    $('#btn-print').trigger('click');
+                }
+            }
+            
+            $('#paymentModal').modal('hide');
+
             window.location.reload();
         }).fail(function (e) {
             console.log(e);
         });
-        
+
         return false;
+    });
+
+    $(document).off('click', '.cart-print').on('click', '.cart-print', function (e) {
+
+        var printable = $('.printable').html();
+        var sale_date = $('#ProductStockSales_sale_date').val();
+
+        if ($('.print').length > 0) {
+
+            if ($('.print .print-wrapper').find('table').length > 0) {
+                $('.print .print-wrapper').find('table').remove();
+            }
+            $('.print .print-wrapper').append(printable);
+
+            $('.print').find('table tr').each(function (e) {
+                $(this).find('th:last-child').remove();
+                $(this).find('td:last-child').remove();
+                $(this).find('td:eq(2) input.cart_qty').remove();
+                $(this).find('td:eq(2) label.cart_qty_lbl').show();
+            });
+
+            $('.print').find('table').attr('cellspacing', '0');
+            $('.print .bill-date span').html(sale_date);
+
+            $('#btn-print').trigger('click');
+        }
+
 
     });
 

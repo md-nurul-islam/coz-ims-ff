@@ -26,7 +26,7 @@ class CategoryController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'autocomplete'),
+                'actions' => array('index', 'view', 'create', 'update', 'autocomplete', 'getdata', 'getStatusComboData'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -67,7 +67,7 @@ class CategoryController extends Controller {
 
         if (isset($_POST['CategoryDetails'])) {
             $model->attributes = $_POST['CategoryDetails'];
-            
+
 //            if (!Yii::app()->user->isSuperAdmin) {
 //                $model->store_id = Yii::app()->user->storeId;
 //            }
@@ -97,7 +97,7 @@ class CategoryController extends Controller {
 
         if (isset($_POST['CategoryDetails'])) {
             $model->attributes = $_POST['CategoryDetails'];
-            
+
 //            if (!Yii::app()->user->isSuperAdmin) {
 //                $model->store_id = Yii::app()->user->storeId;
 //            }
@@ -130,18 +130,7 @@ class CategoryController extends Controller {
      * Lists all models.
      */
     public function actionIndex() {
-        $model = new CategoryDetails('search');
-
-        $this->pageTitle = Yii::app()->name . ' - Category List';
-        $this->pageHeader = 'Category List';
-
-        $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['CategoryDetails']))
-            $model->attributes = $_GET['CategoryDetails'];
-
-        $this->render('index', array(
-            'model' => $model,
-        ));
+        $this->render('index');
     }
 
     /**
@@ -189,6 +178,46 @@ class CategoryController extends Controller {
 
             echo CJSON::encode($return_array);
         }
+    }
+
+    /*
+     * Grid functions
+     */
+    public function actionGetdata() {
+
+        foreach (DataGridHelper::$_ar_non_filterable_vars as $nfv_key => $nfv_var_name) {
+            ${$nfv_var_name} = Yii::app()->request->getParam($nfv_key);
+        }
+
+        $rows = array();
+        $offest = 0;
+
+        if (${DataGridHelper::$_ar_non_filterable_vars['page']} > 1) {
+            $offest = (${DataGridHelper::$_ar_non_filterable_vars['page']} - 1) * ${DataGridHelper::$_ar_non_filterable_vars['rows']};
+        }
+
+        $CategoryDetails = new CategoryDetails();
+
+        $CategoryDetails->pageSize = 20;
+        $query_params = array(
+            'offset' => $offest,
+            'order' => ${DataGridHelper::$_ar_non_filterable_vars['sort']} . ' ' . ${DataGridHelper::$_ar_non_filterable_vars['order']},
+            'where' => $_POST,
+        );
+
+        $result['rows'] = $CategoryDetails->dataGridRows($query_params);
+//        var_dump($result['rows']);exit;
+        $result["total"] = 0;
+
+        if (($result['rows'])) {
+            $result["total"] = $result['rows'][0]['total_rows'];
+        }
+        echo CJSON::encode($result);
+        Yii::app()->end();
+    }
+
+    public function actionGetStatusComboData() {
+        echo CJSON::encode(CategoryDetails::model()->statusComboData());
     }
 
     /**

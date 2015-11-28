@@ -26,7 +26,7 @@ class ManageController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'autocomplete'),
+                'actions' => array('index', 'view', 'create', 'update', 'autocomplete', 'getdata', 'getStatusComboData'),
                 'users' => array('@'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -56,8 +56,10 @@ class ManageController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
+        $now = date('Y-m-d H:i:s', Settings::getBdLocalTime());
         $this->pageTitle = Yii::app()->name . ' - Add Product';
         $this->pageHeader = 'Add Product';
+        $edit = false;
 
         $model = new ProductDetails;
         $category_name = '';
@@ -72,34 +74,48 @@ class ManageController extends Controller {
         }
 
         $grades = Grade::model()->findAll();
+        $sizes = Sizes::model()->findAll();
+        $colors = Color::model()->findAll();
 
         if (isset($_POST['ProductDetails'])) {
-            $category_name = Yii::app()->request->getPost('category_name');
-            $supplier_name = Yii::app()->request->getPost('supplier_name');
-
+            
             $model->attributes = $_POST['ProductDetails'];
-
+            
             $model->store_id = $store_id;
-
-            if (empty($category_name)) {
-                $model->category_id = '';
-            }
-
-            if (empty($supplier_name)) {
-                $model->supplier_id = '';
-            }
-
-            $model->create_date = date('Y-m-d H:i:s', Settings::getBdLocalTime());
-
+            
+            $model->create_date = $now;
+            $model->update_date = $now;
+            
             if ($model->save()) {
-                $product_grades = $_POST['ProductGrade']['grade_id'];
-
-                foreach ($product_grades as $pg) {
-                    $obj_pg = new ProductGrade();
-                    $obj_pg->product_details_id = $model->id;
-                    $obj_pg->grade_id = $pg;
-                    $obj_pg->save();
-                }
+                
+                $product_grade = $_POST['ProductGrade']['grade_id'];
+                $product_size = $_POST['ProductSize']['size_id'];
+                $product_color = $_POST['ProductColor']['color_id'];
+                
+                $obj_pg = new ProductGrade();
+                $obj_pg->product_details_id = $model->id;
+                $obj_pg->grade_id = $product_grade;
+                $obj_pg->save();
+                
+                $obj_ps = new ProductSize();
+                $obj_ps->product_details_id = $model->id;
+                $obj_ps->size_id = $product_size;
+                $obj_ps->save();
+                
+                $obj_pc = new ProductColor();
+                $obj_pc->product_details_id = $model->id;
+                $obj_pc->color_id = $product_color;
+                $obj_pc->save();
+                
+                $obj_p_stock = new ProductStockAvail();
+                $obj_p_stock->product_details_id = $model->id;
+                $obj_p_stock->quantity = 0;
+                $obj_p_stock->store_id = $store_id;
+                $obj_p_stock->product_grade_id = $obj_pg->id;
+                $obj_p_stock->product_size_id = $obj_ps->id;
+                $obj_p_stock->product_color_id = $obj_pc->id;
+                $obj_p_stock->insert();
+                
                 $this->redirect(array('index'));
             }
         }
@@ -109,6 +125,8 @@ class ManageController extends Controller {
             'category_name' => $category_name,
             'supplier_name' => $supplier_name,
             'grades' => $grades,
+            'sizes' => $sizes,
+            'colors' => $colors,
         ));
     }
 
@@ -134,12 +152,12 @@ class ManageController extends Controller {
         }
 
         $grades = Grade::model()->findAll();
-        
+
         $ar_pd = array();
         foreach ($model->productGrade as $pd) {
             $ar_pd[] = $pd->grade_id;
         }
-        
+
         if (isset($_POST['ProductDetails'])) {
             $category_name = Yii::app()->request->getPost('category_name');
             $supplier_name = Yii::app()->request->getPost('supplier_name');
@@ -178,14 +196,14 @@ class ManageController extends Controller {
                 'status' => $model->status,
                     ), 'id = :id AND store_id = :sid', array(':id' => $id, ':sid' => $model->store_id)
             );
-            
+
             $product_grades = $_POST['ProductGrade']['grade_id'];
             $cnt_product_grades = count($product_grades);
             $obj_pg = new ProductGrade();
-            if(!empty($product_grades) && $cnt_product_grades > 0) {
+            if (!empty($product_grades) && $cnt_product_grades > 0) {
                 $i_deleted_rows = $obj_pg->deleteAllByAttributes(array('product_details_id' => $id));
             }
-            
+
             foreach ($product_grades as $pg) {
                 $obj_pg = new ProductGrade();
                 $obj_pg->product_details_id = $model->id;
@@ -395,6 +413,46 @@ class ManageController extends Controller {
         }
 
         $this->render('update_stock', array('model' => $model));
+    }
+    
+    /*
+     * Grid functions
+     */
+    public function actionGetdata() {
+
+        foreach (DataGridHelper::$_ar_non_filterable_vars as $nfv_key => $nfv_var_name) {
+            ${$nfv_var_name} = Yii::app()->request->getParam($nfv_key);
+        }
+
+        $rows = array();
+        $offest = 0;
+
+        if (${DataGridHelper::$_ar_non_filterable_vars['page']} > 1) {
+            $offest = (${DataGridHelper::$_ar_non_filterable_vars['page']} - 1) * ${DataGridHelper::$_ar_non_filterable_vars['rows']};
+        }
+
+        $ProductDetails = new ProductDetails();
+
+        $ProductDetails->pageSize = 20;
+        $query_params = array(
+            'offset' => $offest,
+            'order' => ${DataGridHelper::$_ar_non_filterable_vars['sort']} . ' ' . ${DataGridHelper::$_ar_non_filterable_vars['order']},
+            'where' => $_POST,
+        );
+
+        $result['rows'] = $ProductDetails->dataGridRows($query_params);
+//        var_dump($result['rows']);exit;
+        $result["total"] = 0;
+
+        if (($result['rows'])) {
+            $result["total"] = $result['rows'][0]['total_rows'];
+        }
+        echo CJSON::encode($result);
+        Yii::app()->end();
+    }
+
+    public function actionGetStatusComboData() {
+        echo CJSON::encode(CategoryDetails::model()->statusComboData());
     }
 
     /**

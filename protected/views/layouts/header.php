@@ -215,6 +215,12 @@
                                 </li>-->
                 <!-- User Account: style can be found in dropdown.less -->
 
+                <li class="user user-menu">
+                    <a href="javascript:void(0);">
+                        <span class="hidden-xs"><?php echo CHtml::encode(Yii::app()->user->storeName); ?></span>
+                    </a>
+                </li>
+
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <!--<img src="/css/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">-->
@@ -271,9 +277,9 @@
                     </ul>
                 </li>
                 <!-- Control Sidebar Toggle Button -->
-<!--                <li>
-                    <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-                </li>-->
+                <!--                <li>
+                                    <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                                </li>-->
             </ul>
         </div>
     </nav>
