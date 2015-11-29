@@ -200,6 +200,7 @@ class PurchaseController extends Controller {
         if (isset($_POST['ProductStockEntries'])) {
 
             $product_id = $_POST['product_details_id'];
+            
             $new_cost = $_POST['n_cost'];
             $new_price = $_POST['n_price'];
 
@@ -225,7 +226,7 @@ class PurchaseController extends Controller {
             $model->store_id = $store_id;
             $model->purchase_cart_id = $purchase_cart->id;
             $model->insert();
-
+            
             $purchase_cart_items = new PurchaseCartItems;
             $purchase_cart_items->cart_id = $purchase_cart->id;
             $purchase_cart_items->product_details_id = $product_id;
@@ -240,7 +241,8 @@ class PurchaseController extends Controller {
 
             $stock_info->quantity = ((int) $stock_info->quantity + (int) $_POST['quantity']);
 
-            $ProductDetails = ProductDetails::model()->findByPk($product_id);
+            $ProductDetails = ProductDetails::model()->findByAttributes( array('id' => $product_id));
+            
             $ProductDetails->purchase_price = $new_cost;
             $ProductDetails->selling_price = $new_price;
             $ProductDetails->update();
