@@ -22,20 +22,19 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CCl
 <div class="col-lg-12">
 
     <div id="filters" style="padding:5px; height:auto">
-        <div style="margin-bottom:5px">
+<!--        <div style="margin-bottom:5px">
             <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
             <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
             <a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
             <a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
             <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true"></a>
-        </div>
+        </div>-->
 
         <?php
         if (!empty($this->filters)) {
             ?>
 
             <div>
-
                 <?php foreach ($this->filters as $key => $val) { ?>
                     <?php if (isset($val['label']) && !empty($val['label'])) { ?>
                         <?php echo $val['label']; ?>
@@ -51,7 +50,7 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CCl
         <?php } ?>
     </div>
 
-    <table id="dg" class="table table-bordered table-hover" style="height:auto;"
+    <table id="dg" class="table table-bordered table-hover table-responsive" style="height:auto;"
            data-options="
            rownumbers:true,
            singleSelect:true,
@@ -84,12 +83,12 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CCl
 <script type="text/javascript">
 
     $(function () {
-    var dg = $('#dg').datagrid();
-            dg.datagrid('getPager').pagination({
+        var dg = $('#dg').datagrid();
+        dg.datagrid('getPager').pagination({
             layout: ['first', 'prev', 'links', 'next', 'last', 'refresh'],
         });
     });
-
+    
     function doSearch() {
         $('#dg').datagrid('reload', {
             <?php foreach ($this->filters as $key => $filter) { ?>

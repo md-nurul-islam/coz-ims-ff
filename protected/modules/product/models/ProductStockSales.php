@@ -381,32 +381,32 @@ class ProductStockSales extends CActiveRecord {
      * @return assocciative array of sale and related data
      */
     public function getSaleData($id = 0) {
-        
+
         $store_id = 1;
-        
+
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
         }
-        
+
         $command = Yii::app()->db->createCommand()
                 ->from($this->tableName() . ' t')
                 ->join(Cart::model()->tableName() . ' c', 'c.id = t.cart_id')
                 ->join(CartItems::model()->tableName() . ' ci', 'c.id = ci.cart_id')
                 ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = ci.product_details_id')
         ;
-        
+
         $command->andWhere('t.store_id = :store_id', array(':store_id' => $store_id));
-        
-        if($id > 0) {
+
+        if ($id > 0) {
             $command->andWhere('t.id = :id', array(':id' => $id));
         }
-        
+
         $command->select('t.id, t.billnumber, t.sale_date, t.store_id , c.discount, c.vat, c.grand_total, c.discount, c.vat, ci.price, ci.quantity, ci.sub_total, pd.product_name');
-        
+
         $data = $command->queryAll();
         return $data;
     }
-    
+
     /**
      * NEW CODES
      */
@@ -421,6 +421,9 @@ class ProductStockSales extends CActiveRecord {
             'billnumber' => array('label' => 'Bill Number', 'sortable' => 'true', 'width' => 50),
             'product_name' => array('label' => 'Product Name', 'sortable' => 'true', 'width' => 180),
             'grand_total' => array('label' => 'Total', 'sortable' => 'true', 'width' => 50),
+            'color_name' => array('label' => 'Color', 'sortable' => 'true', 'width' => 50),
+            'size_name' => array('label' => 'Size', 'sortable' => 'true', 'width' => 50),
+            'grade_name' => array('label' => 'Grade', 'sortable' => 'true', 'width' => 50),
             'discount' => array('label' => 'Discount', 'sortable' => 'true', 'width' => 50),
             'vat' => array('label' => 'Vat', 'sortable' => 'true', 'width' => 50),
         );
@@ -469,6 +472,12 @@ class ProductStockSales extends CActiveRecord {
                 ->join(Cart::model()->tableName() . ' c', 'c.id = t.cart_id')
                 ->join(CartItems::model()->tableName() . ' ci', 'c.id = ci.cart_id')
                 ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = ci.product_details_id')
+                ->join(ProductColor::model()->tableName() . ' pc', 'pd.id = pc.product_details_id')
+                ->join(Color::model()->tableName() . ' cl', 'cl.id = pc.color_id')
+                ->join(ProductSize::model()->tableName() . ' ps', 'pd.id = ps.product_details_id')
+                ->join(Sizes::model()->tableName() . ' s', 's.id = ps.size_id')
+                ->join(ProductGrade::model()->tableName() . ' pg', 'pd.id = pg.product_details_id')
+                ->join(Grade::model()->tableName() . ' g', 'g.id = pg.grade_id')
                 ->offset($offset)
                 ->limit($this->pageSize)
                 ->order($order)
@@ -481,6 +490,12 @@ class ProductStockSales extends CActiveRecord {
                 ->join(Cart::model()->tableName() . ' c', 'c.id = t.cart_id')
                 ->join(CartItems::model()->tableName() . ' ci', 'c.id = ci.cart_id')
                 ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = ci.product_details_id')
+                ->join(ProductColor::model()->tableName() . ' pc', 'pd.id = pc.product_details_id')
+                ->join(Color::model()->tableName() . ' cl', 'cl.id = pc.color_id')
+                ->join(ProductSize::model()->tableName() . ' ps', 'pd.id = ps.product_details_id')
+                ->join(Sizes::model()->tableName() . ' s', 's.id = ps.size_id')
+                ->join(ProductGrade::model()->tableName() . ' pg', 'pd.id = pg.product_details_id')
+                ->join(Grade::model()->tableName() . ' g', 'g.id = pg.grade_id')
                 ->where('t.cart_id IS NOT NULL')
         ;
 
@@ -491,7 +506,16 @@ class ProductStockSales extends CActiveRecord {
             $sub_command = $new_command_objs[1];
         }
 
-        $command->select('t.id, GROUP_CONCAT(pd.product_name) as product_name, c.grand_total, c.discount, c.vat, (' . $sub_command->getText() . ') AS total_rows');
+        $command->select(
+                't.id,
+                GROUP_CONCAT(pd.product_name) as product_name,
+                GROUP_CONCAT(cl.name) as color_name,
+                GROUP_CONCAT(g.name) as grade_name,
+                GROUP_CONCAT(s.name) as size_name,
+                t.billnumber, c.grand_total,
+                c.discount, c.vat,
+                (' . $sub_command->getText() . ') AS total_rows'
+        );
 
         return $command->queryAll();
     }

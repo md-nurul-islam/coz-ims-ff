@@ -431,13 +431,17 @@ class ProductStockEntries extends CActiveRecord {
      */
     public function dataGridHeaders() {
         return array(
-            'id' => array('label' => 'ID', 'sortable' => 'true', 'width' => 50),
+//            'id' => array('label' => 'ID', 'sortable' => 'true', 'width' => 50),
             'billnumber' => array('label' => 'Bill Number', 'sortable' => 'true', 'width' => 50),
             'product_name' => array('label' => 'Product Name', 'sortable' => 'true', 'width' => 180),
             'quantity' => array('label' => 'Quantity', 'sortable' => 'true', 'width' => 50),
+            'color_name' => array('label' => 'Color', 'sortable' => 'true', 'width' => 50),
+            'size_name' => array('label' => 'Size', 'sortable' => 'true', 'width' => 50),
+            'grade_name' => array('label' => 'Grade', 'sortable' => 'true', 'width' => 50),
             'grand_total' => array('label' => 'Total', 'sortable' => 'true', 'width' => 50),
             'discount' => array('label' => 'Discount', 'sortable' => 'true', 'width' => 50),
             'vat' => array('label' => 'Vat', 'sortable' => 'true', 'width' => 50),
+            'action' => array('label' => 'Action', 'sortable' => 'false', 'width' => 50),
         );
     }
 
@@ -487,6 +491,12 @@ class ProductStockEntries extends CActiveRecord {
                 ->join(PurchaseCart::model()->tableName() . ' pc', 'pc.id = t.purchase_cart_id')
                 ->join(PurchaseCartItems::model()->tableName() . ' pci', 'pc.id = pci.cart_id')
                 ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = pci.product_details_id')
+                ->join(ProductColor::model()->tableName() . ' pcl', 'pd.id = pcl.product_details_id')
+                ->join(Color::model()->tableName() . ' cl', 'cl.id = pcl.color_id')
+                ->join(ProductSize::model()->tableName() . ' ps', 'pd.id = ps.product_details_id')
+                ->join(Sizes::model()->tableName() . ' s', 's.id = ps.size_id')
+                ->join(ProductGrade::model()->tableName() . ' pg', 'pd.id = pg.product_details_id')
+                ->join(Grade::model()->tableName() . ' g', 'g.id = pg.grade_id')
                 ->offset($offset)
                 ->limit($this->pageSize)
                 ->order($order)
@@ -499,6 +509,12 @@ class ProductStockEntries extends CActiveRecord {
                 ->join(PurchaseCart::model()->tableName() . ' pc', 'pc.id = t.purchase_cart_id')
                 ->join(PurchaseCartItems::model()->tableName() . ' pci', 'pc.id = pci.cart_id')
                 ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = pci.product_details_id')
+                ->join(ProductColor::model()->tableName() . ' pcl', 'pd.id = pcl.product_details_id')
+                ->join(Color::model()->tableName() . ' cl', 'cl.id = pcl.color_id')
+                ->join(ProductSize::model()->tableName() . ' ps', 'pd.id = ps.product_details_id')
+                ->join(Sizes::model()->tableName() . ' s', 's.id = ps.size_id')
+                ->join(ProductGrade::model()->tableName() . ' pg', 'pd.id = pg.product_details_id')
+                ->join(Grade::model()->tableName() . ' g', 'g.id = pg.grade_id')
                 ->where('pci.cart_id IS NOT NULL')
         ;
 
@@ -509,9 +525,20 @@ class ProductStockEntries extends CActiveRecord {
             $sub_command = $new_command_objs[1];
         }
 
-        $command->select('t.id, t.billnumber, pci.quantity, GROUP_CONCAT(pd.product_name) as product_name, pc.grand_total, pc.discount, pc.vat, (' . $sub_command->getText() . ') AS total_rows');
+        $command->select('t.id,
+            t.billnumber,
+            pci.quantity,
+            GROUP_CONCAT(pd.product_name) as product_name,
+            pc.grand_total,
+            pc.discount, pc.vat,
+            cl.name as color_name,
+            g.name as grade_name,
+            s.name as size_name,
+            (' . $sub_command->getText() . ') AS total_rows');
+        
+        $data = DataGridHelper::propagateActionLinks($command->queryAll());
 
-        return $command->queryAll();
+        return $data;
     }
 
 }

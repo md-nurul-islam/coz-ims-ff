@@ -183,7 +183,7 @@ class PurchaseController extends Controller {
     }
 
     public function actionCreatesingle() {
-
+        
         $model = new ProductStockEntries;
         $now = date('Y-m-d');
 
@@ -319,7 +319,8 @@ class PurchaseController extends Controller {
      * Lists all models.
      */
     public function actionIndex() {
-
+        $this->pageHeader = 'Purchase List';
+        
         $model = new ProductStockEntries();
         $pageSize = 0;
 

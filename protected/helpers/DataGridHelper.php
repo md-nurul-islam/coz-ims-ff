@@ -43,5 +43,20 @@ class DataGridHelper {
         }
         return array($query_object, $sub_query_object);
     }
+    
+    public static function propagateActionLinks($data) {
+        
+        $i = 0;
+        $response = [];
+        foreach ($data as $row) {
+            $row['action'] = '
+                <a href="view/'.$row['id'].'"><i class="fa fa-eye"></i></a>
+                <a href="edit/'.$row['id'].'"><i class="fa fa-pencil-square-o"></i></a>
+                ';
+            $response[$i] = $row;
+            $i++;
+        }
+        return $response;
+    }
 
 }
