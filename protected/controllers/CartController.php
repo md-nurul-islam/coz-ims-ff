@@ -149,7 +149,7 @@ class CartController extends Controller {
         $data = call_user_func_array(array($this, 'proccess' . $cart_type), array($cart_id, $post_data));
 
         if (!empty($data)) {
-            
+
             $respons['success'] = TRUE;
             $respons['message'] = 'Successfully paid.';
             $respons['html'] = $this->renderPartial('//cart/_bill', $data, TRUE, true);
@@ -198,8 +198,8 @@ class CartController extends Controller {
 
             if ($sales->insert()) {
 
-//                Yii::app()->db->createCommand()
-//                        ->delete(TmpCart::model()->tableName(), 'id = :id', array(':id' => $cart_id));
+                Yii::app()->db->createCommand()
+                        ->delete(TmpCart::model()->tableName(), 'id = :id', array(':id' => $cart_id));
             }
         }
 
@@ -213,14 +213,21 @@ class CartController extends Controller {
             $cart_item->sub_total = $tmp_cart['sub_total'];
             $cart_item->insert();
             $i++;
+
+            $stock_info = ProductStockAvail::model()->findByAttributes(array(
+                'product_details_id' => $cart_item->product_details_id
+            ));
+            
+            $stock_info->quantity = ((int) $stock_info->quantity - (int) $tmp_cart['quantity']);
+            $stock_info->update();
         }
 
-//        Yii::app()->db->createCommand()
-//                ->delete(TmpCartItems::model()->tableName(), 'cart_id = :cid', array(':cid' => $cart_id));
+        Yii::app()->db->createCommand()
+                ->delete(TmpCartItems::model()->tableName(), 'cart_id = :cid', array(':cid' => $cart_id));
 
         $sold_data = new ProductStockSales;
         $response['data'] = $sold_data->getSaleData($sales->id);
-        
+
         return $response;
     }
 

@@ -278,8 +278,8 @@ class ManageController extends Controller {
 
         ini_set('max_execution_time', 0);
 
-        $modPurchase = new ProductStockEntries();
-        $purchaseRecords = $modPurchase->purchaseListForBarcode();
+        $modPurchase = new PurchaseCartItems();
+        $purchaseRecords = $modPurchase->itemListForBarcode();
 
         $barcode['filetype'] = 'PNG';
         $barcode['dpi'] = 300;

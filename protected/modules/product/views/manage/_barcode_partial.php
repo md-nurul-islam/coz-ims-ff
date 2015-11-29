@@ -6,47 +6,44 @@ $now = date('Ymd_His');
 ob_start();
 ?>
 
-<div class="wrapper">
-    <?php
-    if (!empty($purchaseRecords)) {
-        $c = 0;
-        $k = 0;
-        $i_purchase_row_ids = array();
-        foreach ($purchaseRecords as $pr) {
-            ?>
-            <?php for ($i = 0; $i < $pr['quantity']; $i++) { ?>
-                <div class="code-wrapper">
-                    <div class="prod_barcode">
-                        <img src="/product/barcode/generate?filetype=<?php echo $barcode['filetype']; ?>&dpi=<?php echo $barcode['dpi']; ?>&scale=<?php echo $barcode['scale']; ?>&rotation=<?php echo $barcode['rotation']; ?>&font_family=<?php echo $barcode['font_family']; ?>&font_size=<?php echo $barcode['font_size']; ?>&text=<?php echo $pr['code']; ?>&thickness=<?php echo $barcode['thickness']; ?>&code=<?php echo $barcode['codetype']; ?>&pid=<?php echo $pr['id'];?>">
-                    </div>
-                    <div class="prod_name"><?php echo $pr['product_name']; ?></div>
-                    <div class="prod_ptice"><?php echo ' TK ' . $pr['selling_price']; ?></div>
-                    <div class="prod_ref_num">
-                        <?php
-                        $rev_purchase_price = str_replace('.00', '', $pr['purchase_price']);
-                        $dotless_rev_purchase_price = strrev($rev_purchase_price);
-                        
-                        echo $dotless_rev_purchase_price;
-                        ?>K<?php echo $pr['code']; ?>-<?php echo $pr['quantity'] . '/' . $pr['quantity']; ?>
-                    </div>
-                </div>
-                <?php
-                $c++;
-                if ($c % 63 == 0) {
-                    ?>
-                    <pagebreak />
-                <?php } ?>
-                <?php
-            }
-            $k++;
-        }
-    } else {
+<?php
+if (!empty($purchaseRecords)) {
+    $c = 0;
+    $k = 0;
+    $i_purchase_row_ids = array();
+    foreach ($purchaseRecords as $pr) {
         ?>
-        <div class="code-wrapper">
-            No Product available to generate barcode.
-        </div>
-    <?php } ?>
-</div>
+        <?php for ($i = 0; $i < $pr['quantity']; $i++) { ?>
+            <div class="code-wrapper">
+                <div class="prod_barcode">
+                    <img src="/product/barcode/generate?filetype=<?php echo $barcode['filetype']; ?>&dpi=<?php echo $barcode['dpi']; ?>&scale=<?php echo $barcode['scale']; ?>&rotation=<?php echo $barcode['rotation']; ?>&font_family=<?php echo $barcode['font_family']; ?>&font_size=<?php echo $barcode['font_size']; ?>&text=<?php echo $pr['code']; ?>&thickness=<?php echo $barcode['thickness']; ?>&code=<?php echo $barcode['codetype']; ?>&pid=<?php echo $pr['id']; ?>">
+                </div>
+                <div class="prod_name"><?php echo $pr['product_name']; ?></div>
+                <div class="prod_ptice"><?php echo ' TK ' . $pr['selling_price']; ?></div>
+                <div class="prod_ref_num">
+                    <?php
+                    $rev_purchase_price = str_replace('.00', '', $pr['purchase_price']);
+                    $dotless_rev_purchase_price = strrev($rev_purchase_price);
+
+                    echo $dotless_rev_purchase_price;
+                    ?>K<?php echo $pr['code']; ?>-<?php echo $pr['quantity'] . '/' . $pr['quantity']; ?>
+                </div>
+            </div>
+            <?php
+            $c++;
+            if ($c % 63 == 0) {
+                ?>
+                <pagebreak />
+            <?php } ?>
+            <?php
+        }
+        $k++;
+    }
+} else {
+    ?>
+                <label class="control-label">No Product available to generate barcode.</label>
+<?php } ?>
+
 
 <style type="text/css" media="all">
     .note {
@@ -56,12 +53,6 @@ ob_start();
         margin-left: auto; 
         margin-right: auto; 
         text-align: center;
-        width: 100%;
-    }
-    .wrapper {
-        margin: 0;
-        padding: 0;
-        float: left;
         width: 100%;
     }
     .code-wrapper {
@@ -98,6 +89,6 @@ if (!empty($purchaseRecords)) {
     $pdf = Yii::app()->ePdf->mpdf('', 'A4');
     $pdf->SetDisplayMode('fullpage');
     $pdf->WriteHTML($s_pdf_content);
-    $pdf->Output($pdfs_path . DIRECTORY_SEPARATOR . $now . '_barcodes.pdf', 'F');
+    $pdf->Output($pdfs_path . $now . '_barcodes.pdf', 'F');
 }
 ?>

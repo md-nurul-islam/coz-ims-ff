@@ -26,7 +26,7 @@ class PurchaseController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('getlatestprice', 'getproductcolorgradesize', 'index', 'print', 'view', 'create', 'update', 'product_stock_info', 'createsingle', 'autocomplete'),
+                'actions' => array('getStatusComboData', 'getdata', 'getlatestprice', 'getproductcolorgradesize', 'index', 'print', 'view', 'create', 'update', 'product_stock_info', 'createsingle', 'autocomplete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -239,6 +239,11 @@ class PurchaseController extends Controller {
             $purchase_cart_items->insert();
 
             $stock_info->quantity = ((int) $stock_info->quantity + (int) $_POST['quantity']);
+
+            $ProductDetails = ProductDetails::model()->findByPk($product_id);
+            $ProductDetails->purchase_price = $new_cost;
+            $ProductDetails->selling_price = $new_price;
+            $ProductDetails->update();
 
             if ($stock_info->update()) {
                 Yii::app()->user->setFlash('success', 'Products successfully added to stock.');
@@ -551,6 +556,47 @@ class PurchaseController extends Controller {
 
         echo CJSON::encode($response);
         exit;
+    }
+
+    /*
+     * Grid functions
+     */
+
+    public function actionGetdata() {
+
+        foreach (DataGridHelper::$_ar_non_filterable_vars as $nfv_key => $nfv_var_name) {
+            ${$nfv_var_name} = Yii::app()->request->getParam($nfv_key);
+        }
+
+        $rows = array();
+        $offest = 0;
+
+        if (${DataGridHelper::$_ar_non_filterable_vars['page']} > 1) {
+            $offest = (${DataGridHelper::$_ar_non_filterable_vars['page']} - 1) * ${DataGridHelper::$_ar_non_filterable_vars['rows']};
+        }
+
+        $ProductStockEntries = new ProductStockEntries();
+
+        $ProductStockEntries->pageSize = 20;
+        $query_params = array(
+            'offset' => $offest,
+            'order' => ${DataGridHelper::$_ar_non_filterable_vars['sort']} . ' ' . ${DataGridHelper::$_ar_non_filterable_vars['order']},
+            'where' => $_POST,
+        );
+
+        $result['rows'] = $ProductStockEntries->dataGridRows($query_params);
+//        var_dump($result['rows']);exit;
+        $result["total"] = 0;
+
+        if (($result['rows'])) {
+            $result["total"] = $result['rows'][0]['total_rows'];
+        }
+        echo CJSON::encode($result);
+        Yii::app()->end();
+    }
+
+    public function actionGetStatusComboData() {
+        echo CJSON::encode(ProductStockEntries::model()->statusComboData());
     }
 
     private function generatePurchaseId() {

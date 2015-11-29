@@ -399,26 +399,119 @@ class ProductStockEntries extends CActiveRecord {
 
         $formatted_data = array();
         $date = date('ymd');
-        
+
         foreach ($obj_data as $row) {
-            
-            $cp = $row->id.$row->grade_id;
-            
-            $code_prefix = Settings::$_num_zeros_for_barcode[strlen($cp)].$cp;
-            
+
+            $cp = $row->id . $row->grade_id;
+
+            $code_prefix = Settings::$_num_zeros_for_barcode[strlen($cp)] . $cp;
+
             $_data['id'] = $row->id;
 //            $_data['code'] = $row->purchase_id . $row->product_details_id;
-            $_data['code'] = $date.$code_prefix;
+            $_data['code'] = $date . $code_prefix;
             $_data['purchase_price'] = $row->purchase_price;
             $_data['selling_price'] = $row->selling_price;
             $_data['product_name'] = $row->productDetails->product_name;
             $_data['quantity'] = $row->quantity;
             $_data['purchase_date'] = str_replace('-', '', $row->purchase_date);
-            
+
             $formatted_data[] = $_data;
         }
 
         return $formatted_data;
+    }
+
+    /**
+     * GRID Functions
+     */
+
+    /**
+     * @return array for Data Grid Headers customized attribute labels (name=>label)
+     * remove the attributes don't needed in the Grid
+     */
+    public function dataGridHeaders() {
+        return array(
+            'id' => array('label' => 'ID', 'sortable' => 'true', 'width' => 50),
+            'billnumber' => array('label' => 'Bill Number', 'sortable' => 'true', 'width' => 50),
+            'product_name' => array('label' => 'Product Name', 'sortable' => 'true', 'width' => 180),
+            'quantity' => array('label' => 'Quantity', 'sortable' => 'true', 'width' => 50),
+            'grand_total' => array('label' => 'Total', 'sortable' => 'true', 'width' => 50),
+            'discount' => array('label' => 'Discount', 'sortable' => 'true', 'width' => 50),
+            'vat' => array('label' => 'Vat', 'sortable' => 'true', 'width' => 50),
+        );
+    }
+
+    public function dataGridFilters() {
+        return array(
+            'billnumber' => array('id' => 'billnumber', 'class' => 'easyui-textbox', 'label' => 'Bill Number: ', 'style' => 'width:80px;'),
+            'product_name' => array('id' => 'product_name', 'class' => 'easyui-textbox', 'label' => 'Product: ', 'style' => 'width:80px;'),
+            'grand_total' => array('id' => 'quantity', 'class' => 'easyui-textbox', 'label' => 'Qty: ', 'style' => 'width:80px;'),
+            'quantity' => array('id' => 'quantity', 'class' => 'easyui-textbox', 'label' => 'Qty: ', 'style' => 'width:80px;'),
+            'discount' => array('id' => 'quantity', 'class' => 'easyui-textbox', 'label' => 'Qty: ', 'style' => 'width:80px;'),
+            'vat' => array('id' => 'quantity', 'class' => 'easyui-textbox', 'label' => 'Qty: ', 'style' => 'width:80px;'),
+        );
+    }
+
+    public function statusComboData() {
+
+        return array(
+            array(
+                'id' => '',
+                'text' => 'Select',
+            ),
+            array(
+                'id' => '1',
+                'text' => 'Active',
+            ),
+            array(
+                'id' => '0',
+                'text' => 'Inactive',
+            ),
+        );
+    }
+
+    public function dataGridRows($params = array()) {
+
+        $offset = 0;
+        if (isset($params['offset']) && $params['offset'] > 0) {
+            $offset = $params['offset'];
+        }
+
+        $order = 'id DESC';
+        if (isset($params['order']) && !empty($params['order'])) {
+            $order = $params['order'];
+        }
+
+        $command = Yii::app()->db->createCommand()
+                ->from($this->tableName() . ' t')
+                ->join(PurchaseCart::model()->tableName() . ' pc', 'pc.id = t.purchase_cart_id')
+                ->join(PurchaseCartItems::model()->tableName() . ' pci', 'pc.id = pci.cart_id')
+                ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = pci.product_details_id')
+                ->offset($offset)
+                ->limit($this->pageSize)
+                ->order($order)
+                ->group('pci.cart_id')
+        ;
+
+        $sub_command = Yii::app()->db->createCommand()
+                ->select('count( DISTINCT pci.cart_id )')
+                ->from($this->tableName() . ' t')
+                ->join(PurchaseCart::model()->tableName() . ' pc', 'pc.id = t.purchase_cart_id')
+                ->join(PurchaseCartItems::model()->tableName() . ' pci', 'pc.id = pci.cart_id')
+                ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = pci.product_details_id')
+                ->where('pci.cart_id IS NOT NULL')
+        ;
+
+        $filter_keys = array_keys($this->dataGridFilters());
+        if (isset($params['where']) && !empty($params['where'])) {
+            $new_command_objs = DataGridHelper::processFilterableVars($command, $params['where'], $filter_keys, 't', $sub_command);
+            $command = $new_command_objs[0];
+            $sub_command = $new_command_objs[1];
+        }
+
+        $command->select('t.id, t.billnumber, pci.quantity, GROUP_CONCAT(pd.product_name) as product_name, pc.grand_total, pc.discount, pc.vat, (' . $sub_command->getText() . ') AS total_rows');
+
+        return $command->queryAll();
     }
 
 }

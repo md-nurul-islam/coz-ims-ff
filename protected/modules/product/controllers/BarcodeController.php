@@ -87,8 +87,8 @@ class BarcodeController extends Controller {
                 $ref_num = $text.$code_generated->getChecksum();
                 
                 $command = Yii::app()->db->createCommand();
-                $command->update(ProductStockEntries::model()->tableName(), array(
-                    'ref_num' => $ref_num,
+                $command->update(PurchaseCartItems::model()->tableName(), array(
+                    'reference_number' => $ref_num,
                         ), 'id=:id', array(':id' => $pid));
                 
             }
@@ -127,8 +127,7 @@ class BarcodeController extends Controller {
     }
 
     private function baseCustomSetup($barcode, $get) {
-
-//        var_dump($get['font_family']);exit;
+        
         $bcdir = Yii::getPathOfAlias('application.vendors.barcodegen');
         $font_dir = $bcdir . DIRECTORY_SEPARATOR . 'font';
 

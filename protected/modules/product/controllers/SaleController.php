@@ -578,7 +578,7 @@ class SaleController extends Controller {
 
         $cur_stock = 0;
 
-        $model = new ProductStockEntries();
+        $model = new PurchaseCartItems();
 
         $model = $model->getProductStockInfo($prod_id, $ref_num, true);
 
@@ -600,17 +600,16 @@ class SaleController extends Controller {
     }
 
     private function formatProdInfo($prods) {
-
+        
         $response = array();
-
         foreach ($prods as $row) {
 
-            $_data['product_id'] = $row['productDetails']->id;
-            $_data['product_name'] = $row['productDetails']->product_name;
-            $_data['price'] = ( empty($row['productDetails']->selling_price) || ($row['productDetails']->selling_price <= 0) ) ? $row->selling_price : $row['productDetails']->selling_price;
-            $_data['cur_stock'] = $row['productDetails']['productStockAvails']->quantity;
-            $_data['vat'] = Settings::$_vat;
-            $_data['discount'] = Settings::$_discount;
+            $_data['product_id'] = $row['product_details_id'];
+            $_data['product_name'] = $row['product_name'];
+            $_data['price'] = (empty($row['selling_price']) || ($row['selling_price'] <= 0) ) ? $row['selling_price'] : $row['selling_price'];
+            $_data['cur_stock'] = $row['quantity'];
+            $_data['vat'] = (empty($row['vat']) || ($row['vat'] <= 0) ) ? Settings::$_vat : $row['vat'];
+            $_data['discount'] = (empty($row['discount']) || ($row['discount'] <= 0) ) ? Settings::$_discount : $row['discount'];
             $response[] = $_data;
         }
 
