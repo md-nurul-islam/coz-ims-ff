@@ -1,5 +1,5 @@
 var cart_row = 1;
-function add_to_cart(prod_id, prod_name, cur_stock, price, vat, discount) {
+function add_to_cart(prod_id, prod_name, cur_stock, price, vat, discount, reference_number) {
 
     var prod_bg_color_class = 'label label-default';
     var cart_row_html = '';
@@ -29,6 +29,7 @@ function add_to_cart(prod_id, prod_name, cur_stock, price, vat, discount) {
                 '<input type="hidden" class="form-control cart_cur_stock" value="' + cur_stock + '" />' +
                 '<input type="hidden" class="form-control cart_vat" value="' + vat + '" >' +
                 '<input type="hidden" class="form-control cart_discount" value="' + discount + '" >' +
+                '<input type="hidden" class="form-control cart_reference_number" value="' + reference_number + '" >' +
                 '</td>' +
                 '<td>' + sub_total.toFixed(2) + '</td>' +
                 '<td><i class="fa fa-trash-o"></i></td>' +
@@ -56,13 +57,13 @@ var cart_rows = {};
 function calculate_sub_total(cart_row_id) {
 
     var cart_body = $('#cart-row');
-    var item_id = parseFloat(cart_body.find('tr#' + cart_row_id + ' td:eq(2) .cart_prod_id').val());
+    var item_id = parseInt(cart_body.find('tr#' + cart_row_id + ' td:eq(2) .cart_prod_id').val());
     var qty = parseInt(cart_body.find('tr#' + cart_row_id + ' td:eq(2) .cart_qty').val());
     var price = parseFloat(cart_body.find('tr#' + cart_row_id + ' td:eq(2) .sell_price').val());
     var sub_total = parseFloat(qty * price);
+    var reference_number = parseInt(cart_body.find('tr#' + cart_row_id + ' td:eq(2) .cart_reference_number').val());
 
     cart_body.find('tr#' + cart_row_id + ' td:eq(2) .cart_qty_lbl').text(qty);
-
     cart_body.find('tr#' + cart_row_id + ' td:eq(3)').text(sub_total.toFixed(2));
 
     var cart_item = {
@@ -70,6 +71,7 @@ function calculate_sub_total(cart_row_id) {
         qty: qty,
         price: price,
         sub_total: sub_total,
+        reference_number: reference_number,
     };
     cart_rows = cart_item;
 
@@ -385,7 +387,8 @@ $(document).ready(function () {
                                 data.response[0].cur_stock,
                                 data.response[0].price,
                                 data.response[0].vat,
-                                data.response[0].discount
+                                data.response[0].discount,
+                                data.response[0].reference_number
                                 );
                         $('#div_product_list').html('');
                         $('#div_product_list').hide();
@@ -419,7 +422,8 @@ $(document).ready(function () {
                         data.response[0].cur_stock,
                         data.response[0].price,
                         data.response[0].vat,
-                        data.response[0].discount
+                        data.response[0].discount,
+                        data.response[0].reference_number
                         );
             },
             error: function () {

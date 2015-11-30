@@ -407,6 +407,74 @@ class ProductStockSales extends CActiveRecord {
         return $data;
     }
 
+    public function getSaleDataForReport($from_date, $to_date) {
+
+        $store_id = 1;
+        if (!Yii::app()->user->isSuperAdmin) {
+            $store_id = Yii::app()->user->storeId;
+        }
+        
+        $from_date = date('Y-m-d', strtotime($from_date));
+        $to_date = date('Y-m-d', strtotime($to_date));
+
+        $command = Yii::app()->db->createCommand()
+                ->from($this->tableName() . ' t')
+                ->join(Cart::model()->tableName() . ' c', 'c.id = t.cart_id')
+                ->join(CartItems::model()->tableName() . ' ci', 'c.id = ci.cart_id')
+                ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = ci.product_details_id')
+                ->order('t.id DESC')
+        ;
+
+        $command->andWhere('t.store_id = :store_id', array(':store_id' => $store_id));
+        $command->andWhere('DATE(t.sale_date) >= :from_date AND DATE(t.sale_date) <= :to_date', array(
+            ':from_date' => $from_date,
+            ':to_date' => $to_date,
+        ));
+
+        $command->select('t.id, t.billnumber, t.sale_date, t.is_advance, t.store_id, c.discount, c.vat, c.grand_total, c.grand_total_paid, c.grand_total_balance, ci.reference_number, ci.price, ci.quantity, ci.sub_total, pd.product_name');
+
+        $data = $this->formatSaleDataForReport($command->queryAll());
+        return $data;
+    }
+    
+    private function formatSaleDataForReport($ar_data) {
+
+        $formatted_data = array();
+        
+        $sale_ids = array_unique(array_map(function ($row) { return $row['billnumber']; }, $ar_data));
+
+        foreach ($sale_ids as $sale_id) {
+
+            $_data = array();
+            foreach ($ar_data as $row) {
+
+                if ($sale_id == $row['billnumber']) {
+
+                    $_data['bill_total'] = (empty($row['grand_total']) || ($row['grand_total'] <= 0) ) ? 0.00 : $row['grand_total'];
+                    $_data['discount'] = (empty($row['discount']) || ($row['discount'] <= 0) ) ? 0.00 : $row['discount'];
+                    $_data['vat'] = (empty($row['vat']) || ($row['vat'] <= 0) ) ? 0.00 : $row['vat'];
+                    
+                    $_data['amount_given'] = ( empty($row['grand_total_paid']) || ($row['grand_total_paid'] <= 0) ) ? 0.00 : $row['grand_total_paid'];
+                    $_data['balance'] = ( empty($row['grand_total_balance']) || ($row['grand_total_balance'] <= 0) ) ? 0.00 : $row['grand_total_balance'];
+
+                    
+                    $cart['prod_name'] = $row['product_name'];
+                    $cart['is_advance'] = $row['is_advance'];
+                    $cart['ref_num'] = $row['reference_number'];
+                    $cart['qty'] = $row['quantity'];
+                    $cart['price'] = $row['price'];
+                    $cart['item_sub_total'] = $row['sub_total'];
+
+                    $_data[] = $cart;
+                }
+            }
+
+            $formatted_data[$sale_id][] = $_data;
+        }
+
+        return $formatted_data;
+    }
+
     /**
      * NEW CODES
      */

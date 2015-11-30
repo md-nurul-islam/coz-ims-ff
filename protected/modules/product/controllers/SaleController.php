@@ -579,7 +579,6 @@ class SaleController extends Controller {
         $cur_stock = 0;
 
         $model = new PurchaseCartItems();
-
         $model = $model->getProductStockInfo($prod_id, $ref_num, true);
 
         if (!empty($model)) {
@@ -610,6 +609,7 @@ class SaleController extends Controller {
             $_data['cur_stock'] = $row['quantity'];
             $_data['vat'] = (empty($row['vat']) || ($row['vat'] <= 0) ) ? Settings::$_vat : $row['vat'];
             $_data['discount'] = (empty($row['discount']) || ($row['discount'] <= 0) ) ? Settings::$_discount : $row['discount'];
+            $_data['reference_number'] = (empty($row['reference_number']) || ($row['reference_number'] <= 0) ) ? Settings::$_discount : $row['reference_number'];
             $response[] = $_data;
         }
 

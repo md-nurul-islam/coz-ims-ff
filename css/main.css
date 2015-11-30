@@ -1,3 +1,33 @@
+.report_table .table-bordered > tbody > tr > td,
+.report_table .table-bordered > tbody > tr > th,
+.report_table .table-bordered > tfoot > tr > td,
+.report_table .table-bordered > tfoot > tr > th,
+.report_table .table-bordered > thead > tr > td,
+.report_table .table-bordered > thead > tr > th {
+    border: 1px solid #ddd;
+}
+.report_table  > .table-bordered > tbody > tr > td:first-child,
+.report_table  > .table-bordered > tbody > tr > th:first-child,
+.report_table > .table-bordered > tfoot > tr > td:first-child,
+.report_table > .table-bordered > tfoot > tr > th:first-child,
+.report_table > .table-bordered > thead > tr > td:first-child,
+.report_table > .table-bordered > thead > tr > th:first-child,
+.report_table > .table-responsive > .table-bordered > tbody > tr > td:first-child,
+.report_table > .table-responsive > .table-bordered > tbody > tr > th:first-child,
+.report_table > .table-responsive > .table-bordered > tfoot > tr > td:first-child,
+.report_table > .table-responsive > .table-bordered > tfoot > tr > th:first-child,
+.report_table > .table-responsive > .table-bordered > thead > tr > td:first-child,
+.report_table > .table-responsive > .table-bordered > thead > tr > th:first-child {
+    border-left: 1px solid #ddd;
+}
+.table > caption + thead > tr:first-child > td, .table > caption + thead > tr:first-child > th, .table > colgroup + thead > tr:first-child > td, .table > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > td, .table > thead:first-child > tr:first-child > th {
+    border-top: 1px solid #ddd;
+}
+
+.panel > .table-bordered > tbody > tr > td:last-child, .panel > .table-bordered > tbody > tr > th:last-child, .panel > .table-bordered > tfoot > tr > td:last-child, .panel > .table-bordered > tfoot > tr > th:last-child, .panel > .table-bordered > thead > tr > td:last-child, .panel > .table-bordered > thead > tr > th:last-child, .panel > .table-responsive > .table-bordered > tbody > tr > td:last-child, .panel > .table-responsive > .table-bordered > tbody > tr > th:last-child, .panel > .table-responsive > .table-bordered > tfoot > tr > td:last-child, .panel > .table-responsive > .table-bordered > tfoot > tr > th:last-child, .panel > .table-responsive > .table-bordered > thead > tr > td:last-child, .panel > .table-responsive > .table-bordered > thead > tr > th:last-child {
+    border-right: 1px solid #ddd;
+}
+
 .center {
     float: none;
     margin-left: auto;

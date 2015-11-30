@@ -5,15 +5,17 @@
 
         <div class="box-body">
 
-            <div class="center col-lg-7">
-                <h3>Sales Report Starting from <?php // echo $from_date; ?> till <?php // echo $to_date; ?></h3>
+            <div class="center col-lg-6">
+                <h3>Sales Report Starting from <?php echo $from_date; ?> till <?php echo $to_date; ?></h3>
             </div>
+            
+            <legend></legend>
 
-            <div class="panel panel-body panel-default">
-                
+            <div class="report_table">
+
                 <table class="table table-bordered table-striped table-hover table-condensed">
-                    
-                    <tbody>
+
+                    <thead>
                         <tr>
                             <th>Bill Number</th>
                             <th>Ref. Number</th>
@@ -22,6 +24,9 @@
                             <th>Price</th>
                             <th>Item Total</th>
                         </tr>
+                    </thead>
+
+                    <tbody>
 
                         <?php
                         $j = 0;
@@ -59,14 +64,14 @@
                                 <tr>
                                     <?php if ($i == 0) { ?>
                                         <td rowspan="<?php echo $num_rows; ?>"><?php echo $k; ?><?php echo ($c['is_advance'] == 1) ? ' (Adv)' : ''; ?></td>
+                                    <?php } else { ?>
+
+                                        <td><?php echo $c['ref_num']; ?></td>
+                                        <td style="text-align: left;"><?php echo $c['prod_name']; ?></td>
+                                        <td><?php echo $c['qty']; ?></td>
+                                        <td><?php echo $c['price']; ?></td>
+                                        <td><?php echo $c['item_sub_total']; ?></td>
                                     <?php } ?>
-
-                                    <td><?php echo $c['ref_num']; ?></td>
-                                    <td style="text-align: left;"><?php echo $c['prod_name']; ?></td>
-                                    <td><?php echo $c['qty']; ?></td>
-                                    <td><?php echo $c['price']; ?></td>
-                                    <td><?php echo $c['item_sub_total']; ?></td>
-
                                 </tr>
 
                                 <?php
@@ -145,10 +150,12 @@
                         <?php } ?>
 
                     </tbody>
-                    
+
                 </table>
-                
+
             </div>
         </div>
     </div>
 </div>
+
+<div class="clearfix"></div>

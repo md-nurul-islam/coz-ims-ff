@@ -50,16 +50,14 @@ class SaleController extends Controller {
         if( Yii::app()->request->isPostRequest && !empty($_POST) ){
             
             $from_date = Yii::app()->request->getPost('from_date');
-            
             $to_date = Yii::app()->request->getPost('to_date');
             
             $model = new ProductStockSales;
-            $model = $model->saleReportData($from_date, $to_date);
+            $model = $model->getSaleDataForReport($from_date, $to_date);
             
             if(!$model){
                 $msg = 'No Record Found in the given date rang.';
             }
-            
         }
         
         $this->render('index', array(

@@ -102,6 +102,7 @@ class CartController extends Controller {
         $tmp_cart_item = new TmpCartItems;
         $tmp_cart_item->cart_id = $cart_id;
         $tmp_cart_item->product_details_id = $cart_iems['item_id'];
+        $tmp_cart_item->reference_number = $cart_iems['reference_number'];
         $tmp_cart_item->quantity = $cart_iems['qty'];
         $tmp_cart_item->sub_total = $cart_iems['sub_total'];
         $tmp_cart_item->price = $cart_iems['price'];
@@ -167,7 +168,7 @@ class CartController extends Controller {
         $response = [];
         $tmp_cart = new TmpCart;
         $tmp_cart_data = $tmp_cart->getCart($cart_id);
-
+        
         $cart = new Cart;
         $cart->grand_total = $tmp_cart_data[0]['grand_total'];
         $cart->discount = $tmp_cart_data[0]['discount'];
@@ -208,12 +209,14 @@ class CartController extends Controller {
             $cart_item = new CartItems;
             $cart_item->cart_id = $cart->id;
             $cart_item->product_details_id = $tmp_cart['product_details_id'];
+            $cart_item->reference_number = $tmp_cart['reference_number'];
             $cart_item->price = $tmp_cart['price'];
             $cart_item->quantity = $tmp_cart['quantity'];
             $cart_item->sub_total = $tmp_cart['sub_total'];
+            
             $cart_item->insert();
             $i++;
-
+            
             $stock_info = ProductStockAvail::model()->findByAttributes(array(
                 'product_details_id' => $cart_item->product_details_id
             ));
