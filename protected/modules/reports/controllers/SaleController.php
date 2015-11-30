@@ -41,6 +41,7 @@ class SaleController extends Controller {
         $msg = '';
         
         $this->pageTitle = Yii::app()->name . ' - Sale Report';
+        $this->pageHeader = 'Sale Report';
         
         $today = date('Y-m-d', Settings::getBdLocalTime());
         $from_date = $today;
