@@ -26,7 +26,19 @@ class PurchaseController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('getStatusComboData', 'getdata', 'getlatestprice', 'getproductcolorgradesize', 'index', 'print', 'view', 'create', 'update', 'product_stock_info', 'createsingle', 'autocomplete'),
+                'actions' => array(
+                    'getStatusComboData',
+                    'getdata',
+                    'getlatestprice',
+                    'getproductcolorgradesize',
+                    'index',
+                    'print',
+                    'view',
+                    'create',
+                    'update',
+                    'product_stock_info',
+                    'createsingle',
+                    'autocomplete'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -183,7 +195,7 @@ class PurchaseController extends Controller {
     }
 
     public function actionCreatesingle() {
-        
+
         $model = new ProductStockEntries;
         $now = date('Y-m-d');
 
@@ -196,11 +208,20 @@ class PurchaseController extends Controller {
         }
 
         $ar_cart = array();
+        $ar_cart['errors'] = array();
 
         if (isset($_POST['ProductStockEntries'])) {
 
+            if (empty($_POST['quantity'])) {
+                $ar_cart['errors'][] = 'Quanity is required';
+            }
+
+            if (empty($_POST['total'])) {
+                $ar_cart['errors'][] = 'Total is required';
+            }
+
             $product_id = $_POST['product_details_id'];
-            
+
             $new_cost = $_POST['n_cost'];
             $new_price = $_POST['n_price'];
 
@@ -209,50 +230,68 @@ class PurchaseController extends Controller {
             ));
 
             $bill_number = (empty($_POST['ProductStockEntries']['billnumber'])) ? Settings::getToken(8, FALSE) : $_POST['ProductStockEntries']['billnumber'];
-            $purchase_date = $now;
+            $purchase_date = (empty($_POST['ProductStockEntries']['purchase_date'])) ? $now : date('Y-m-d', strtotime($_POST['ProductStockEntries']['purchase_date']));
             $due_payment_date = (empty($_POST['ProductStockEntries']['due_payment_date'])) ? $now : date('Y-m-d', strtotime($_POST['ProductStockEntries']['due_payment_date']));
             $payment_method = $_POST['ProductStockEntries']['payment_method'];
             $note = $_POST['ProductStockEntries']['note'];
 
-            $purchase_cart = new PurchaseCart;
-            $purchase_cart->grand_total = $_POST['total'];
-            $purchase_cart->insert();
+            if (empty($ar_cart['errors'])) {
+                
+                $purchase_cart = new PurchaseCart;
+                $purchase_cart->grand_total = $_POST['total'];
+                $purchase_cart->insert();
 
-            $model->billnumber = $bill_number;
-            $model->purchase_date = $purchase_date;
-            $model->due_payment_date = $due_payment_date;
-            $model->payment_method = $payment_method;
-            $model->note = $note;
-            $model->store_id = $store_id;
-            $model->purchase_cart_id = $purchase_cart->id;
-            $model->insert();
-            
-            $purchase_cart_items = new PurchaseCartItems;
-            $purchase_cart_items->cart_id = $purchase_cart->id;
-            $purchase_cart_items->product_details_id = $product_id;
-            $purchase_cart_items->cost = $new_cost;
-            $purchase_cart_items->price = $new_price;
-            $purchase_cart_items->quantity = $_POST['quantity'];
-            $purchase_cart_items->sub_total = $purchase_cart->grand_total;
-            $purchase_cart_items->product_color_id = $stock_info->product_color_id;
-            $purchase_cart_items->product_size_id = $stock_info->product_size_id;
-            $purchase_cart_items->product_grade_id = $stock_info->product_grade_id;
-            $purchase_cart_items->insert();
+                $model->billnumber = $bill_number;
+                $model->purchase_date = $purchase_date;
+                $model->due_payment_date = $due_payment_date;
+                $model->payment_method = $payment_method;
+                $model->note = $note;
+                $model->store_id = $store_id;
+                $model->purchase_cart_id = $purchase_cart->id;
+                $model->insert();
 
-            $stock_info->quantity = ((int) $stock_info->quantity + (int) $_POST['quantity']);
+                $purchase_cart_items = new PurchaseCartItems;
+                $purchase_cart_items->cart_id = $purchase_cart->id;
+                $purchase_cart_items->product_details_id = $product_id;
+                $purchase_cart_items->cost = $new_cost;
+                $purchase_cart_items->price = $new_price;
+                $purchase_cart_items->quantity = $_POST['quantity'];
+                $purchase_cart_items->sub_total = $purchase_cart->grand_total;
+                $purchase_cart_items->product_color_id = $stock_info->product_color_id;
+                $purchase_cart_items->product_size_id = $stock_info->product_size_id;
+                $purchase_cart_items->product_grade_id = $stock_info->product_grade_id;
+                $purchase_cart_items->insert();
 
-            $ProductDetails = ProductDetails::model()->findByAttributes( array('id' => $product_id));
-            
-            $ProductDetails->purchase_price = $new_cost;
-            $ProductDetails->selling_price = $new_price;
-            $ProductDetails->update();
+                $stock_info->quantity = ((int) $stock_info->quantity + (int) $_POST['quantity']);
 
-            if ($stock_info->update()) {
-                Yii::app()->user->setFlash('success', 'Products successfully added to stock.');
-                $this->redirect(array('createsingle'));
+                $ProductDetails = ProductDetails::model()->findByAttributes(array('id' => $product_id));
+
+                $ProductDetails->purchase_price = $new_cost;
+                $ProductDetails->selling_price = $new_price;
+                $ProductDetails->update();
+
+                if ($stock_info->update()) {
+                    Yii::app()->user->setFlash('success', 'Products successfully added to stock.');
+                    $this->redirect(array('createsingle'));
+                }
+            } else {
+                
+                $ar_cart['purchase_date'] = $purchase_date;
+                $ar_cart['due_payment_date'] = $due_payment_date;
+                $ar_cart['product_name'] = $_POST['product_name'];
+                $ar_cart['product_details_id'] = $_POST['product_details_id'];
+                $ar_cart['note'] = $note;
+                $ar_cart['stock'] = $_POST['stock'];
+                $ar_cart['cost'] = $_POST['cost'];
+                $ar_cart['price'] = $_POST['price'];
+                $ar_cart['n_cost'] = $new_cost;
+                $ar_cart['n_price'] = $new_price;
+                $ar_cart['quantity'] = $_POST['quantity'];
+                $ar_cart['total'] = $_POST['total'];
+                $ar_cart['payment_method'] = $payment_method;
             }
         }
-
+        
         $this->render('create', array(
             'model' => $model,
             'ar_cart' => $ar_cart,
@@ -320,7 +359,7 @@ class PurchaseController extends Controller {
      */
     public function actionIndex() {
         $this->pageHeader = 'Purchase List';
-        
+
         $model = new ProductStockEntries();
         $pageSize = 0;
 

@@ -13,20 +13,30 @@
         )
     ));
     ?>
-    
+
     <?php if (Yii::app()->user->hasFlash('success')) { ?>
         <div class="alert alert-success">
             <?php echo Yii::app()->user->getFlash('success'); ?>
         </div>
     <?php } ?>
 
+    <?php
+    if (isset($ar_cart['errors']) && !empty($ar_cart['errors'])) {
+        foreach ($ar_cart['errors'] as $error) {
+            ?>
+            <div class="alert alert-danger">
+                <?php echo $error; ?>
+            </div>
+            <?php
+        }
+    }
+    ?>
+
     <div class="col-lg-6">
 
         <div class="box box-info">
 
             <div class="box-body">
-
-                <?php echo $form->errorSummary($model); ?>
 
                 <div class="form-group">
                     <div class="col-sm-10">
@@ -41,8 +51,8 @@
                 <?php } ?>
 
                 <div class="form-group">
-                    <?php echo $form->labelEx($model, 'billnumber', array('class' => 'col-sm-2 control-label')); ?>
-                    <div class="col-sm-9">
+                    <?php echo $form->labelEx($model, 'billnumber', array('class' => 'col-sm-4 control-label')); ?>
+                    <div class="col-sm-7">
                         <?php
                         echo $form->textField($model, 'billnumber', array(
                             'size' => 20,
@@ -51,17 +61,16 @@
                             'placeholder' => 'Billnumber',
                         ));
                         ?>
-                        <?php echo $form->error($model, 'billnumber', array('class' => 'alert alert-danger')); ?>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <?php echo $form->labelEx($model, 'purchase_date', array('class' => 'col-sm-2 control-label')); ?>
-                    <div class="col-sm-9">
+                    <?php echo $form->labelEx($model, 'purchase_date', array('class' => 'col-sm-4 control-label')); ?>
+                    <div class="col-sm-7">
                         <?php
                         $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                             'name' => 'ProductStockEntries[purchase_date]',
-                            'value' => date('Y-m-d', Settings::getBdLocalTime()),
+                            'value' => (isset($ar_cart['purchase_date']) && !empty($ar_cart['purchase_date'])) ? $ar_cart['purchase_date'] : date('Y-m-d', Settings::getBdLocalTime()),
                             'options' => array(
                                 'dateFormat' => 'yy-mm-dd',
                                 'showAnim' => 'blind', //'slide','fold','slideDown','fadeIn','blind','bounce','clip','drop'
@@ -85,12 +94,12 @@
                 </div>
 
                 <div class="form-group">
-                    <?php echo $form->labelEx($model, 'due_payment_date', array('class' => 'col-sm-2 control-label')); ?>
-                    <div class="col-sm-9">
+                    <?php echo $form->labelEx($model, 'due_payment_date', array('class' => 'col-sm-4 control-label')); ?>
+                    <div class="col-sm-7">
                         <?php
                         $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                             'name' => 'ProductStockEntries[due_payment_date]',
-                            //'value'=> date('Y-m-d', Settings::getBdLocalTime()),
+                            'value'=> (isset($ar_cart['due_payment_date']) && !empty($ar_cart['due_payment_date'])) ? $ar_cart['due_payment_date'] : '',
                             'options' => array(
                                 'dateFormat' => 'yy-mm-dd',
                                 'showAnim' => 'blind', //'slide','fold','slideDown','fadeIn','blind','bounce','clip','drop'
@@ -114,10 +123,13 @@
                 </div>
 
                 <div class="form-group">
-                    <?php echo CHtml::label('Product Name', 'product_name', array('class' => 'col-sm-2 control-label', 'for' => 'product_details_id')); ?>
-                    <?php $product_name = ''; ?>
-                    <?php echo CHtml::hiddenField('product_details_id', '', array('size' => 30)); ?>
-                    <div class="col-sm-9">
+                    <?php echo CHtml::label('Product Name', 'product_name', array('class' => 'col-sm-4 control-label', 'for' => 'product_details_id')); ?>
+
+                    <?php $product_name = (isset($ar_cart['product_name']) && !empty($ar_cart['product_name'])) ? $ar_cart['product_name'] : ''; ?>
+                    <?php $product_details_id = (isset($ar_cart['product_details_id']) && !empty($ar_cart['product_details_id'])) ? $ar_cart['product_details_id'] : 0; ?>
+                    <?php echo CHtml::hiddenField('product_details_id', $product_details_id, array('size' => 30)); ?>
+                    
+                    <div class="col-sm-7">
                         <?php
                         $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
                             'name' => 'product_name',
@@ -140,6 +152,9 @@
                                         $('#stock').val(data.stock);
                                         $('#cost').val(data.cost);
                                         $('#price').val(data.price);
+                                        
+                                        $('#n_cost').val(data.cost);
+                                        $('#n_price').val(data.price);
 
                                     }).fail(function() {
                                         
@@ -162,12 +177,12 @@
                 </div>
 
                 <div class="form-group">
-                    <?php echo $form->labelEx($model, 'ref_num', array('class' => 'col-sm-2 control-label', 'for' => 'ref_num')); ?>
-                    <div class="col-sm-9">
+                    <?php echo $form->labelEx($model, 'ref_num', array('class' => 'col-sm-4 control-label', 'for' => 'ref_num')); ?>
+                    <div class="col-sm-7">
                         <?php
                         echo CHtml::textField('ref_num', '', array(
-                            'size' => 25,
-                            'maxlength' => 150,
+                            'size' => 12,
+                            'maxlength' => 12,
                             'class' => 'form-control',
                             'placeholder' => 'Reference Number',
                         ));
@@ -177,17 +192,16 @@
 
 
                 <div class="form-group">
-                    <?php echo $form->labelEx($model, 'note', array('class' => 'col-sm-2 control-label')); ?>
-                    <div class="col-sm-9">
+                    <?php echo $form->labelEx($model, 'note', array('class' => 'col-sm-4 control-label')); ?>
+                    <div class="col-sm-7">
                         <?php
                         echo $form->textArea($model, 'note', array(
-                            'rows' => 6,
-                            'cols' => 50,
+                            'rows' => 3,
                             'class' => 'form-control',
                             'placeholder' => 'Note',
+                            'value' => (isset($ar_cart['note']) && !empty($ar_cart['note'])) ? $ar_cart['note'] : ''
                         ));
                         ?>
-                        <?php echo $form->error($model, 'note', array('class' => 'alert alert-danger')); ?>
                     </div>
                 </div>
 
@@ -203,11 +217,10 @@
             <div class="box-body">
 
                 <div class="form-group">
-                    <?php echo CHtml::label('Current Stock', 'stock', array('class' => 'col-sm-2 control-label')); ?>
-                    <div class="col-sm-9">
+                    <?php echo CHtml::label('Current Stock', 'stock', array('class' => 'col-sm-4 control-label')); ?>
+                    <div class="col-sm-7">
                         <?php
-                        echo CHtml::textField('stock', '', array(
-                            'class' => 'form-control',
+                        echo CHtml::textField('stock', (isset($ar_cart['stock']) && !empty($ar_cart['stock'])) ? $ar_cart['stock'] : '', array(                            'class' => 'form-control',
                             'placeholder' => 'Current Stock',
                             'readonly' => TRUE,
                         ));
@@ -216,10 +229,10 @@
                 </div>
 
                 <div class="form-group">
-                    <?php echo CHtml::label('Last Cost', 'cost', array('class' => 'col-sm-2 control-label')); ?>
-                    <div class="col-sm-9">
+                    <?php echo CHtml::label('Last Cost', 'cost', array('class' => 'col-sm-4 control-label')); ?>
+                    <div class="col-sm-7">
                         <?php
-                        echo CHtml::textField('cost', '', array(
+                        echo CHtml::textField('cost', (isset($ar_cart['cost']) && !empty($ar_cart['cost'])) ? $ar_cart['cost'] : '', array(
                             'class' => 'form-control',
                             'placeholder' => 'Last Cost',
                             'readonly' => TRUE,
@@ -229,10 +242,10 @@
                 </div>
 
                 <div class="form-group">
-                    <?php echo CHtml::label('Last Price', 'price', array('class' => 'col-sm-2 control-label')); ?>
-                    <div class="col-sm-9">
+                    <?php echo CHtml::label('Last Price', 'price', array('class' => 'col-sm-4 control-label')); ?>
+                    <div class="col-sm-7">
                         <?php
-                        echo CHtml::textField('price', '', array(
+                        echo CHtml::textField('price', (isset($ar_cart['price']) && !empty($ar_cart['price'])) ? $ar_cart['price'] : '', array(
                             'class' => 'form-control',
                             'placeholder' => 'Last Price',
                             'readonly' => TRUE,
@@ -242,10 +255,10 @@
                 </div>
 
                 <div class="form-group">
-                    <?php echo CHtml::label('New Cost', 'n_cost', array('class' => 'col-sm-2 control-label')); ?>
-                    <div class="col-sm-9">
+                    <?php echo CHtml::label('New Cost', 'n_cost', array('class' => 'col-sm-4 control-label')); ?>
+                    <div class="col-sm-7">
                         <?php
-                        echo CHtml::textField('n_cost', '', array(
+                        echo CHtml::textField('n_cost', (isset($ar_cart['n_cost']) && !empty($ar_cart['n_cost'])) ? $ar_cart['n_cost'] : '', array(
                             'class' => 'form-control',
                             'placeholder' => 'New Cost',
                         ));
@@ -254,10 +267,10 @@
                 </div>
 
                 <div class="form-group">
-                    <?php echo CHtml::label('New Price', 'n_price', array('class' => 'col-sm-2 control-label')); ?>
-                    <div class="col-sm-9">
+                    <?php echo CHtml::label('New Price', 'n_price', array('class' => 'col-sm-4 control-label')); ?>
+                    <div class="col-sm-7">
                         <?php
-                        echo CHtml::textField('n_price', '', array(
+                        echo CHtml::textField('n_price', (isset($ar_cart['n_price']) && !empty($ar_cart['n_price'])) ? $ar_cart['n_price'] : '', array(
                             'class' => 'form-control',
                             'placeholder' => 'New Price',
                         ));
@@ -266,40 +279,41 @@
                 </div>
 
                 <div class="form-group">
-                    <?php echo CHtml::label('Quantity', 'quantity', array('class' => 'col-sm-2 control-label')); ?>
-                    <div class="col-sm-9">
+                    <?php echo CHtml::label('Quantity <span class="required">*</span>', 'quantity', array('class' => 'col-sm-4 control-label')); ?>
+                    <div class="col-sm-7">
                         <?php
-                        echo CHtml::textField('quantity', '', array(
+                        echo CHtml::textField('quantity', (isset($ar_cart['quantity']) && !empty($ar_cart['quantity'])) ? $ar_cart['quantity'] : 0, array(
                             'class' => 'form-control',
                             'placeholder' => 'Quantity',
+                            'required' => TRUE,
                         ));
                         ?>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <?php echo CHtml::label('Total', 'total', array('class' => 'col-sm-2 control-label')); ?>
-                    <div class="col-sm-9">
+                    <?php echo CHtml::label('Total', 'total', array('class' => 'col-sm-4 control-label')); ?>
+                    <div class="col-sm-7">
                         <?php
-                        echo CHtml::textField('total', '', array(
+                        echo CHtml::textField('total', (isset($ar_cart['total']) && !empty($ar_cart['total'])) ? $ar_cart['total'] : 0.00, array(
                             'class' => 'form-control',
                             'placeholder' => 'Total',
                             'readonly' => TRUE,
+                            'required' => TRUE,
                         ));
                         ?>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <?php echo $form->labelEx($model, 'payment_method', array('class' => 'col-sm-2 control-label')); ?>
-                    <div class="col-sm-9">
+                    <?php echo $form->labelEx($model, 'payment_method', array('class' => 'col-sm-4 control-label')); ?>
+                    <div class="col-sm-7">
                         <?php
                         echo $form->dropDownList($model, 'payment_method', Settings::$_payment_types, array(
                             'style' => 'width: 100%;',
                             'class' => 'select2'
                         ));
                         ?>
-                        <?php echo $form->error($model, 'payment_method', array('class' => 'alert alert-danger')); ?>
                     </div>
                 </div>
 
@@ -310,18 +324,20 @@
 
     </div>
 
+    <div class="form-group col-lg-12 pull-right">
+        <div class="col-sm-12">
+            <?php
+            echo CHtml::submitButton($model->isNewRecord ? 'Purchase' : 'Update', array(
+                'id' => 'btn-submit',
+                'class' => 'btn btn-info pull-right'
+            ));
+            ?>
+        </div>
+    </div>
+
 </div>
 
 <div class="clearfix"></div>
-
-<div class="box-footer">
-    <?php
-    echo CHtml::submitButton($model->isNewRecord ? 'Purchase' : 'Update', array(
-        'id' => 'btn-submit',
-        'class' => 'btn btn-info pull-right'
-    ));
-    ?>
-</div>
 
 <?php $this->endWidget(); ?>
 
