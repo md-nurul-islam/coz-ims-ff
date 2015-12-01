@@ -413,7 +413,7 @@ class ProductStockSales extends CActiveRecord {
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
         }
-        
+
         $from_date = date('Y-m-d', strtotime($from_date));
         $to_date = date('Y-m-d', strtotime($to_date));
 
@@ -422,6 +422,12 @@ class ProductStockSales extends CActiveRecord {
                 ->join(Cart::model()->tableName() . ' c', 'c.id = t.cart_id')
                 ->join(CartItems::model()->tableName() . ' ci', 'c.id = ci.cart_id')
                 ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = ci.product_details_id')
+                ->join(ProductColor::model()->tableName() . ' pc', 'pd.id = pc.product_details_id')
+                ->join(Color::model()->tableName() . ' cl', 'cl.id = pc.color_id')
+                ->join(ProductSize::model()->tableName() . ' ps', 'pd.id = ps.product_details_id')
+                ->join(Sizes::model()->tableName() . ' s', 's.id = ps.size_id')
+                ->join(ProductGrade::model()->tableName() . ' pg', 'pd.id = pg.product_details_id')
+                ->join(Grade::model()->tableName() . ' g', 'g.id = pg.grade_id')
                 ->order('t.id DESC')
         ;
 
@@ -431,17 +437,39 @@ class ProductStockSales extends CActiveRecord {
             ':to_date' => $to_date,
         ));
 
-        $command->select('t.id, t.billnumber, t.sale_date, t.is_advance, t.store_id, c.discount, c.vat, c.grand_total, c.grand_total_paid, c.grand_total_balance, ci.reference_number, ci.price, ci.quantity, ci.sub_total, pd.product_name');
+        $command->select(
+                't.id,
+                t.billnumber,
+                t.sale_date,
+                t.is_advance,
+                t.store_id,
+                c.discount,
+                c.vat,
+                c.grand_total,
+                c.grand_total_paid,
+                c.grand_total_balance,
+                ci.reference_number,
+                ci.price,
+                ci.quantity,
+                ci.sub_total,
+                pd.product_name,
+                cl.name AS color_name,
+                s.name AS size_name,
+                g.name AS grade_name
+                '
+        );
 
         $data = $this->formatSaleDataForReport($command->queryAll());
         return $data;
     }
-    
+
     private function formatSaleDataForReport($ar_data) {
 
         $formatted_data = array();
-        
-        $sale_ids = array_unique(array_map(function ($row) { return $row['billnumber']; }, $ar_data));
+
+        $sale_ids = array_unique(array_map(function ($row) {
+                    return $row['billnumber'];
+                }, $ar_data));
 
         foreach ($sale_ids as $sale_id) {
 
@@ -453,12 +481,14 @@ class ProductStockSales extends CActiveRecord {
                     $_data['bill_total'] = (empty($row['grand_total']) || ($row['grand_total'] <= 0) ) ? 0.00 : $row['grand_total'];
                     $_data['discount'] = (empty($row['discount']) || ($row['discount'] <= 0) ) ? 0.00 : $row['discount'];
                     $_data['vat'] = (empty($row['vat']) || ($row['vat'] <= 0) ) ? 0.00 : $row['vat'];
-                    
+
                     $_data['amount_given'] = ( empty($row['grand_total_paid']) || ($row['grand_total_paid'] <= 0) ) ? 0.00 : $row['grand_total_paid'];
                     $_data['balance'] = ( empty($row['grand_total_balance']) || ($row['grand_total_balance'] <= 0) ) ? 0.00 : $row['grand_total_balance'];
 
-                    
                     $cart['prod_name'] = $row['product_name'];
+                    $cart['color_name'] = $row['color_name'];
+                    $cart['size_name'] = $row['size_name'];
+                    $cart['grade_name'] = $row['grade_name'];
                     $cart['is_advance'] = $row['is_advance'];
                     $cart['ref_num'] = $row['reference_number'];
                     $cart['qty'] = $row['quantity'];

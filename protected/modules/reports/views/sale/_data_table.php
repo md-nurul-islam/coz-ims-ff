@@ -67,7 +67,12 @@
                                     <?php } else { ?>
 
                                         <td><?php echo $c['ref_num']; ?></td>
-                                        <td style="text-align: left;"><?php echo $c['prod_name']; ?></td>
+                                        <td>
+                                            <?php echo $c['prod_name']; ?>
+                                            <span class="label label-warning"><?php echo $c['color_name']; ?></span>
+                                            <span class="label label-success "><?php echo $c['size_name']; ?></span>
+                                            <span class="label label-info"><?php echo $c['grade_name']; ?></span>
+                                        </td>
                                         <td><?php echo $c['qty']; ?></td>
                                         <td><?php echo $c['price']; ?></td>
                                         <td><?php echo $c['item_sub_total']; ?></td>
