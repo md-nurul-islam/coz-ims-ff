@@ -16,6 +16,7 @@
 
     <?php if (Yii::app()->user->hasFlash('success')) { ?>
         <div class="alert alert-success">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             <?php echo Yii::app()->user->getFlash('success'); ?>
         </div>
     <?php } ?>
@@ -25,6 +26,7 @@
         foreach ($ar_cart['errors'] as $error) {
             ?>
             <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                 <?php echo $error; ?>
             </div>
             <?php
