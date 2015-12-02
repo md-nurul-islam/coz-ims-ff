@@ -69,9 +69,9 @@ class Ims_menu {
             'url' => '#',
             'icon' => '<i class="fa fa-th-list"></i>',
             'submenu' => array(
-                array('label' => 'Category List', 'url' => '/product/category/'),
+                array('label' => 'Category List', 'url' => '/product/category'),
                 array('label' => 'Add Category', 'url' => '/product/category/create'),
-                array('label' => 'Product List', 'url' => '/product/manage/'),
+                array('label' => 'Product List', 'url' => '/product/manage'),
                 array('label' => 'Add Product', 'url' => '/product/manage/create'),
             ),
         ),
@@ -80,7 +80,7 @@ class Ims_menu {
             'url' => '#',
             'icon' => '<i class="glyphicon glyphicon-save"></i>',
             'submenu' => array(
-                array('label' => 'Purchase List', 'url' => '/product/purchase/'),
+                array('label' => 'Purchase List', 'url' => '/product/purchase'),
                 array('label' => 'Purchase Product', 'url' => '/product/purchase/createsingle'),
 //    	array('label'=>'Purchase Product', 'url'=>array('create')),
             ),

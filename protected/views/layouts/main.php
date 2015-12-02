@@ -132,7 +132,6 @@
         <!-- AdminLTE for demo purposes -->
         <script src="/css/dist/js/demo.js"></script>
 
-
         <script type="text/javascript" src="/js/custom/main.js"></script>
 
     </body>
