@@ -251,14 +251,16 @@ class PurchaseController extends Controller {
                 $model->store_id = $store_id;
                 $model->purchase_cart_id = $purchase_cart->id;
                 $model->insert();
-
+                
+                $sub_total = intval($_POST['quantity']) * floatval($new_cost);
+                
                 $purchase_cart_items = new PurchaseCartItems;
                 $purchase_cart_items->cart_id = $purchase_cart->id;
                 $purchase_cart_items->product_details_id = $product_id;
                 $purchase_cart_items->cost = $new_cost;
                 $purchase_cart_items->price = $new_price;
                 $purchase_cart_items->quantity = $_POST['quantity'];
-                $purchase_cart_items->sub_total = $purchase_cart->grand_total;
+                $purchase_cart_items->sub_total = floatval($sub_total);
                 $purchase_cart_items->insert();
 
                 $stock_info->quantity = ((int) $stock_info->quantity + (int) $_POST['quantity']);

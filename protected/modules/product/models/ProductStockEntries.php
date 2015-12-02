@@ -403,6 +403,7 @@ class ProductStockEntries extends CActiveRecord {
                     $cart['grade_name'] = $row['grade_name'];
                     $cart['ref_num'] = $row['reference_number'];
                     $cart['qty'] = $row['quantity'];
+                    $cart['cost'] = $row['cost'];
                     $cart['price'] = $row['price'];
                     $cart['item_discount'] = $row['item_discount'];
                     $cart['item_vat'] = $row['item_vat'];

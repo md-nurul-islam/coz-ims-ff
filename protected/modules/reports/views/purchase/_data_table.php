@@ -21,6 +21,7 @@
                             <th>Ref. Number</th>
                             <th>Item</th>
                             <th>Quantity</th>
+                            <th>Cost</th>
                             <th>Price</th>
                             <th>Item Total</th>
                         </tr>
@@ -83,6 +84,7 @@
                                             <span class="label label-info"><?php echo $c['grade_name']; ?></span>
                                         </td>
                                         <td><?php echo $c['qty']; ?></td>
+                                        <td><?php echo $c['cost']; ?></td>
                                         <td><?php echo $c['price']; ?></td>
                                         <td><?php echo $c['item_sub_total']; ?></td>
                                     <?php  ?>
@@ -94,36 +96,36 @@
                             ?>
 
                             <tr>
-                                <td colspan="5" style="text-align: right;">Gross</td>
+                                <td colspan="6" style="text-align: right;">Gross</td>
                                 <td><?php echo number_format($gross, 2); ?></td>
                             </tr>
 
                             <?php if ($advance_sale_list) { ?>
                                 <tr>
-                                    <td colspan="5" style="text-align: right;">Advance</td>
+                                    <td colspan="6" style="text-align: right;">Advance</td>
                                     <td><?php echo number_format($amount_given, 2); ?></td>
                                 </tr>
                             <?php } ?>
 
                             <?php if ($advance_sale_list) { ?>
                                 <tr>
-                                    <td colspan="5" style="text-align: right;">Due</td>
+                                    <td colspan="6" style="text-align: right;">Due</td>
                                     <td><?php echo number_format($balance, 2); ?></td>
                                 </tr>
                             <?php } ?>
 
                             <tr>
-                                <td colspan="5" style="text-align: right;">Vat</td>
+                                <td colspan="6" style="text-align: right;">Vat</td>
                                 <td><?php echo number_format($vat, 2); ?></td>
                             </tr>
                             
                             <tr>
-                                <td colspan="5" style="text-align: right;">Discount</td>
+                                <td colspan="6" style="text-align: right;">Discount</td>
                                 <td><?php echo number_format($discount, 2); ?></td>
                             </tr>
                             
                             <tr>
-                                <td colspan="5" style="text-align: right;">Net</td>
+                                <td colspan="6" style="text-align: right;">Net</td>
                                 <td><?php echo number_format($net, 2); ?></td>
                             </tr>
 
@@ -147,35 +149,35 @@
                         <tr><td colspan="6" style="border-top: none;">&nbsp;</td></tr>
 
                         <tr>
-                            <td colspan="5" style="text-align: right;">Total Gross</td>
+                            <td colspan="6" style="text-align: right;">Total Gross</td>
                             <td><?php echo number_format($total_gross, 2); ?></td>
                         </tr>
 
                         <?php if ($advance_sale_list) { ?>
                             <tr>
-                                <td colspan="5" style="text-align: right;">Total Advance</td>
+                                <td colspan="6" style="text-align: right;">Total Advance</td>
                                 <td><?php echo number_format($total_amount_given, 2); ?></td>
                             </tr>
                         <?php } ?>
 
                         <tr>
-                            <td colspan="5" style="text-align: right;">Total Discount</td>
+                            <td colspan="6" style="text-align: right;">Total Discount</td>
                             <td><?php echo number_format($total_discount, 2); ?></td>
                         </tr>
                         
                         <tr>
-                            <td colspan="5" style="text-align: right;">Total Vat</td>
+                            <td colspan="6" style="text-align: right;">Total Vat</td>
                             <td><?php echo number_format($total_vat, 2); ?></td>
                         </tr>
                         
                         <tr>
-                            <td colspan="5" style="text-align: right;">Total Net</td>
+                            <td colspan="6" style="text-align: right;">Total Net</td>
                             <td><?php echo number_format($total_net, 2); ?></td>
                         </tr>
                         
                         <?php if ($advance_sale_list) { ?>
                             <tr>
-                                <td colspan="5" style="text-align: right;">Total Due</td>
+                                <td colspan="6" style="text-align: right;">Total Due</td>
                                 <td><?php echo number_format($total_balance, 2); ?></td>
                             </tr>
                         <?php } ?>

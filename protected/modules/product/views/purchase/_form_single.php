@@ -361,7 +361,7 @@
                 return false;
             }
 
-            var price = $('#n_price').val();
+            var price = $('#n_cost').val();
             var total = 0.00;
 
             if (price != '') {
