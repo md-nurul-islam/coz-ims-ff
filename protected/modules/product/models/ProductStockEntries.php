@@ -327,69 +327,91 @@ class ProductStockEntries extends CActiveRecord {
             $store_id = Yii::app()->user->storeId;
         }
 
-        $from_date = (!empty($from_date)) ? $from_date : date('Y-m-d', Settings::getBdLocalTime());
-        $to_date = (!empty($to_date)) ? $to_date : date('Y-m-d', Settings::getBdLocalTime());
+        $from_date = date('Y-m-d', strtotime($from_date));
+        $to_date = date('Y-m-d', strtotime($to_date));
 
-        $criteria = new CDbCriteria;
-        //var_dump($this->id);exit;
-        $criteria->select = 't.id, t.purchase_id, t.ref_num, t.quantity, t.serial_num, t.selling_price, t.item_subtotal, t.grand_total_paid, t.grand_total_balance, t.grand_total_payable';
-        $criteria->with = array(
-            'productDetails' => array(
-                'select' => 'productDetails.product_name',
-                'joinType' => 'LEFT JOIN',
-            ),
+        $command = Yii::app()->db->createCommand()
+                ->from($this->tableName() . ' t')
+                ->join(PurchaseCart::model()->tableName() . ' c', 'c.id = t.purchase_cart_id')
+                ->join(PurchaseCartItems::model()->tableName() . ' ci', 'c.id = ci.cart_id')
+                ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = ci.product_details_id')
+                ->leftJoin(ProductColor::model()->tableName() . ' pc', 'pd.id = pc.product_details_id')
+                ->leftJoin(Color::model()->tableName() . ' cl', 'cl.id = pc.color_id')
+                ->leftJoin(ProductSize::model()->tableName() . ' ps', 'pd.id = ps.product_details_id')
+                ->leftJoin(Sizes::model()->tableName() . ' s', 's.id = ps.size_id')
+                ->leftJoin(ProductGrade::model()->tableName() . ' pg', 'pd.id = pg.product_details_id')
+                ->leftJoin(Grade::model()->tableName() . ' g', 'g.id = pg.grade_id')
+                ->order('t.id DESC')
+        ;
+
+        $command->andWhere('t.store_id = :store_id', array(':store_id' => $store_id));
+        $command->andWhere('DATE(t.purchase_date) >= :from_date AND DATE(t.purchase_date) <= :to_date', array(
+            ':from_date' => $from_date,
+            ':to_date' => $to_date,
+        ));
+
+        $command->select(
+                't.id,
+                t.billnumber,
+                t.purchase_date,
+                t.store_id,
+                c.discount,
+                c.vat,
+                c.grand_total,
+                ci.reference_number,
+                ci.cost,
+                ci.price,
+                ci.quantity,
+                ci.discount AS item_discount,
+                ci.vat AS item_vat,
+                ci.sub_total,
+                pd.product_name,
+                cl.name AS color_name,
+                s.name AS size_name,
+                g.name AS grade_name
+                '
         );
 
-        $criteria->compare('DATE(t.purchase_date) >', $from_date);
-        $criteria->compare('DATE(t.purchase_date) <', $to_date);
-
-        if (!Yii::app()->user->isSuperAdmin) {
-            $criteria->compare('productDetails.store_id', $store_id);
-            $criteria->compare('productStockAvails.store_id', $store_id);
-            $criteria->compare('t.store_id', $store_id);
-        }
-
-        $criteria->together = true;
-        $criteria->order = 't.id DESC';
-
-        $data = $this->findAll($criteria);
-
-        return (!empty($data)) ? $this->formatPurchaseReportData($data) : FALSE;
+        $data = $this->formatPurchaseReportData($command->queryAll());
+        return $data;
     }
 
-    private function formatPurchaseReportData($obj_data) {
+    private function formatPurchaseReportData($ar_data) {
 
         $formatted_data = array();
 
-        foreach ($obj_data as $row) {
-            $sale_ids[] = $row->purchase_id;
-        }
+        $purchase_ids = array_unique(array_map(function ($row) {
+                    return $row['billnumber'];
+                }, $ar_data));
 
-        $sale_ids = array_unique($sale_ids);
-
-        foreach ($sale_ids as $sale_id) {
+        foreach ($purchase_ids as $purchase_id) {
 
             $_data = array();
-            foreach ($obj_data as $row) {
+            foreach ($ar_data as $row) {
 
-                if ($sale_id == $row->purchase_id) {
+                if ($purchase_id == $row['billnumber']) {
 
-                    $_data['bill_total'] = ( empty($row->grand_total_payable) || ($row->grand_total_payable <= 0) ) ? 0.00 : $row->grand_total_payable;
-                    $_data['amount_given'] = ( empty($row->grand_total_paid) || ($row->grand_total_paid <= 0) ) ? 0.00 : $row->grand_total_paid;
-                    $_data['discount'] = ( empty($row->dis_amount) || ($row->dis_amount <= 0) ) ? 0.00 : $row->dis_amount;
-                    $_data['balance'] = ( empty($row->grand_total_balance) || ($row->grand_total_balance <= 0) ) ? 0.00 : $row->grand_total_balance;
+                    $_data['bill_total'] = (empty($row['grand_total']) || ($row['grand_total'] <= 0) ) ? 0.00 : $row['grand_total'];
+                    $_data['discount'] = (empty($row['discount']) || ($row['discount'] <= 0) ) ? 0.00 : $row['discount'];
+                    $_data['vat'] = (empty($row['vat']) || ($row['vat'] <= 0) ) ? 0.00 : $row['vat'];
+                    $_data['amount_given'] = ( empty($row['grand_total_paid']) || ($row['grand_total_paid'] <= 0) ) ? 0.00 : $row['grand_total_paid'];
+                    $_data['balance'] = ( empty($row['grand_total_balance']) || ($row['grand_total_balance'] <= 0) ) ? 0.00 : $row['grand_total_balance'];
+                    
+                    $cart['prod_name'] = $row['product_name'];
+                    $cart['color_name'] = $row['color_name'];
+                    $cart['size_name'] = $row['size_name'];
+                    $cart['grade_name'] = $row['grade_name'];
+                    $cart['ref_num'] = $row['reference_number'];
+                    $cart['qty'] = $row['quantity'];
+                    $cart['price'] = $row['price'];
+                    $cart['item_discount'] = $row['item_discount'];
+                    $cart['item_vat'] = $row['item_vat'];
+                    $cart['item_sub_total'] = $row['sub_total'];
 
-                    $cart['prod_name'] = $row->productDetails->product_name;
-                    $cart['ref_num'] = $row->ref_num;
-                    $cart['qty'] = $row->quantity;
-                    $cart['price'] = $row->selling_price;
-                    $cart['item_sub_total'] = $row->item_subtotal;
-
-                    $_data[] = $cart;
+                    $_data['cart_items'][] = $cart;
                 }
+                $formatted_data[$purchase_id] = $_data;
             }
-
-            $formatted_data[$sale_id][] = $_data;
         }
 
         return $formatted_data;
@@ -535,7 +557,7 @@ class ProductStockEntries extends CActiveRecord {
             g.name as grade_name,
             s.name as size_name,
             (' . $sub_command->getText() . ') AS total_rows');
-        
+
         $data = DataGridHelper::propagateActionLinks($command->queryAll());
 
         return $data;

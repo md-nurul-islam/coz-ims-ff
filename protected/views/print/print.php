@@ -3,73 +3,53 @@
     <style type="text/css">
         .print-wrapper table {
             font-family: Helvetica;
-            font-size: 12px;
+            font-size: 14px;
             width: 100%;
         }
-        .print-wrapper table td, table th {
+        .print-wrapper table td, .print-wrapper table th {
             border: 1px solid #ccc;
             border-spacing: 0;
         }
-        .head{
-            margin-left: auto;
-            margin-right: auto;
-            width: 50%;
+        .print-wrapper table td:not(:first-child), .print-wrapper table th:not(:first-child) {
             text-align: center;
-            font-weight: bold;
-            font-size: 14px;
         }
-        .bill-table{
-            width: 100%;
-        }
-        .bill-print{
-            border: 1px solid #000;
-        }
-        .bill-print thead th{
-            background: transparent;
-        }
-        .td-top-border-1px{
-            border-top: 1px solid #000;
-        }
-        .text-align-left{
+         .print-wrapper table th:first-child {
             text-align: left;
-        }
-        .text-align-center{
-            text-align: center;
-        }
-        .text-right-align{
-            text-align: right;
-        }
-        .bold-font{
-            font-weight: bold;
         }
         .clearfix {
             clear: both;
         }
         .store-name {
-            font-size: 13px;
+            font-size: 16px;
             font-weight: bold;
             padding: 5px 0;
             text-align: center;
         }
         .store-address {
-            font-size: 12px;
+            font-size: 14px;
             margin-bottom: 15px;
             text-align: center;
         }
         .bill-date, .bill-number {
             float: right;
-            font-size: 12px;
+            font-size: 14px;
             margin-bottom: 2px;
         }
         .bill-number {
             margin-bottom: 8px;
+        }
+        .vat_cell, .discount_cell {
+            border-right: 0 none !important;
+        }
+        .vat_cell_val, .discount_cell_val {
+            border-left: 0 none !important;
         }
     </style>
 
     <div class="print-wrapper" style="
          margin-left: auto;
          margin-right: auto;
-         width: 300px;
+         width: 350px;
          float: left;
          border: 1px solid #000000;
          ">

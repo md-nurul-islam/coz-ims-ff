@@ -259,9 +259,6 @@ class PurchaseController extends Controller {
                 $purchase_cart_items->price = $new_price;
                 $purchase_cart_items->quantity = $_POST['quantity'];
                 $purchase_cart_items->sub_total = $purchase_cart->grand_total;
-                $purchase_cart_items->product_color_id = $stock_info->product_color_id;
-                $purchase_cart_items->product_size_id = $stock_info->product_size_id;
-                $purchase_cart_items->product_grade_id = $stock_info->product_grade_id;
                 $purchase_cart_items->insert();
 
                 $stock_info->quantity = ((int) $stock_info->quantity + (int) $_POST['quantity']);

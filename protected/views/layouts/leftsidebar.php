@@ -39,7 +39,12 @@
                 ?>
                 <li class="treeview">
                     <a href="<?php echo $menu['url']; ?>">
-                        <i class="fa fa-pie-chart"></i>
+
+                        <?php if (isset($menu['icon']) && !empty($menu['icon'])) { ?>
+                            <?php echo $menu['icon']; ?>
+                        <?php } else { ?>
+                            <i class="fa fa-pie-chart"></i>
+                        <?php } ?>
                         <span><?php echo $menu['label']; ?></span>
                         <?php if (isset($menu['submenu']) && !empty($menu['submenu'])) { ?>
                             <i class="fa fa-angle-left pull-right"></i>

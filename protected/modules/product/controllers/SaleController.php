@@ -26,7 +26,18 @@ class SaleController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'advance_sale', 'advance_sale_list', 'view', 'create', 'update', 'product_stock_info', 'print', 'getdata', 'getStatusComboData'),
+                'actions' => array(
+                    'index',
+                    'advance_sale',
+                    'advance_sale_list',
+                    'view',
+                    'create',
+                    'update',
+                    'product_stock_info',
+                    'print',
+                    'getdata',
+                    'getStatusComboData'
+                ),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -499,41 +510,6 @@ class SaleController extends Controller {
      * Manages all models.
      */
     public function actionIndex() {
-
-//        $model = new ProductStockSales();
-//        $pageSize = 0;
-//
-//        $model->unsetAttributes();  // clear any default values
-//        if (isset($_GET['ProductStockSales'])) {
-//            if (isset($_GET['ProductStockSales']['id']) && !empty($_GET['ProductStockSales']['id'])) {
-//                $model->sales_id = $_GET['ProductStockSales']['id'];
-//            }
-//
-//            if (isset($_GET['ProductStockSales']['product_name']) && !empty($_GET['ProductStockSales']['product_name'])) {
-//                $model->product_name = $_GET['ProductStockSales']['product_name'];
-//            }
-//
-//            if (isset($_GET['ProductStockSales']['grand_total_paid']) && !empty($_GET['ProductStockSales']['grand_total_paid'])) {
-//                $model->grand_total_paid = $_GET['ProductStockSales']['grand_total_paid'];
-//            }
-//        }
-//
-//        if (isset($_GET['pageSize'])) {
-//            $pageSize = (int) $_GET['pageSize'];
-//            $model->pageSize = $pageSize;
-//            unset($_GET['pageSize']);
-//        }
-//
-//        if (!Yii::app()->user->isSuperAdmin) {
-//            $model->store_id = Yii::app()->user->storeId;
-//        } else {
-//            $model->store_id = 1;
-//        }
-
-//        $this->render('index', array(
-//            'model' => $model,
-//            'pageSize' => $pageSize,
-//        ));
         $this->render('index');
     }
 
@@ -599,7 +575,7 @@ class SaleController extends Controller {
     }
 
     private function formatProdInfo($prods) {
-        
+
         $response = array();
         foreach ($prods as $row) {
 

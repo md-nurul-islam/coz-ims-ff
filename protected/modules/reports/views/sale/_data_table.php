@@ -5,8 +5,8 @@
 
         <div class="box-body">
             
-            <div class="center col-lg-6">
-                <h3>Sales Report Starting from <?php echo $from_date; ?> till <?php echo $to_date; ?></h3>
+            <div class="center col-lg-7">
+                <h3 class="text-aqua">Sales Report Starting from <?php echo $from_date; ?> till <?php echo $to_date; ?></h3>
             </div>
             
             <legend></legend>
