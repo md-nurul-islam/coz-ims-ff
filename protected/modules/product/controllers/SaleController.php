@@ -510,6 +510,10 @@ class SaleController extends Controller {
      * Manages all models.
      */
     public function actionIndex() {
+        
+        $this->pageTitle = Yii::app()->name . ' - Sale List';
+        $this->pageHeader = 'Sale List';
+        
         $this->render('index');
     }
 

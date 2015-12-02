@@ -26,7 +26,15 @@ class CategoryController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'autocomplete', 'getdata', 'getStatusComboData'),
+                'actions' => array(
+                    'index',
+                    'view',
+                    'create',
+                    'update',
+                    'autocomplete',
+                    'getdata',
+                    'getStatusComboData'
+                ),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -130,6 +138,9 @@ class CategoryController extends Controller {
      * Lists all models.
      */
     public function actionIndex() {
+        
+        $this->pageTitle = Yii::app()->name . ' - Category List';
+        $this->pageHeader = 'Category List';
         $this->render('index');
     }
 
@@ -183,6 +194,7 @@ class CategoryController extends Controller {
     /*
      * Grid functions
      */
+
     public function actionGetdata() {
 
         foreach (DataGridHelper::$_ar_non_filterable_vars as $nfv_key => $nfv_var_name) {

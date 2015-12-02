@@ -26,7 +26,15 @@ class ManageController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'autocomplete', 'getdata', 'getStatusComboData'),
+                'actions' => array(
+                    'index',
+                    'view',
+                    'create',
+                    'update',
+                    'autocomplete',
+                    'getdata',
+                    'getStatusComboData'
+                ),
                 'users' => array('@'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -78,46 +86,46 @@ class ManageController extends Controller {
         $colors = Color::model()->findAll();
 
         if (isset($_POST['ProductDetails'])) {
-            
+
             $model->attributes = $_POST['ProductDetails'];
-            
+
             $model->store_id = $store_id;
             $model->create_date = $now;
             $model->update_date = $now;
-            
+
             $product_grade = 0;
             $product_size = 0;
             $product_color = 0;
-            
+
             if ($model->save()) {
-                
-                if(isset($_POST['ProductGrade']['grade_id']) && !empty($_POST['ProductGrade']['grade_id'])) {
+
+                if (isset($_POST['ProductGrade']['grade_id']) && !empty($_POST['ProductGrade']['grade_id'])) {
                     $product_grade = $_POST['ProductGrade']['grade_id'];
                 }
-                
-                if(isset($_POST['ProductSize']['size_id']) && !empty($_POST['ProductSize']['size_id'])) {
+
+                if (isset($_POST['ProductSize']['size_id']) && !empty($_POST['ProductSize']['size_id'])) {
                     $product_size = $_POST['ProductSize']['size_id'];
                 }
-                
-                if(isset($_POST['ProductColor']['color_id']) && !empty($_POST['ProductColor']['color_id'])) {
+
+                if (isset($_POST['ProductColor']['color_id']) && !empty($_POST['ProductColor']['color_id'])) {
                     $product_color = $_POST['ProductColor']['color_id'];
                 }
-                
+
                 $obj_pg = new ProductGrade();
                 $obj_pg->product_details_id = $model->id;
                 $obj_pg->grade_id = $product_grade;
                 $obj_pg->save();
-                
+
                 $obj_ps = new ProductSize();
                 $obj_ps->product_details_id = $model->id;
                 $obj_ps->size_id = $product_size;
                 $obj_ps->save();
-                
+
                 $obj_pc = new ProductColor();
                 $obj_pc->product_details_id = $model->id;
                 $obj_pc->color_id = $product_color;
                 $obj_pc->save();
-                
+
                 $obj_p_stock = new ProductStockAvail();
                 $obj_p_stock->product_details_id = $model->id;
                 $obj_p_stock->quantity = 0;
@@ -126,7 +134,7 @@ class ManageController extends Controller {
                 $obj_p_stock->product_size_id = $obj_ps->id;
                 $obj_p_stock->product_color_id = $obj_pc->id;
                 $obj_p_stock->insert();
-                
+
                 $this->redirect(array('index'));
             }
         }
@@ -256,6 +264,7 @@ class ManageController extends Controller {
         $model = new ProductDetails('search');
 
         $this->pageTitle = Yii::app()->name . ' - Product List';
+        $this->pageHeader = 'Product List';
         $pageSize = 0;
 
         $model->unsetAttributes();  // clear any default values
@@ -425,10 +434,11 @@ class ManageController extends Controller {
 
         $this->render('update_stock', array('model' => $model));
     }
-    
+
     /*
      * Grid functions
      */
+
     public function actionGetdata() {
 
         foreach (DataGridHelper::$_ar_non_filterable_vars as $nfv_key => $nfv_var_name) {
