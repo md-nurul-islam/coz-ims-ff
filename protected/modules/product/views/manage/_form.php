@@ -18,8 +18,6 @@
 
         <div class="box-body">
 
-            <?php echo $form->errorSummary($model); ?>
-
             <div class="form-group">
                 <div class="col-sm-10">
                     <label>Fields with <span class="required">*</span> are required.</label>
@@ -251,6 +249,8 @@
 
     </div><!-- form -->
 </div>
+
+<div class="clearfix"></div>
 
 <script type="text/javascript">
     $(document).ready(function () {

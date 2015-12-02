@@ -103,4 +103,19 @@
         'from_date' => $from_date,
         'to_date' => $to_date,));
     ?>
+<?php } else if (!empty ($msg)) { ?>
+    
+<div class="col-lg-12">
+    
+    <div class="box box-info">
+
+        <div class="box-body">
+            
+            <div class="center col-lg-6">
+                <h3><?php echo $msg; ?></h3>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?php } ?>

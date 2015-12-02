@@ -178,19 +178,19 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <?php echo $form->labelEx($model, 'ref_num', array('class' => 'col-sm-4 control-label', 'for' => 'ref_num')); ?>
+<!--                <div class="form-group">
+                    <?php // echo $form->labelEx($model, 'ref_num', array('class' => 'col-sm-4 control-label', 'for' => 'ref_num')); ?>
                     <div class="col-sm-7">
                         <?php
-                        echo CHtml::textField('ref_num', '', array(
-                            'size' => 12,
-                            'maxlength' => 12,
-                            'class' => 'form-control',
-                            'placeholder' => 'Reference Number',
-                        ));
+//                        echo CHtml::textField('ref_num', '', array(
+//                            'size' => 12,
+//                            'maxlength' => 12,
+//                            'class' => 'form-control',
+//                            'placeholder' => 'Reference Number',
+//                        ));
                         ?>
                     </div>
-                </div>
+                </div>-->
 
 
                 <div class="form-group">
@@ -307,17 +307,17 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <?php echo $form->labelEx($model, 'payment_method', array('class' => 'col-sm-4 control-label')); ?>
+<!--                <div class="form-group">
+                    <?php // echo $form->labelEx($model, 'payment_method', array('class' => 'col-sm-4 control-label')); ?>
                     <div class="col-sm-7">
                         <?php
-                        echo $form->dropDownList($model, 'payment_method', Settings::$_payment_types, array(
-                            'style' => 'width: 100%;',
-                            'class' => 'select2'
-                        ));
+//                        echo $form->dropDownList($model, 'payment_method', Settings::$_payment_types, array(
+//                            'style' => 'width: 100%;',
+//                            'class' => 'select2'
+//                        ));
                         ?>
                     </div>
-                </div>
+                </div>-->
 
 
             </div>

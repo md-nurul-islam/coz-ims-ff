@@ -38,7 +38,8 @@ class PurchaseController extends Controller {
                     'update',
                     'product_stock_info',
                     'createsingle',
-                    'autocomplete'),
+                    'autocomplete'
+                ),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -232,11 +233,12 @@ class PurchaseController extends Controller {
             $bill_number = (empty($_POST['ProductStockEntries']['billnumber'])) ? Settings::getToken(8, FALSE) : $_POST['ProductStockEntries']['billnumber'];
             $purchase_date = (empty($_POST['ProductStockEntries']['purchase_date'])) ? $now : date('Y-m-d', strtotime($_POST['ProductStockEntries']['purchase_date']));
             $due_payment_date = (empty($_POST['ProductStockEntries']['due_payment_date'])) ? $now : date('Y-m-d', strtotime($_POST['ProductStockEntries']['due_payment_date']));
-            $payment_method = $_POST['ProductStockEntries']['payment_method'];
+            $payment_method = 1;
+//            $payment_method = $_POST['ProductStockEntries']['payment_method'];
             $note = $_POST['ProductStockEntries']['note'];
 
             if (empty($ar_cart['errors'])) {
-                
+
                 $purchase_cart = new PurchaseCart;
                 $purchase_cart->grand_total = $_POST['total'];
                 $purchase_cart->insert();
@@ -275,7 +277,7 @@ class PurchaseController extends Controller {
                     $this->redirect(array('createsingle'));
                 }
             } else {
-                
+
                 $ar_cart['purchase_date'] = $purchase_date;
                 $ar_cart['due_payment_date'] = $due_payment_date;
                 $ar_cart['product_name'] = $_POST['product_name'];
@@ -291,7 +293,7 @@ class PurchaseController extends Controller {
                 $ar_cart['payment_method'] = $payment_method;
             }
         }
-        
+
         $this->render('create', array(
             'model' => $model,
             'ar_cart' => $ar_cart,
@@ -435,12 +437,12 @@ class PurchaseController extends Controller {
                 $command = Yii::app()->db->createCommand()
                         ->from(ProductDetails::model()->tableName() . ' t')
                         ->join(SupplierDetails::model()->tableName() . ' s', 's.id = t.supplier_id')
-                        ->join(ProductColor::model()->tableName() . ' pc', 't.id = pc.product_details_id')
-                        ->join(Color::model()->tableName() . ' cl', 'pc.color_id = cl.id')
-                        ->join(ProductGrade::model()->tableName() . ' pg', 't.id = pg.product_details_id')
-                        ->join(Grade::model()->tableName() . ' gr', 'pg.grade_id = gr.id')
-                        ->join(ProductSize::model()->tableName() . ' psz', 't.id = psz.product_details_id')
-                        ->join(Sizes::model()->tableName() . ' sz', 'psz.size_id = sz.id')
+                        ->leftJoin(ProductColor::model()->tableName() . ' pc', 't.id = pc.product_details_id')
+                        ->leftJoin(Color::model()->tableName() . ' cl', 'pc.color_id = cl.id')
+                        ->leftJoin(ProductGrade::model()->tableName() . ' pg', 't.id = pg.product_details_id')
+                        ->leftJoin(Grade::model()->tableName() . ' gr', 'pg.grade_id = gr.id')
+                        ->leftJoin(ProductSize::model()->tableName() . ' psz', 't.id = psz.product_details_id')
+                        ->leftJoin(Sizes::model()->tableName() . ' sz', 'psz.size_id = sz.id')
                         ->limit(50)
                 ;
             }

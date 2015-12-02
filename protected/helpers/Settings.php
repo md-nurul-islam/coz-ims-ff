@@ -26,7 +26,7 @@ class Settings {
     public static $_vat = 1.5;
     public static $_vat_mode = '%';
     public static $_discount = 0;
-    public static $_discount_mode = '%';
+    public static $_discount_mode = '';
     public static $_num_zeros_for_barcode = array(
         '0' => '000000',
         '1' => '00000',
@@ -37,7 +37,7 @@ class Settings {
         '6' => '',
     );
     public static $_available_payment_options = array(
-        0 => 'Cache',
+        0 => 'Cash',
         1 => 'Debit Card',
         2 => 'Credit Card',
     );

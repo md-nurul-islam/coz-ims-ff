@@ -56,7 +56,7 @@ class SaleController extends Controller {
             $model = $model->getSaleDataForReport($from_date, $to_date);
             
             if(!$model){
-                $msg = 'No Record Found in the given date rang.';
+                $msg = 'No data found in the given date range.';
             }
         }
         

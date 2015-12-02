@@ -241,34 +241,26 @@ $(document).ready(function () {
 
         var vat = $('#vat').val();
         var discount = $('#discount').val();
-
+        
         var global_vat_mode = $('#global_vat_mode').val();
         var global_discount_mode = $('#global_discount_mode').val();
 
         var grand_total = parseFloat($('#cart-total tr:last-child th:eq(2)').text());
-
-        if (global_vat_mode == '%') {
-            if ((vat.indexOf("%") > -1)) {
-                vat = vat.slice(0, -1);
-            }
-        } else if ((vat.indexOf("%") > -1)) {
-            vat = vat.slice(0, -1);
+        
+        if(global_vat_mode == '%' || vat.indexOf("%") > -1 ) {
+            vat = parseFloat(vat);
+            vat = (grand_total * vat) / 100;
+        } else {
+            vat = parseFloat(vat);
         }
-        $('#global_vat').val(vat);
-
-        vat = (grand_total * parseFloat(vat)) / 100;
-
-        if (global_discount_mode == '%') {
-            if ((discount.indexOf("%") > -1)) {
-                discount = discount.slice(0, -1);
-            }
-        } else if ((discount.indexOf("%") > -1)) {
-            discount = discount.slice(0, -1);
+        
+        if(global_discount_mode == '%' || discount.indexOf("%") > -1 ) {
+            discount = parseFloat(discount);
+            discount = (grand_total * discount) / 100;
+        } else {
+            discount = parseFloat(discount);
         }
-        $('#global_discount').val(discount);
-
-        discount = (grand_total * parseFloat(discount)) / 100;
-
+        
         $('th.vat_cell_val').text(vat.toFixed(2));
         $('th.discount_cell_val').text(discount.toFixed(2));
 

@@ -82,15 +82,26 @@ class ManageController extends Controller {
             $model->attributes = $_POST['ProductDetails'];
             
             $model->store_id = $store_id;
-            
             $model->create_date = $now;
             $model->update_date = $now;
             
+            $product_grade = 0;
+            $product_size = 0;
+            $product_color = 0;
+            
             if ($model->save()) {
                 
-                $product_grade = $_POST['ProductGrade']['grade_id'];
-                $product_size = $_POST['ProductSize']['size_id'];
-                $product_color = $_POST['ProductColor']['color_id'];
+                if(isset($_POST['ProductGrade']['grade_id']) && !empty($_POST['ProductGrade']['grade_id'])) {
+                    $product_grade = $_POST['ProductGrade']['grade_id'];
+                }
+                
+                if(isset($_POST['ProductSize']['size_id']) && !empty($_POST['ProductSize']['size_id'])) {
+                    $product_size = $_POST['ProductSize']['size_id'];
+                }
+                
+                if(isset($_POST['ProductColor']['color_id']) && !empty($_POST['ProductColor']['color_id'])) {
+                    $product_color = $_POST['ProductColor']['color_id'];
+                }
                 
                 $obj_pg = new ProductGrade();
                 $obj_pg->product_details_id = $model->id;

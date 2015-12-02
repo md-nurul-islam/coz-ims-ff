@@ -422,12 +422,12 @@ class ProductStockSales extends CActiveRecord {
                 ->join(Cart::model()->tableName() . ' c', 'c.id = t.cart_id')
                 ->join(CartItems::model()->tableName() . ' ci', 'c.id = ci.cart_id')
                 ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = ci.product_details_id')
-                ->join(ProductColor::model()->tableName() . ' pc', 'pd.id = pc.product_details_id')
-                ->join(Color::model()->tableName() . ' cl', 'cl.id = pc.color_id')
-                ->join(ProductSize::model()->tableName() . ' ps', 'pd.id = ps.product_details_id')
-                ->join(Sizes::model()->tableName() . ' s', 's.id = ps.size_id')
-                ->join(ProductGrade::model()->tableName() . ' pg', 'pd.id = pg.product_details_id')
-                ->join(Grade::model()->tableName() . ' g', 'g.id = pg.grade_id')
+                ->leftJoin(ProductColor::model()->tableName() . ' pc', 'pd.id = pc.product_details_id')
+                ->leftJoin(Color::model()->tableName() . ' cl', 'cl.id = pc.color_id')
+                ->leftJoin(ProductSize::model()->tableName() . ' ps', 'pd.id = ps.product_details_id')
+                ->leftJoin(Sizes::model()->tableName() . ' s', 's.id = ps.size_id')
+                ->leftJoin(ProductGrade::model()->tableName() . ' pg', 'pd.id = pg.product_details_id')
+                ->leftJoin(Grade::model()->tableName() . ' g', 'g.id = pg.grade_id')
                 ->order('t.id DESC')
         ;
 
@@ -451,6 +451,8 @@ class ProductStockSales extends CActiveRecord {
                 ci.reference_number,
                 ci.price,
                 ci.quantity,
+                ci.discount AS item_discount,
+                ci.vat AS item_vat,
                 ci.sub_total,
                 pd.product_name,
                 cl.name AS color_name,
@@ -475,33 +477,33 @@ class ProductStockSales extends CActiveRecord {
 
             $_data = array();
             foreach ($ar_data as $row) {
-
+                
                 if ($sale_id == $row['billnumber']) {
 
                     $_data['bill_total'] = (empty($row['grand_total']) || ($row['grand_total'] <= 0) ) ? 0.00 : $row['grand_total'];
                     $_data['discount'] = (empty($row['discount']) || ($row['discount'] <= 0) ) ? 0.00 : $row['discount'];
                     $_data['vat'] = (empty($row['vat']) || ($row['vat'] <= 0) ) ? 0.00 : $row['vat'];
-
                     $_data['amount_given'] = ( empty($row['grand_total_paid']) || ($row['grand_total_paid'] <= 0) ) ? 0.00 : $row['grand_total_paid'];
                     $_data['balance'] = ( empty($row['grand_total_balance']) || ($row['grand_total_balance'] <= 0) ) ? 0.00 : $row['grand_total_balance'];
+                    $_data['is_advance'] = $row['is_advance'];
 
                     $cart['prod_name'] = $row['product_name'];
                     $cart['color_name'] = $row['color_name'];
                     $cart['size_name'] = $row['size_name'];
                     $cart['grade_name'] = $row['grade_name'];
-                    $cart['is_advance'] = $row['is_advance'];
                     $cart['ref_num'] = $row['reference_number'];
                     $cart['qty'] = $row['quantity'];
                     $cart['price'] = $row['price'];
+                    $cart['item_discount'] = $row['item_discount'];
+                    $cart['item_vat'] = $row['item_vat'];
                     $cart['item_sub_total'] = $row['sub_total'];
 
-                    $_data[] = $cart;
+                    $_data['cart_items'][] = $cart;
                 }
-            }
-
-            $formatted_data[$sale_id][] = $_data;
+                $formatted_data[$sale_id] = $_data;
+            }   
         }
-
+        
         return $formatted_data;
     }
 
