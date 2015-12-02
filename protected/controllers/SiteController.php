@@ -72,6 +72,9 @@ class SiteController extends Controller {
      */
     public function actionLogin() {
         $this->layout = 'login';
+        
+        $this->pageTitle = Yii::app()->name . ' | Login';
+        
         $model = new User;
 
         // if it is ajax validation request
