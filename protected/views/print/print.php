@@ -49,7 +49,7 @@
     <div class="print-wrapper" style="
          margin-left: auto;
          margin-right: auto;
-         width: 350px;
+         width: 320px;
          float: left;
          border: 1px solid #000000;
          ">
