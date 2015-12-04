@@ -173,10 +173,7 @@ class CartController extends Controller {
         $cart->grand_total = $tmp_cart_data[0]['grand_total'];
         $cart->discount = $tmp_cart_data[0]['discount'];
         $cart->vat = $tmp_cart_data[0]['vat'];
-        
-        $cart->grand_total = floatval($cart->grand_total) - floatval($cart->vat);
-        $cart->grand_total = floatval($cart->grand_total) + floatval($cart->discount);
-        
+
         $bill_number = $post_data['bill_number'];
         $sale_date = date('Y-m-d', strtotime($post_data['sale_date']));
         $due_payment_date = date('Y-m-d', strtotime($post_data['due_payment_date']));
@@ -216,8 +213,6 @@ class CartController extends Controller {
             $cart_item->price = $tmp_cart['price'];
             $cart_item->quantity = $tmp_cart['quantity'];
             $cart_item->sub_total = $tmp_cart['sub_total'];
-            $cart_item->discount = $tmp_cart['item_discount'];
-            $cart_item->vat = $tmp_cart['item_vat'];
             
             $cart_item->insert();
             $i++;
