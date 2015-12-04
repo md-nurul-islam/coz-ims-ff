@@ -559,7 +559,7 @@ class ProductStockEntries extends CActiveRecord {
             s.name as size_name,
             (' . $sub_command->getText() . ') AS total_rows');
 
-        $data = DataGridHelper::propagateActionLinks($command->queryAll());
+        $data = DataGridHelper::propagateActionLinks($command->queryAll(), array('view', 'edit', 'delete'));
 
         return $data;
     }

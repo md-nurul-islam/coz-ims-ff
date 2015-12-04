@@ -155,90 +155,76 @@ class ManageController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
+
+        $now = date('Y-m-d H:i:s', Settings::getBdLocalTime());
         $this->pageTitle = Yii::app()->name . ' - Update Product';
-
-        $model = $this->loadModel($id);
-
-        $category_name = $model->category->category_name;
-        $supplier_name = $model->supplier->supplier_name;
-        // Uncomment the following line if AJAX validation is needed
-        $this->performAjaxValidation($model);
-
+        $this->pageHeader = 'Update Product';
+        $done = FALSE;
+        
+        $model = ProductDetails::model()->getDetails($id);
+        
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
         } else {
             $store_id = 1;
         }
-
+        
         $grades = Grade::model()->findAll();
-
-        $ar_pd = array();
-        foreach ($model->productGrade as $pd) {
-            $ar_pd[] = $pd->grade_id;
+        $sizes = Sizes::model()->findAll();
+        $colors = Color::model()->findAll();
+        
+        if( isset($_POST) && !empty($_POST['product_details_id']) ) {
+            
+            $id = $_POST['product_details_id'];
+            
+            $prod_model =  ProductDetails::model()->findByAttributes(array('id' => $id));
+            
+            $prod_model->category_id = $_POST['category_id'];
+            $prod_model->supplier_id = $_POST['supplier_id'];
+            $prod_model->product_name = $_POST['product_name'];
+            $prod_model->purchase_price = $_POST['purchase_price'];
+            $prod_model->selling_price = $_POST['selling_price'];
+            $prod_model->update_date = $now;
+            $prod_model->status = $_POST['status'];
+            $prod_model->vat = 0.00;
+            $prod_model->discount = 0.00;
+            
+            $color_model = ProductColor::model()->findByAttributes(array('product_details_id' => $id));
+            $color_model->color_id = $_POST['color_id'];
+            
+            $size_model = ProductSize::model()->findByAttributes(array('product_details_id' => $id));
+            $size_model->size_id = $_POST['size_id'];
+            
+            $grade_model = ProductGrade::model()->findByAttributes(array('product_details_id' => $id));
+            $grade_model->grade_id = $_POST['grade_id'];
+            
+            $transaction = Yii::app()->db->beginTransaction();
+            
+            try {
+                
+                $prod_model->update();
+                $color_model->update();
+                $size_model->update();
+                $grade_model->update();
+                
+                $transaction->commit();
+                $done = TRUE;
+                
+            } catch (CDbException $exc) {
+                $transaction->rollback();
+            }
+            
+            if($done) {
+                Yii::app()->user->setFlash('success', 'Product successfully updated.');
+                $this->redirect(array('manage/'));
+            }
         }
-
-        if (isset($_POST['ProductDetails'])) {
-            $category_name = Yii::app()->request->getPost('category_name');
-            $supplier_name = Yii::app()->request->getPost('supplier_name');
-
-            $model->attributes = $_POST['ProductDetails'];
-
-            $model->store_id = $store_id;
-
-            if (empty($category_name)) {
-                $model->category_id = '';
-            }
-
-            if (empty($supplier_name)) {
-                $model->supplier_id = '';
-            }
-
-            if (empty($model->purchase_price)) {
-                $model->purchase_price = 0.00;
-            }
-
-            if (empty($model->selling_price)) {
-                $model->selling_price = 0.00;
-            }
-
-            $model->status = $_POST['ProductDetails']['status'];
-            $model->update_date = date('Y-m-d H:i:s', Settings::getBdLocalTime());
-
-            $update = Yii::app()->db->createCommand()
-                    ->update('cims_product_details', array(
-                'category_id' => $model->category_id,
-                'supplier_id' => $model->supplier_id,
-                'product_name' => $model->product_name,
-                'purchase_price' => $model->purchase_price,
-                'selling_price' => $model->selling_price,
-                'update_date' => $model->update_date,
-                'status' => $model->status,
-                    ), 'id = :id AND store_id = :sid', array(':id' => $id, ':sid' => $model->store_id)
-            );
-
-            $product_grades = $_POST['ProductGrade']['grade_id'];
-            $cnt_product_grades = count($product_grades);
-            $obj_pg = new ProductGrade();
-            if (!empty($product_grades) && $cnt_product_grades > 0) {
-                $i_deleted_rows = $obj_pg->deleteAllByAttributes(array('product_details_id' => $id));
-            }
-
-            foreach ($product_grades as $pg) {
-                $obj_pg = new ProductGrade();
-                $obj_pg->product_details_id = $model->id;
-                $obj_pg->grade_id = $pg;
-                $obj_pg->insert();
-            }
-
-            $this->redirect(array('index'));
-        }
-
+        
         $this->render('update', array(
             'model' => $model,
-            'category_name' => $category_name,
-            'supplier_name' => $supplier_name,
             'grades' => $grades,
-            'ar_product_id' => $ar_pd,
+            'sizes' => $sizes,
+            'colors' => $colors,
         ));
     }
 

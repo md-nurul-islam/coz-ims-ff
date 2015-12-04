@@ -107,7 +107,8 @@ class ProductDetails extends CActiveRecord {
             'quantity' => array('label' => 'Stock', 'sortable' => 'true', 'width' => 50),
             'purchase_price' => array('label' => 'Cost', 'sortable' => 'true', 'width' => 50),
             'selling_price' => array('label' => 'Price', 'sortable' => 'true', 'width' => 50),
-            'status' => array('label' => 'Status', 'sortable' => 'true', 'width' => 80)
+            'status' => array('label' => 'Status', 'sortable' => 'true', 'width' => 80),
+            'action' => array('label' => 'Action', 'sortable' => 'false', 'width' => 50),
         );
     }
 
@@ -148,7 +149,7 @@ class ProductDetails extends CActiveRecord {
     }
 
     public function dataGridRows($params = array()) {
-        
+
         $offset = 0;
         if (isset($params['offset']) && $params['offset'] > 0) {
             $offset = $params['offset'];
@@ -174,7 +175,7 @@ class ProductDetails extends CActiveRecord {
                 ->limit($this->pageSize)
                 ->order($order)
         ;
-        
+
         $sub_command = Yii::app()->db->createCommand()
                 ->select('count(t.id)')
                 ->from($this->tableName() . ' t')
@@ -188,16 +189,16 @@ class ProductDetails extends CActiveRecord {
                 ->leftJoin(ProductSize::model()->tableName() . ' psz', 't.id = psz.product_details_id')
                 ->leftJoin(Sizes::model()->tableName() . ' sz', 'psz.size_id = sz.id')
         ;
-        
+
         $filter_keys = array_keys($this->dataGridFilters());
         if (isset($params['where']) && !empty($params['where'])) {
             $new_command_objs = DataGridHelper::processFilterableVars($command, $params['where'], $filter_keys, 't', $sub_command);
             $command = $new_command_objs[0];
             $sub_command = $new_command_objs[1];
         }
-        
+
         $command->select(
-            't.id,
+                't.id,
             t.product_name,
             t.purchase_price,
             t.selling_price,
@@ -210,9 +211,55 @@ class ProductDetails extends CActiveRecord {
             gr.name as grade_name,
             sz.name as size_name'
         );
-        
-        return $command->queryAll();
+
+        $data = DataGridHelper::propagateActionLinks($command->queryAll(), array(
+//            'view',
+                    'update',
+//            'delete'
+        ));
+
+        return $data;
     }
+
+    public function getDetails($id) {
+
+        $command = Yii::app()->db->createCommand()
+                ->from($this->tableName() . ' t')
+                ->join(CategoryDetails::model()->tableName() . ' c', 'c.id = t.category_id')
+                ->join(SupplierDetails::model()->tableName() . ' s', 's.id = t.supplier_id')
+                ->join(ProductStockAvail::model()->tableName() . ' ps', 't.id = ps.product_details_id')
+                ->leftJoin(ProductColor::model()->tableName() . ' pc', 't.id = pc.product_details_id')
+                ->leftJoin(Color::model()->tableName() . ' cl', 'pc.color_id = cl.id')
+                ->leftJoin(ProductGrade::model()->tableName() . ' pg', 't.id = pg.product_details_id')
+                ->leftJoin(Grade::model()->tableName() . ' gr', 'pg.grade_id = gr.id')
+                ->leftJoin(ProductSize::model()->tableName() . ' psz', 't.id = psz.product_details_id')
+                ->leftJoin(Sizes::model()->tableName() . ' sz', 'psz.size_id = sz.id')
+        ;
+        
+        $command->andWhere('t.id = :id', array(':id' => $id));
+        
+        $command->select('
+            t.id,
+            t.product_name,
+            t.purchase_price,
+            t.selling_price,
+            t.status,
+            c.id AS category_id,
+            c.category_name,
+            s.id AS supplier_id,
+            s.supplier_name,
+            ps.quantity,
+            cl.id as color_id,
+            gr.id as grade_id,
+            sz.id as size_id
+        ');
+        
+        return $command->queryRow();
+    }
+
+    /**
+     * NEW CODES
+     */
 
     /**
      * Retrieves a list of models based on the current search/filter conditions.

@@ -21,24 +21,25 @@
             <div class="form-group">
                 <div class="col-sm-10">
                     <label>Fields with <span class="required">*</span> are required.</label>
+                    <?php echo CHtml::hiddenField('product_details_id', $model['id']); ?>
                 </div>
             </div>
 
             <div class="form-group">
-                <?php echo $form->labelEx($model, 'category_id', array('class' => 'col-sm-2 control-label')); ?>
+                <?php echo CHtml::label('Category Name', 'category_name', array('class' => 'col-sm-2 control-label')); ?>
                 <div class="col-sm-10">
-                    <?php echo $form->hiddenField($model, 'category_id'); ?>
+                    <?php echo CHtml::hiddenField('category_id', $model['category_id']); ?>
                     <?php
                     $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
                         'name' => 'category_name',
-                        'value' => $category_name,
+                        'value' => $model['category_name'],
                         'source' => $this->createUrl('category/autocomplete'),
                         'options' =>
                         array(
                             'minLength' => '3',
                             'showAnim' => 'fold',
                             'select' => "js:function(event, data) {
-                            $('#ProductDetails_category_id').val(data.item.id);
+                            $('#category_id').val(data.item.id);
                         }",
                         ),
                         'htmlOptions' => array(
@@ -49,25 +50,24 @@
                         ),
                     ));
                     ?>
-                    <?php echo $form->error($model, 'category_id', array('class' => 'alert alert-danger')); ?>
                 </div>
             </div>
 
             <div class="form-group">
-                <?php echo $form->labelEx($model, 'supplier_id', array('class' => 'col-sm-2 control-label')); ?>
-                <?php echo $form->hiddenField($model, 'supplier_id'); ?>
+                <?php echo CHtml::label('Supplier Name', 'supplier_name', array('class' => 'col-sm-2 control-label')); ?>
+                <?php echo CHtml::hiddenField('supplier_id', $model['supplier_id']); ?>
                 <div class="col-sm-10">
                     <?php
                     $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
                         'name' => 'supplier_name',
-                        'value' => $supplier_name,
+                        'value' => $model['supplier_name'],
                         'source' => $this->createUrl('/supplier/manage/autocomplete'),
                         'options' =>
                         array(
                             'minLength' => 'a',
                             'showAnim' => 'fold',
                             'select' => "js:function(event, data) {
-                            $('#ProductDetails_supplier_id').val(data.item.id);
+                            $('#supplier_id').val(data.item.id);
                         }",
                         ),
                         'htmlOptions' => array(
@@ -78,22 +78,20 @@
                         ),
                     ));
                     ?>
-                    <?php echo $form->error($model, 'supplier_id', array('class' => 'alert alert-danger')); ?>
                 </div>
             </div>
 
             <div class="form-group">
-                <?php echo $form->labelEx($model, 'product_name', array('class' => 'col-sm-2 control-label')); ?>
+                <?php echo CHtml::label('Product Name', 'product_name', array('class' => 'col-sm-2 control-label')); ?>
                 <div class="col-sm-10">
                     <?php
-                    echo $form->textField($model, 'product_name', array(
+                    echo CHtml::textField('product_name', $model['product_name'], array(
                         'size' => 60,
                         'maxlength' => 255,
                         'class' => 'form-control',
                         'placeholder' => 'Product Name',
                     ));
                     ?>
-                    <?php echo $form->error($model, 'product_name', array('class' => 'alert alert-danger')); ?>
                 </div>
             </div>
 
@@ -107,14 +105,12 @@
                             <li>
                                 <?php
                                 $checked = FALSE;
-                                if (isset($ar_product_id)) {
-                                    if (in_array($grade->id, $ar_product_id)) {
-                                        $checked = TRUE;
-                                    }
+                                if ($model['grade_id'] == $grade->id) {
+                                    $checked = TRUE;
                                 }
                                 ?>
                                 <?php
-                                echo CHtml::radioButton('ProductGrade[grade_id]', $checked, array(
+                                echo CHtml::radioButton('grade_id', $checked, array(
                                     'value' => $grade->id,
                                     'id' => strtolower($grade->name),
                                     'class' => 'flat-red'
@@ -138,14 +134,12 @@
                             <li>
                                 <?php
                                 $checked = FALSE;
-                                if (isset($ar_product_id)) {
-                                    if (in_array($size->id, $ar_product_id)) {
-                                        $checked = TRUE;
-                                    }
+                                if ($model['size_id'] == $size->id) {
+                                    $checked = TRUE;
                                 }
                                 ?>
                                 <?php
-                                echo CHtml::radioButton('ProductSize[size_id]', $checked, array(
+                                echo CHtml::radioButton('size_id', $checked, array(
                                     'value' => $size->id,
                                     'id' => strtolower($size->name),
                                     'class' => 'flat-red'
@@ -169,14 +163,12 @@
                             <li>
                                 <?php
                                 $checked = FALSE;
-                                if (isset($ar_product_id)) {
-                                    if (in_array($colors->id, $ar_product_id)) {
-                                        $checked = TRUE;
-                                    }
+                                if ($model['color_id'] == $color->id) {
+                                    $checked = TRUE;
                                 }
                                 ?>
                                 <?php
-                                echo CHtml::radioButton('ProductColor[color_id]', $checked, array(
+                                echo CHtml::radioButton('color_id', $checked, array(
                                     'value' => $color->id,
                                     'id' => strtolower($color->name),
                                     'class' => 'flat-red'
@@ -190,56 +182,53 @@
 
             </div>
 
-            <?php if (!$model->isNewRecord) { ?>
-                <div class="form-group">
-                    <?php echo $form->labelEx($model, 'purchase_price', array('class' => 'col-sm-2 control-label')); ?>
-                    <div class="col-sm-10">
-                        <?php
-                        echo $form->textField($model, 'purchase_price', array(
-                            'size' => 10,
-                            'maxlength' => 10,
-                            'class' => 'form-control',
-                            'placeholder' => 'Purchase Price',
-                        ));
-                        ?>
-                        <?php echo $form->error($model, 'purchase_price', array('class' => 'alert alert-danger')); ?>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <?php echo $form->labelEx($model, 'selling_price', array('class' => 'col-sm-2 control-label')); ?>
-                    <div class="col-sm-10">
-                        <?php
-                        echo $form->textField($model, 'selling_price', array(
-                            'size' => 10,
-                            'maxlength' => 10,
-                            'placeholder' => 'Selling Price',
-                            'class' => 'form-control',
-                        ));
-                        ?>
-                        <?php echo $form->error($model, 'selling_price', array('class' => 'alert alert-danger')); ?>
-                    </div>
-                </div>
-
-                <div class="form-group">
+            <div class="form-group">
+                <?php echo CHtml::label('Purchase Price', 'purchase_price', array('class' => 'col-sm-2 control-label')); ?>
+                <div class="col-sm-10">
                     <?php
-                    $data = array('0' => 'Inactive', '1' => 'Active');
+                    echo CHtml::textField('purchase_price', $model['purchase_price'], array(
+                        'size' => 10,
+                        'maxlength' => 10,
+                        'class' => 'form-control',
+                        'placeholder' => 'Purchase Price',
+                        'readonly' => TRUE,
+                    ));
                     ?>
-                    <?php echo $form->labelEx($model, 'status', array('class' => 'col-sm-2 control-label')); ?>
-                    <div class="col-sm-10">
-                        <?php
-                        echo $form->dropDownList($model, 'status', $data, array(
-                            'class' => 'select2',
-                            'style' => 'width: 100%;'
-                        ));
-                        ?>
-                        <?php echo $form->error($model, 'status', array('class' => 'alert alert-danger')); ?>
-                    </div>
                 </div>
-            <?php } ?>
+            </div>
+
+            <div class="form-group">
+                <?php echo CHtml::label('Selling Price', 'selling_price', array('class' => 'col-sm-2 control-label')); ?>
+                <div class="col-sm-10">
+                    <?php
+                    echo CHtml::textField('selling_price', $model['selling_price'], array(
+                        'size' => 10,
+                        'maxlength' => 10,
+                        'placeholder' => 'Selling Price',
+                        'class' => 'form-control',
+                        'readonly' => TRUE,
+                    ));
+                    ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <?php
+                $data = array('0' => 'Inactive', '1' => 'Active');
+                ?>
+                <?php echo CHtml::label('status', 'status', array('class' => 'col-sm-2 control-label')); ?>
+                <div class="col-sm-10">
+                    <?php
+                    echo CHtml::dropDownList('status', $model['status'], $data, array(
+                        'class' => 'select2',
+                        'style' => 'width: 100%;'
+                    ));
+                    ?>
+                </div>
+            </div>
 
             <div class="box-footer">
-                <?php echo CHtml::submitButton(($model->isNewRecord) ? 'Add' : 'Update', array('id' => 'btn-submit', 'class' => 'btn btn-info pull-right')); ?>
+                <?php echo CHtml::submitButton('Update', array('id' => 'btn-submit', 'class' => 'btn btn-info pull-right')); ?>
             </div>
 
         </div>

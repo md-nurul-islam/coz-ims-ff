@@ -8,6 +8,12 @@ class DataGridHelper {
         'order' => 'order',
         'sort' => 'sortBy'
     );
+    public static $_ar_button_color_class = array(
+        'edit' => 'fa fa-pencil-square-o text-green',
+        'update' => 'fa fa-pencil-square-o text-green',
+        'view' => 'fa fa-eye text-aqua',
+        'delete' => 'fa fa-trash text-red',
+    );
 
     public static function processFilterableVars($query_object, $ar_filterable, $ar_filter_keys, $tab_prefix = 't', $sub_query_object = NULL) {
 
@@ -43,18 +49,31 @@ class DataGridHelper {
         }
         return array($query_object, $sub_query_object);
     }
-    
-    public static function propagateActionLinks($data) {
+
+    public static function propagateActionLinks($data, $buttons = array()) {
+
+        $url = '/';
+        if (isset(Yii::app()->controller->module->id)) {
+            $url .= Yii::app()->controller->module->id . '/';
+        }
+        $url .= Yii::app()->controller->id . '/';
         
         $i = 0;
         $response = [];
-        foreach ($data as $row) {
-            $row['action'] = '
-                <a href="view/'.$row['id'].'"><i class="fa fa-eye"></i></a>
-                <a href="edit/'.$row['id'].'"><i class="fa fa-pencil-square-o"></i></a>
-                ';
-            $response[$i] = $row;
-            $i++;
+
+        if (!empty($buttons)) {
+
+            foreach ($data as $row) {
+
+                $actions = [];
+                foreach ($buttons as $button) {
+                    $actions[] = '<a href="' . $url . $button . '/id/' . $row['id'] . '"><i class="' . self::$_ar_button_color_class[$button] . '"></i></a>';
+                }
+
+                $row['action'] = implode('&nbsp;&nbsp;', $actions);
+                $response[$i] = $row;
+                $i++;
+            }
         }
         return $response;
     }

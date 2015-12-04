@@ -7,7 +7,7 @@
 require_once('dataCon.php');
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
-    'name' => 'SIPS',
+    'name' => 'Pitf!',
     'defaultController' => 'site',
     // preloading 'log' component
     'preload' => array('log'),
@@ -76,7 +76,7 @@ return array(
             'routes' => array(
                 array(
                     'class' => 'CFileLogRoute',
-                    'levels' => 'trace, log, error, warning',
+                    'levels' => 'log, error, warning',
 //                    'categories' => 'system.db.CDbCommand',
 //                    'logFile' => 'db.log',
                 ),
