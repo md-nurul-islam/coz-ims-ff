@@ -4,6 +4,7 @@ $global_discount = $data[0]['discount'];
 $global_vat = $data[0]['vat'];
 $bill_number = $data[0]['billnumber'];
 $sale_date = $data[0]['sale_date'];
+$payment_amount = $payment_amount;
 ?>
 
 <div class="hidden_bill_number" style="display: none;"><?php echo $bill_number; ?></div>
@@ -45,15 +46,28 @@ $sale_date = $data[0]['sale_date'];
 
     <tfoot id="cart-total">
         <tr>
-            <th class="vat_cell">Vat</th>
+            <th colspan="3" class="vat_cell">Vat</th>
             <th class="vat_cell_val"><?php echo $global_vat; ?></th>
-            <th class="discount_cell">Discount</th>
+        </tr>
+        <tr>
+            <th colspan="3" class="discount_cell">Discount</th>
             <th class="discount_cell_val"><?php echo $global_discount; ?></th>
         </tr>
         <tr>
-            <th colspan="2">Total Items</th>
-            <th><?php echo $i; ?> (<?php echo $total_qty; ?>)</th>
+            <th colspan="3">Total Items</th>
+            <th><?php echo $i; ?></th>
+        </tr>
+        <tr>
+            <th colspan="3">Total Quantity</th>
+            <th><?php echo $total_qty; ?></th>
+        </tr>
+        <tr>
+            <th colspan="3">Total Gross</th>
             <th><?php echo $global_grand_total; ?></th>
+        </tr>
+        <tr>
+            <th colspan="3">Changes</th>
+            <th><?php echo $payment_amount - $global_grand_total; ?></th>
         </tr>
     </tfoot>
 

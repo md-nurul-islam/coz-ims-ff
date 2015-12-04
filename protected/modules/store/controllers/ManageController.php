@@ -42,19 +42,46 @@ class ManageController extends Controller {
      */
     public function actionUpdate() {
         $this->pageHeader = 'Update Store';
+        $now = date('Y-m-d H:i:s', Settings::getBdLocalTime());
+        $model_config_data = [];
 
         $id = 1;
         if (!Yii::app()->user->isSuperAdmin) {
             $id = Yii::app()->user->storeId;
         }
-        
-        $model = $this->loadModel($id);
 
+        $model = $this->loadModel($id);
+        $model_config = new Configurations();
+        $model_config_data = $model_config->getStoreConfigs();
+        
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($model);
 
         if (isset($_POST['StoreDetails'])) {
             $model->attributes = $_POST['StoreDetails'];
+            
+            if (isset($_POST['Configurations']) && !empty($_POST['Configurations']) && !empty($_POST['Configurations']['value'])) {
+            
+                foreach ($_POST['Configurations']['value'] as $key => $value) {
+                    
+                    if( isset($value['id']) && !empty($value['id']) ) {
+                        
+                        $config = Configurations::model()->findByAttributes(array('id' => $value['id']));
+                    } else {
+                        
+                        $config = new Configurations;
+                        $config->created_date = $now;
+                        $config->key = Settings::$_bill_header_and_footer_config_keys[$key];
+                        $config->store_id = $id;
+                    }
+                    
+                    $config->updated_date = $now;
+                    $config->value = $value['value'];
+                    
+                    $config->save();
+                }
+            }
+
             if ($model->save()) {
                 $this->redirect(array('update'));
             }
@@ -62,6 +89,8 @@ class ManageController extends Controller {
 
         $this->render('update', array(
             'model' => $model,
+            'model_config' => $model_config,
+            'model_config_data' => $model_config_data,
         ));
     }
 

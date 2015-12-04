@@ -75,7 +75,7 @@ return array(
             'class' => 'CLogRouter',
             'routes' => array(
                 array(
-                    'class' => 'CFileLogRoute',
+                    'class' => 'CWebLogRoute',
                     'levels' => 'log, error, warning',
 //                    'categories' => 'system.db.CDbCommand',
 //                    'logFile' => 'db.log',

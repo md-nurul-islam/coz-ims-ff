@@ -86,11 +86,36 @@
                 </div>
             </div>
 
+            <?php
+            foreach (Settings::$_bill_header_and_footer_config_keys as $key => $value) {
+                if (isset($model_config_data[$key]['id']) && !empty($model_config_data[$key]['id'])) {
+
+                    echo $form->hiddenField($model_config, 'value[' . $key . '][id]', array(
+                        'value' => $model_config_data[$key]['id']
+                    ));
+                }
+                ?>
+
+                <div class="form-group">
+                    <?php echo CHtml::label('Bill ' . ucfirst($key), get_class($model_config) . '_value_header', array('class' => 'col-sm-2 control-label')); ?>
+                    <div class="col-sm-10">
+                        <?php
+                        echo $form->textArea($model_config, 'value[' . $key . '][value]', array(
+                            'size' => 60,
+                            'maxlength' => 100,
+                            'placeholder' => 'Bill ' . ucfirst($key),
+                            'class' => 'form-control',
+                            'value' => ( isset($model_config_data[$key]['value']) ) ? $model_config_data[$key]['value'] : ''
+                        ));
+                        ?>
+                    </div>
+                </div>
+
+            <?php } ?>
+
             <div class="box-footer">
                 <?php echo CHtml::submitButton(($model->isNewRecord) ? 'Add' : 'Update', array('id' => 'btn-submit', 'class' => 'btn btn-info pull-right')); ?>
             </div>
-
-
 
         </div>
 

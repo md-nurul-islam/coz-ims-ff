@@ -131,7 +131,6 @@ function calculate_grand_total() {
     var grand_num_item = 0;
     var grand_qty = 0;
     var cart_id = $('#cart_id').val();
-    var discount = 0;
     var post_data = {};
 
     $('#cart-row').find('tr').each(function () {
@@ -177,7 +176,6 @@ function calculate_grand_total() {
     }).fail(function (e) {
 
     });
-
 
     return cart_id;
 }
@@ -241,26 +239,26 @@ $(document).ready(function () {
 
         var vat = $('#vat').val();
         var discount = $('#discount').val();
-        
+
         var global_vat_mode = $('#global_vat_mode').val();
         var global_discount_mode = $('#global_discount_mode').val();
 
         var grand_total = parseFloat($('#cart-total tr:last-child th:eq(2)').text());
-        
-        if(global_vat_mode == '%' || vat.indexOf("%") > -1 ) {
+
+        if (global_vat_mode == '%' || vat.indexOf("%") > -1) {
             vat = parseFloat(vat);
             vat = (grand_total * vat) / 100;
         } else {
             vat = parseFloat(vat);
         }
-        
-        if(global_discount_mode == '%' || discount.indexOf("%") > -1 ) {
+
+        if (global_discount_mode == '%' || discount.indexOf("%") > -1) {
             discount = parseFloat(discount);
             discount = (grand_total * discount) / 100;
         } else {
             discount = parseFloat(discount);
         }
-        
+
         $('th.vat_cell_val').text(vat.toFixed(2));
         $('th.discount_cell_val').text(discount.toFixed(2));
 
@@ -508,17 +506,15 @@ $(document).ready(function () {
 
                 if ($('.print').length > 0) {
 
-                    if ($('.print .print-wrapper').find('table').length > 0) {
-                        $('.print .print-wrapper').find('table').remove();
-                    }
-                    $('.print .print-wrapper').append(data.html);
-                    
+                    $('.print .print-wrapper .bill_table').html('');
+                    $('.print .print-wrapper .bill_table').html(data.html);
+
                     var bill_number = $('.print .hidden_bill_number').text().trim();
                     var sale_date = $('.print .hidden_sale_date').text().trim();
-                    
+
                     $('.print .bill-date span').html('');
                     $('.print .bill-date span').html(sale_date);
-                    
+
                     $('.print .bill-number span').html('');
                     $('.print .bill-number span').html(bill_number);
 
@@ -528,7 +524,7 @@ $(document).ready(function () {
                     $('#btn-print').trigger('click');
                 }
             }
-            
+
             $('#paymentModal').modal('hide');
 
             window.location.reload();
@@ -546,10 +542,24 @@ $(document).ready(function () {
 
         if ($('.print').length > 0) {
 
-            if ($('.print .print-wrapper').find('table').length > 0) {
-                $('.print .print-wrapper').find('table').remove();
-            }
-            $('.print .print-wrapper').append(printable);
+            $('.print .print-wrapper .bill_table').html('');
+            $('.print .print-wrapper .bill_table').html(printable);
+
+            var vat_val = $('.vat_cell_val').text();
+            var dis_val = $('.discount_cell_val').text();
+            var gross_total_row = $('.print .print-wrapper .bill_table table tfoot#cart-total tr:last-child').html();
+
+            $('.print .print-wrapper .bill_table table tfoot#cart-total tr:first-child').remove();
+            $('.print .print-wrapper .bill_table table tfoot#cart-total tr:last-child').remove();
+
+            var tfoot = '<tr>' +
+                    '<th colspan="3" class="vat_cell">Vat</th><th class="vat_cell_val">' + parseFloat(vat_val).toFixed(2) + '</th><th></th>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<th colspan="3" class="discount_cell">Discount</th><th class="discount_cell_val">' + parseFloat(dis_val).toFixed(2) + '</th><th></th>' +
+                    '</tr>' +
+                    '<tr>' + gross_total_row + '</tr>';
+            $('.print .print-wrapper .bill_table table tfoot#cart-total').html(tfoot);
 
             $('.print').find('table tr').each(function (e) {
                 $(this).find('th:last-child').remove();

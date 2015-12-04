@@ -47,6 +47,14 @@ class Settings {
         2 => 'AMEX',
         3 => 'DBBL Nexus',
     );
+    public static $_bill_header_and_footer_config_keys = array(
+        'header' => 'posBillHeader',
+        'footer' => 'posBillFooter',
+    );
+    public static $_pos_bill_footer = array(
+        'header' => 'posBillHeader',
+        'footer' => 'posBillFooter',
+    );
 
     public static function crypto_rand_secure($min, $max) {
         $range = $max - $min;
@@ -64,8 +72,12 @@ class Settings {
     }
 
     public static function getToken($length, $b_alpha_num = true) {
+
+        $_pos_bill_header = function($key) {
+            
+        };
         $token = "";
-        
+
         $codeAlphabet = '';
         if ($b_alpha_num) {
             $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

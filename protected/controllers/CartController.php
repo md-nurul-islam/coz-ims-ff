@@ -148,7 +148,8 @@ class CartController extends Controller {
         $cart_type = $post_data['type'];
 
         $data = call_user_func_array(array($this, 'proccess' . $cart_type), array($cart_id, $post_data));
-
+        $data['payment_amount'] = $post_data['payment_amount'];
+        
         if (!empty($data)) {
 
             $respons['success'] = TRUE;
@@ -171,8 +172,8 @@ class CartController extends Controller {
         
         $cart = new Cart;
         $cart->grand_total = $tmp_cart_data[0]['grand_total'];
-        $cart->discount = $tmp_cart_data[0]['discount'];
-        $cart->vat = $tmp_cart_data[0]['vat'];
+        $cart->discount = $tmp_cart_data[0]['total_discount'];
+        $cart->vat = $tmp_cart_data[0]['total_vat'];
 
         $bill_number = $post_data['bill_number'];
         $sale_date = date('Y-m-d', strtotime($post_data['sale_date']));
@@ -213,6 +214,8 @@ class CartController extends Controller {
             $cart_item->price = $tmp_cart['price'];
             $cart_item->quantity = $tmp_cart['quantity'];
             $cart_item->sub_total = $tmp_cart['sub_total'];
+            $cart_item->discount = $tmp_cart['item_discount'];
+            $cart_item->vat = $tmp_cart['item_vat'];
             
             $cart_item->insert();
             $i++;

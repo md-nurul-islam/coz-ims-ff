@@ -13,7 +13,7 @@
         .print-wrapper table td:not(:first-child), .print-wrapper table th:not(:first-child) {
             text-align: center;
         }
-         .print-wrapper table th:first-child {
+        .print-wrapper table th:first-child {
             text-align: left;
         }
         .clearfix {
@@ -24,6 +24,10 @@
             font-weight: bold;
             padding: 5px 0;
             text-align: center;
+        }
+        .store-name p {
+            font-weight: normal;
+            margin: 0;
         }
         .store-address {
             font-size: 14px;
@@ -38,24 +42,27 @@
         .bill-number {
             margin-bottom: 8px;
         }
-        .vat_cell, .discount_cell {
-            border-right: 0 none !important;
+        .store-policy ul {
+            margin: 30px 20px 15px;
+            padding: 0;
         }
-        .vat_cell_val, .discount_cell_val {
-            border-left: 0 none !important;
+        .store-policy ul li {
+            float: left;
+            margin: 10px 0;
+            width: 100%;
         }
     </style>
 
     <div class="print-wrapper" style="
          margin-left: auto;
          margin-right: auto;
-         width: 320px;
+         width: 310px;
          float: left;
          border: 1px solid #000000;
          ">
 
         <div class="store-name">
-            <?php echo CHtml::encode(Yii::app()->user->storeName); ?>
+            <?php echo Configurations::model()->getPosBillHeader()['value']; ?>
         </div>
 
         <div class="clearfix"></div>
@@ -72,6 +79,14 @@
 
         <div class="bill-number">
             Number: <span></span>
+        </div>
+
+        <div class="bill_table">
+
+        </div>
+
+        <div class="store-policy">
+            <?php echo Configurations::model()->getPosBillFooter()['value']; ?>
         </div>
 
     </div>

@@ -101,15 +101,30 @@ class TmpCart extends CActiveRecord {
         $command = Yii::app()->db->createCommand()
                 ->from($this->tableName() . ' t')
                 ->join(TmpCartItems::model()->tableName() . ' ci', 't.id = ci.cart_id');
-        
-        if($id > 0) {
+
+        $command->select('
+            t.id,
+            t.grand_total,
+            t.cart_type,
+            t.discount AS total_discount,
+            t.vat AS total_vat,
+            ci.product_details_id,
+            ci.reference_number,
+            ci.price,
+            ci.quantity,
+            ci.sub_total,
+            ci.discount AS item_discount,
+            ci.vat AS item_vat
+            ');
+
+        if ($id > 0) {
             $command->andWhere('t.id = :cid', array(':cid' => $id));
         }
-        
-        if($type > 0) {
+
+        if ($type > 0) {
             $command->andWhere('t.cart_type = :ctype', array(':ctype' => $type));
         }
-        
+
         return $command->queryAll();
     }
 
