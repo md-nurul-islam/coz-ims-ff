@@ -5,6 +5,7 @@ $global_vat = $data[0]['vat'];
 $bill_number = $data[0]['billnumber'];
 $sale_date = $data[0]['sale_date'];
 $payment_amount = $payment_amount;
+$total_subtotal = 0;
 ?>
 
 <div class="hidden_bill_number" style="display: none;"><?php echo $bill_number; ?></div>
@@ -24,9 +25,10 @@ $payment_amount = $payment_amount;
     <tbody id="cart-row">
 
         <?php
-        $i = 1;
+        $i = 0;
         foreach ($data as $row) {
             $total_qty = 0;
+            $total_subtotal += floatval($row['sub_total']);
             ?>
             <tr>
                 <td><?php echo $row['product_name']; ?></td>
@@ -46,6 +48,10 @@ $payment_amount = $payment_amount;
 
     <tfoot id="cart-total">
         <tr>
+            <th colspan="3" class="vat_cell">Total</th>
+            <th class="vat_cell_val"><?php echo $total_subtotal; ?></th>
+        </tr>
+        <tr>
             <th colspan="3" class="vat_cell">Vat</th>
             <th class="vat_cell_val"><?php echo $global_vat; ?></th>
         </tr>
@@ -62,8 +68,12 @@ $payment_amount = $payment_amount;
             <th><?php echo $total_qty; ?></th>
         </tr>
         <tr>
-            <th colspan="3">Total Gross</th>
+            <th colspan="3">Gross</th>
             <th><?php echo $global_grand_total; ?></th>
+        </tr>
+        <tr>
+            <th colspan="3">Paid</th>
+            <th><?php echo $payment_amount; ?></th>
         </tr>
         <tr>
             <th colspan="3">Changes</th>

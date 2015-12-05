@@ -1,5 +1,4 @@
 <div class="print" style="display: none;">
-
     <style type="text/css">
         .print-wrapper table {
             font-family: Helvetica;
@@ -66,10 +65,6 @@
         </div>
 
         <div class="clearfix"></div>
-
-        <div class="store-address">
-            <?php echo CHtml::encode(Yii::app()->user->storeAddress); ?>
-        </div>
 
         <div class="bill-date">
             Date: <span></span>

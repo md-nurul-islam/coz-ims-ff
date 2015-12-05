@@ -6,9 +6,9 @@
 
             <?php
             $this->widget('DataGrid', array(
-                'model' => 'SupplierDetails',
-                'module' => 'supplier',
-                'controller' => 'manage',
+                'model' => 'Sizes',
+                'module' => 'configuration',
+                'controller' => 'size',
                 'action' => 'getdata'
             ));
             ?>

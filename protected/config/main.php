@@ -35,6 +35,7 @@ return array(
         'customer',
         'store',
         'user',
+        'configuration',
     ),
     // application components
     'components' => array(

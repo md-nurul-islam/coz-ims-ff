@@ -9,6 +9,8 @@
  * @property integer $status
  */
 class Grade extends CActiveRecord {
+    
+    public $pageSize = 20;
 
     /**
      * @return string the associated database table name
@@ -25,6 +27,7 @@ class Grade extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name', 'required'),
+            array('name, code', 'unique'),
             array('status', 'numerical', 'integerOnly' => true),
             array('name', 'length', 'max' => 120),
             // The following rule is used by search().
@@ -88,6 +91,96 @@ class Grade extends CActiveRecord {
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
+    }
+
+    /**
+     * @return array for Data Grid Headers customized attribute labels (name=>label)
+     * remove the attributes don't needed in the Grid
+     */
+    public function dataGridHeaders() {
+        return array(
+            'name' => array('label' => 'Name', 'sortable' => 'true', 'width' => 80),
+            'status' => array('label' => 'Status', 'sortable' => 'true', 'width' => 80),
+            'code' => array('label' => 'Status', 'sortable' => 'true', 'width' => 80),
+            'action' => array('label' => 'Action', 'sortable' => 'false', 'width' => 50),
+        );
+    }
+
+    public function dataGridFilters() {
+        return array(
+            'name' => array('id' => 'name', 'class' => 'easyui-textbox', 'label' => 'Name: ', 'style' => 'width:80px;'),
+            'code' => array('id' => 'code', 'class' => 'easyui-textbox', 'label' => 'Code: ', 'style' => 'width:80px;'),
+            'status' => array('id' => 'status', 'class' => 'easyui-combobox', 'label' => 'Status',
+                'data-options' => "valueField: 'id', textField: 'text', url: '/configuration/qualities/getStatusComboData' ",
+                'panelHeight' => 70,
+                'style' => 'width:80px; cursor: pointer;'),
+        );
+    }
+
+    public function statusComboData() {
+
+        return array(
+            array(
+                'id' => '',
+                'text' => 'Select',
+            ),
+            array(
+                'id' => '1',
+                'text' => 'Active',
+            ),
+            array(
+                'id' => '0',
+                'text' => 'Inactive',
+            ),
+        );
+    }
+
+    public function dataGridRows($params = array()) {
+
+        $offset = 0;
+        if (isset($params['offset']) && $params['offset'] > 0) {
+            $offset = $params['offset'];
+        }
+
+        $order = 'id DESC';
+        if (isset($params['order']) && !empty($params['order'])) {
+            $order = $params['order'];
+        }
+
+        $command = Yii::app()->db->createCommand()
+                ->from($this->tableName() . ' t')
+                ->offset($offset)
+                ->limit($this->pageSize)
+                ->order($order)
+        ;
+
+        $sub_command = Yii::app()->db->createCommand()
+                ->select('count(t.id)')
+                ->from($this->tableName() . ' t')
+        ;
+
+        $filter_keys = array_keys($this->dataGridFilters());
+        if (isset($params['where']) && !empty($params['where'])) {
+            $new_command_objs = DataGridHelper::processFilterableVars($command, $params['where'], $filter_keys, 't', $sub_command);
+            $command = $new_command_objs[0];
+            $sub_command = $new_command_objs[1];
+        }
+
+        $command->select('
+            t.id,
+            t.name,
+            t.code,
+            CASE t.status WHEN "1" THEN "Active" ELSE "Inactive" END AS `status`,
+            (' . $sub_command->getText() . ') AS total_rows
+        ');
+
+        $data = DataGridHelper::propagateActionLinks($command->queryAll(), array(
+//            'view',
+                    'update',
+//            'delete'
+        ));
+
+        return $data;
     }
 
 }
