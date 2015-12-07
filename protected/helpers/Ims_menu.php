@@ -116,5 +116,36 @@ class Ims_menu {
             ),
         ),
     );
+    
+    public static $admin_left_menu = array(
+        
+        array(
+            'label' => 'Groups',
+            'url' => '#',
+            'icon' => '<i class="fa fa-upload"></i>',
+            'submenu' => array(
+                array('label' => 'Groups', 'url' => '/user/group/'),
+                array('label' => 'Add Group', 'url' => '/user/group/create'),
+            ),
+        ),
+        array(
+            'label' => 'Sizes',
+            'url' => '#',
+            'icon' => '<i class="fa fa-upload"></i>',
+            'submenu' => array(
+                array('label' => 'Size List', 'url' => '/configuration/size'),
+                array('label' => 'Add Size', 'url' => '/configuration/size/create'),
+            ),
+        ),
+        array(
+            'label' => 'Qualities',
+            'url' => '#',
+            'icon' => '<i class="fa fa-upload"></i>',
+            'submenu' => array(
+                array('label' => 'Quality List', 'url' => '/configuration/qualities'),
+                array('label' => 'Add Quality', 'url' => '/configuration/qualities/create'),
+            ),
+        ),
+    );
 
 }

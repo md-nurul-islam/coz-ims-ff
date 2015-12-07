@@ -266,7 +266,7 @@
                         <li class="user-footer">
                             <?php if (!Yii::app()->user->isGuest) { ?>
                                 <div class="pull-left">
-                                    <a href="/user/default/changePassword" class="btn btn-default btn-flat">Change Password</a>
+                                    <a href="/user/manage/changePassword" class="btn btn-default btn-flat">Change Password</a>
                                 </div>
 
                                 <div class="pull-right">
