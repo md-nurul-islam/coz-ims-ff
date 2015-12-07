@@ -45,6 +45,7 @@ class User extends CActiveRecord {
             
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
+            array('rememberMe', 'safe', 'on' => 'login'),
             array('id, username, full_name, store_id, email, status, user_type', 'safe', 'on' => 'search'),
         );
     }
@@ -136,6 +137,8 @@ class User extends CActiveRecord {
         if ($user !== false) {
             
             $userIdentity = new UserIdentity($this, $user);
+            
+//            var_dump($userIdentity);exit;
 
             if ($userIdentity->authenticate()) {
                 

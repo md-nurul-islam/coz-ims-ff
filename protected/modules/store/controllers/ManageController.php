@@ -27,7 +27,7 @@ class ManageController extends Controller {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('update'),
-                'expression' => 'Yii::app()->user->isSuperAdmin || Yii::app()->user->isStoreAdmin',
+                'expression' => '(!Yii::app()->user->isGuest) && (Yii::app()->user->isSuperAdmin || Yii::app()->user->isStoreAdmin)',
             ),
             array('deny', // deny all users
                 'users' => array('*'),

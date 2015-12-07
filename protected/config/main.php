@@ -8,7 +8,7 @@ require_once('dataCon.php');
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
     'name' => 'Pitf!',
-    'defaultController' => 'site',
+    'defaultController' => 'user/auth',
     // preloading 'log' component
     'preload' => array('log'),
     // autoloading model and component classes
@@ -50,7 +50,7 @@ return array(
         'user' => array(
             // enable cookie-based authentication
             'allowAutoLogin' => true,
-            'loginUrl' => array('/site/login'),
+            'loginUrl' => array('/user/auth/login'),
         ),
         // uncomment the following to enable URLs in path-format
         'urlManager' => array(

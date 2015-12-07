@@ -66,48 +66,7 @@ class SiteController extends Controller {
         }
         $this->render('contact', array('model' => $model));
     }
-
-    /**
-     * Displays the login page
-     */
-    public function actionLogin() {
-        $this->layout = 'login';
-        $this->pageTitle = Yii::app()->name . ' | Login';
-        
-        $model = new User;
-
-        // if it is ajax validation request
-        if (isset($_POST['ajax']) && $_POST['ajax'] === 'login-form') {
-            echo $model->validate();
-            Yii::app()->end();
-        }
-
-        // collect user input data
-        if (isset($_POST['User'])) {
-            $model->attributes = $_POST['User'];
-
-            if ($_POST['User']['rememberMe']) {
-                $model->rememberMe = $_POST['User']['rememberMe'];
-            }
-
-            // validate user input and redirect to the previous page if valid
-            if ($model->validate() && $model->login()) {
-                $this->redirect('/product/sale');
-            }
-            //$this->redirect(Yii::app()->user->returnUrl);
-        }
-        // display the login form
-        $this->render('login', array('model' => $model));
-    }
-
-    /**
-     * Logs out the current user and redirect to homepage.
-     */
-    public function actionLogout() {
-        Yii::app()->user->logout();
-        $this->redirect(Yii::app()->homeUrl);
-    }
-
+    
     public function actionTest() {
         $this->layout = false;
         $this->render('test');
@@ -134,12 +93,12 @@ class SiteController extends Controller {
             'order' => ${DataGridHelper::$_ar_non_filterable_vars['sort']} . ' ' . ${DataGridHelper::$_ar_non_filterable_vars['order']},
             'where' => $_POST,
         );
-        
+
         $result['rows'] = $productDetails->dataGridRows($query_params);
 //        var_dump($result['rows']);exit;
         $result["total"] = 0;
-        
-        if(($result['rows'])) {
+
+        if (($result['rows'])) {
             $result["total"] = $result['rows'][0]['total_rows'];
         }
         echo CJSON::encode($result);

@@ -12,6 +12,13 @@
     ));
     ?>
 
+    <?php if (Yii::app()->user->hasFlash('error')) { ?>
+        <div class="alert alert-danger">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <?php echo Yii::app()->user->getFlash('error'); ?>
+        </div>
+    <?php } ?>
+
     <div class="form-group has-feedback">
         <?php echo $form->textField($model, 'username', array('placeholder' => 'username', 'class' => 'form-control')); ?>
         <span class="glyphicon glyphicon-user form-control-feedback"></span>

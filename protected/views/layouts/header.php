@@ -270,7 +270,7 @@
                                 </div>
 
                                 <div class="pull-right">
-                                    <a href="/site/logout" class="btn btn-default btn-flat">Sign out</a>
+                                    <a href="/user/auth/logout" class="btn btn-default btn-flat">Sign out</a>
                                 </div>
                             <?php } ?>
                         </li>
