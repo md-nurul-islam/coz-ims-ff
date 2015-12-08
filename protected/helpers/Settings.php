@@ -92,6 +92,25 @@ class Settings {
         return $token;
     }
 
+    public static function getUniqueId($id = 0, $max_length = 12) {
+        
+        $id_len = strlen($id);
+        $max_len = $max_length - $id_len;
+
+        $unique_id = (string) microtime(true);
+        $unique_id = str_replace('.', '', $unique_id);
+
+        $n_unique_id = substr($unique_id, $id_len);
+        $n_unique_id_len = strlen($n_unique_id);
+        
+        $nn_unique_id = '';
+        if ($n_unique_id_len > $max_len) {
+            $nn_unique_id = substr($n_unique_id, -$max_len);
+        }
+        
+        return $id . $nn_unique_id;
+    }
+
 }
 
 ?>

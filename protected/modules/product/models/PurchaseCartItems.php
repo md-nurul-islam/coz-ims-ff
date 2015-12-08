@@ -185,18 +185,8 @@ class PurchaseCartItems extends CActiveRecord {
         foreach ($ar_data as $row) {
 
             $_data['id'] = $row['id'];
-            $_data['code'] = (empty($row['reference_number'])) ? Settings::getToken(12, FALSE) : $row['reference_number'];
-
-            $code_length = strlen($_data['code']);
-            $num_zeros = 0;
-            if (strlen($_data['code']) < 12) {
-                $num_zeros = 12 - $code_length;
-            }
-
-            for ($i = 1; $i <= $num_zeros; $i++) {
-                $_data['code'] .= '1';
-            }
-
+            $_data['code'] = (empty($row['reference_number'])) ? Settings::getUniqueId($_data['id']) : $row['reference_number'];
+            
             $_data['purchase_price'] = $row['cost'];
             $_data['selling_price'] = $row['price'];
             $_data['product_name'] = $row['product_name'];

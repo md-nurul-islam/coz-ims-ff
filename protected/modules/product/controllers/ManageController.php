@@ -297,7 +297,7 @@ class ManageController extends Controller {
         $barcode['codetype'] = 'BCGean13';
 
         $mPDF1 = Yii::app()->ePdf->mpdf();
-
+        
         $this->render('barcode', array(
             'purchaseRecords' => ($purchaseRecords) ? $purchaseRecords : array(),
             'pdf' => $mPDF1,
