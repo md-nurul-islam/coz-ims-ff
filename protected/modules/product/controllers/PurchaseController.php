@@ -36,6 +36,7 @@ class PurchaseController extends Controller {
                     'view',
                     'create',
                     'update',
+                    'edit',
                     'product_stock_info',
                     'createsingle',
                     'autocomplete'
@@ -198,7 +199,7 @@ class PurchaseController extends Controller {
     public function actionCreatesingle() {
 
         $model = new ProductStockEntries;
-        $now = date('Y-m-d');
+        $today = date('Y-m-d', Settings::getBdLocalTime());
 
         $this->pageTitle = Yii::app()->name . ' - Purchase Product';
         $this->pageHeader = 'Purchase Product';
@@ -231,8 +232,8 @@ class PurchaseController extends Controller {
             ));
 
             $bill_number = (empty($_POST['ProductStockEntries']['billnumber'])) ? Settings::getToken(8, FALSE) : $_POST['ProductStockEntries']['billnumber'];
-            $purchase_date = (empty($_POST['ProductStockEntries']['purchase_date'])) ? $now : date('Y-m-d', strtotime($_POST['ProductStockEntries']['purchase_date']));
-            $due_payment_date = (empty($_POST['ProductStockEntries']['due_payment_date'])) ? $now : date('Y-m-d', strtotime($_POST['ProductStockEntries']['due_payment_date']));
+            $purchase_date = (empty($_POST['ProductStockEntries']['purchase_date'])) ? $today : date('Y-m-d', strtotime($_POST['ProductStockEntries']['purchase_date']));
+            $due_payment_date = (empty($_POST['ProductStockEntries']['due_payment_date'])) ? $today : date('Y-m-d', strtotime($_POST['ProductStockEntries']['due_payment_date']));
             $payment_method = 1;
 //            $payment_method = $_POST['ProductStockEntries']['payment_method'];
             $note = $_POST['ProductStockEntries']['note'];
@@ -251,9 +252,9 @@ class PurchaseController extends Controller {
                 $model->store_id = $store_id;
                 $model->purchase_cart_id = $purchase_cart->id;
                 $model->insert();
-                
+
                 $sub_total = intval($_POST['quantity']) * floatval($new_cost);
-                
+
                 $purchase_cart_items = new PurchaseCartItems;
                 $purchase_cart_items->cart_id = $purchase_cart->id;
                 $purchase_cart_items->product_details_id = $product_id;
@@ -327,6 +328,146 @@ class PurchaseController extends Controller {
 
         $this->render('update', array(
             'model' => $model,
+        ));
+    }
+
+    /**
+     * Updates a particular model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id the ID of the model to be updated
+     */
+    public function actionEdit($id) {
+
+        $done = FALSE;
+        $model = ProductStockEntries::model()->with(array(
+                    'purchaseCart' => array(
+                        'with' => array(
+                            'purchaseCartItems' => array(
+                                'with' => array(
+                                    'productDetails' => array(
+                                        'with' => array(
+                                            'productColor',
+                                            'productGrade',
+                                            'productSize',
+                                            'supplier',
+                                            'productStockAvails'
+                                        )
+                                    )
+                                )
+                            )
+                        ),
+                    ),
+                ))->findByPk($id);
+
+        if ($model === null) {
+            throw new CHttpException(404, 'The requested page does not exist.');
+        }
+
+        $today = date('Y-m-d', Settings::getBdLocalTime());
+
+        $this->pageTitle = Yii::app()->name . ' - Update Purchase';
+        $this->pageHeader = 'Update Purchase';
+
+        $store_id = 1;
+        if (!Yii::app()->user->isSuperAdmin) {
+            $store_id = Yii::app()->user->storeId;
+        }
+
+        $ar_cart = array();
+        $ar_cart['errors'] = array();
+
+        if (isset($_POST['ProductStockEntries'])) {
+
+            if (empty($_POST['quantity'])) {
+                $ar_cart['errors'][] = 'Quanity is required';
+            }
+
+            if (empty($_POST['total'])) {
+                $ar_cart['errors'][] = 'Total is required';
+            }
+            
+            $old_quantity = $quanity = $model->purchaseCart->purchaseCartItems[0]->quantity;
+
+            $product_id = $_POST['product_details_id'];
+
+            $new_cost = $_POST['n_cost'];
+            $new_price = $_POST['n_price'];
+
+            $stock_info = ProductStockAvail::model()->findByAttributes(array(
+                'product_details_id' => $product_id
+            ));
+
+            $note = $_POST['ProductStockEntries']['note'];
+
+            if (empty($ar_cart['errors'])) {
+
+                $purchase_cart = PurchaseCart::model()->findByAttributes(array('id' => $model->purchase_cart_id));
+                $purchase_cart->grand_total = $_POST['total'];
+
+                $model->note = $note;
+                
+                $sub_total = intval($_POST['quantity']) * floatval($new_cost);
+
+                $purchase_cart_items = PurchaseCartItems::model()->findByAttributes(array('cart_id' => $purchase_cart->id));
+                $purchase_cart_items->cost = $new_cost;
+                $purchase_cart_items->price = $new_price;
+                $purchase_cart_items->quantity = $_POST['quantity'];
+                $purchase_cart_items->sub_total = floatval($sub_total);
+                
+                if( $_POST['quantity'] < $old_quantity ) {
+                    $qty = $old_quantity - $_POST['quantity'];
+                    $stock_info->quantity = ((int) $stock_info->quantity - $qty);
+                } else if ($_POST['quantity'] > $old_quantity) {
+                    $qty = $_POST['quantity'] - $old_quantity;
+                    $stock_info->quantity = ((int) $stock_info->quantity + $qty);
+                }
+                
+                $ProductDetails = ProductDetails::model()->findByAttributes(array('id' => $product_id));
+                
+                $ProductDetails->purchase_price = $new_cost;
+                $ProductDetails->selling_price = $new_price;
+                
+                $transaction = Yii::app()->db->beginTransaction();
+                try {
+
+                    $purchase_cart->update();
+                    $model->update();
+                    $purchase_cart_items->update();
+                    $ProductDetails->update();
+                    $stock_info->update();
+
+                    $transaction->commit();
+                    $done = TRUE;
+                } catch (CDbException $exc) {
+                    $transaction->rollback();
+                }
+
+
+                if ($done) {
+                    Yii::app()->user->setFlash('success', 'Purchase information successfully updated.');
+                    $this->redirect(array('edit', 'id' => $id));
+                }
+            } else {
+
+                $ar_cart['purchase_date'] = $purchase_date;
+                $ar_cart['due_payment_date'] = $due_payment_date;
+                $ar_cart['product_name'] = $_POST['product_name'];
+                $ar_cart['product_details_id'] = $_POST['product_details_id'];
+                $ar_cart['note'] = $note;
+                $ar_cart['stock'] = $_POST['stock'];
+                $ar_cart['cost'] = $_POST['cost'];
+                $ar_cart['price'] = $_POST['price'];
+                $ar_cart['n_cost'] = $new_cost;
+                $ar_cart['n_price'] = $new_price;
+                $ar_cart['quantity'] = $_POST['quantity'];
+                $ar_cart['total'] = $_POST['total'];
+                $ar_cart['payment_method'] = $payment_method;
+            }
+        }
+
+        $this->render('edit', array(
+            'model' => $model,
+            'ar_cart' => $ar_cart,
         ));
     }
 

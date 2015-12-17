@@ -70,7 +70,22 @@ class ProductDetails extends CActiveRecord {
             ),
             'productStockEntries' => array(self::HAS_MANY, 'ProductStockEntries', 'product_details_id'),
             'productStockSales' => array(self::HAS_MANY, 'ProductStockSales', 'product_details_id'),
-            'productGrade' => array(self::HAS_MANY, 'ProductGrade', 'product_details_id'),
+            'productGrade' => array(self::HAS_MANY, 'ProductGrade', 'product_details_id',
+                'with' => array(
+                    'grade'
+                )
+            ),
+            'productSize' => array(self::HAS_MANY, 'ProductSize', 'product_details_id',
+                'with' => array(
+                    'size'
+                )
+            ),
+            'productColor' => array(self::HAS_MANY, 'ProductColor', 'product_details_id',
+//                'joinType' => 'LEFT JOIN',
+                'with' => array(
+                    'color'
+                )
+            ),
         );
     }
 
@@ -235,9 +250,9 @@ class ProductDetails extends CActiveRecord {
                 ->leftJoin(ProductSize::model()->tableName() . ' psz', 't.id = psz.product_details_id')
                 ->leftJoin(Sizes::model()->tableName() . ' sz', 'psz.size_id = sz.id')
         ;
-        
+
         $command->andWhere('t.id = :id', array(':id' => $id));
-        
+
         $command->select('
             t.id,
             t.product_name,
@@ -253,7 +268,7 @@ class ProductDetails extends CActiveRecord {
             gr.id as grade_id,
             sz.id as size_id
         ');
-        
+
         return $command->queryRow();
     }
 

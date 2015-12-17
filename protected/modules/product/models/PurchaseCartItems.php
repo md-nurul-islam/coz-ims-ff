@@ -51,6 +51,7 @@ class PurchaseCartItems extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'productDetails' => array(self::BELONGS_TO, 'ProductDetails', 'product_details_id'),
         );
     }
 
@@ -134,22 +135,22 @@ class PurchaseCartItems extends CActiveRecord {
                 ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = t.product_details_id')
                 ->join(ProductStockAvail::model()->tableName() . ' psa', 'psa.product_details_id = pd.id')
         ;
-        
+
         if (!empty($prod_id)) {
             $command->andWhere('t.product_details_id = :pid', array(':pid' => $prod_id));
         } else {
             $command->group('t.product_details_id');
         }
-        
+
         if (!empty($ref_num)) {
             $command->andWhere('t.reference_number = :ref_num', array(':ref_num' => $ref_num));
         }
 
         $command->andWhere('pd.store_id = :sid', array(':sid' => $store_id));
         $command->andWhere('pd.status = :status', array(':status' => '1'));
-        
+
         $command->order('pd.id DESC');
-        
+
         if (!$all) {
             $command->limit(1);
             $data = $command->queryRow();
@@ -186,7 +187,7 @@ class PurchaseCartItems extends CActiveRecord {
 
             $_data['id'] = $row['id'];
             $_data['code'] = (empty($row['reference_number'])) ? Settings::getUniqueId($_data['id']) : $row['reference_number'];
-            
+
             $_data['purchase_price'] = $row['cost'];
             $_data['selling_price'] = $row['price'];
             $_data['product_name'] = $row['product_name'];

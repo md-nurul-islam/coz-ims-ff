@@ -72,6 +72,9 @@ class ProductStockEntries extends CActiveRecord {
             ),
             'supplier' => array(self::BELONGS_TO, 'SupplierDetails', 'supplier_id'),
             'category' => array(self::BELONGS_TO, 'CategoryDetails', 'category_id'),
+            'purchaseCart' => array(self::BELONGS_TO, 'PurchaseCart', 'purchase_cart_id',
+                    'with' => array('purchaseCartItems'),
+                ),
         );
     }
 
@@ -396,7 +399,7 @@ class ProductStockEntries extends CActiveRecord {
                     $_data['vat'] = (empty($row['vat']) || ($row['vat'] <= 0) ) ? 0.00 : $row['vat'];
                     $_data['amount_given'] = ( empty($row['grand_total_paid']) || ($row['grand_total_paid'] <= 0) ) ? 0.00 : $row['grand_total_paid'];
                     $_data['balance'] = ( empty($row['grand_total_balance']) || ($row['grand_total_balance'] <= 0) ) ? 0.00 : $row['grand_total_balance'];
-                    
+
                     $cart['prod_name'] = $row['product_name'];
                     $cart['color_name'] = $row['color_name'];
                     $cart['size_name'] = $row['size_name'];
@@ -559,7 +562,11 @@ class ProductStockEntries extends CActiveRecord {
             s.name as size_name,
             (' . $sub_command->getText() . ') AS total_rows');
 
-        $data = DataGridHelper::propagateActionLinks($command->queryAll(), array('view', 'edit', 'delete'));
+        $data = DataGridHelper::propagateActionLinks($command->queryAll(), array(
+                    'view',
+                    'edit',
+                    'delete',
+        ));
 
         return $data;
     }

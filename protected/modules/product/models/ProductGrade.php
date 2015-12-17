@@ -90,34 +90,33 @@ class ProductGrade extends CActiveRecord {
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
-    
+
     public function getGrades($prod_id = 0, $grade_id = 0, $all = TRUE) {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
-        
+
         $criteria->with = array(
             'grade' => array(
                 'select' => 'grade.id, grade.name',
             ),
         );
-        
-        if ($prod_id > 0){
+
+        if ($prod_id > 0) {
             $criteria->compare('t.product_details_id', $prod_id);
         }
-        if ($grade_id > 0){
+        if ($grade_id > 0) {
             $criteria->compare('t.grade_id', $grade_id);
         }
-        
+
         if (!$all) {
             $criteria->limit = 1;
             $data = $this->find($criteria);
         } else {
             $data = $this->findAll($criteria);
         }
-        
-        return (!empty($data)) ? $data : FALSE;
 
+        return (!empty($data)) ? $data : FALSE;
     }
 
 }
