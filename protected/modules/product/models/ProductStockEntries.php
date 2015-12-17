@@ -565,7 +565,7 @@ class ProductStockEntries extends CActiveRecord {
         $data = DataGridHelper::propagateActionLinks($command->queryAll(), array(
                     'view',
                     'edit',
-                    'delete',
+//                    'delete',
         ));
 
         return $data;

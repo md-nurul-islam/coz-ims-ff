@@ -80,6 +80,8 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CCl
     </table>
 </div>
 
+<div class="clearfix"></div>
+
 <script type="text/javascript">
 
     $(function () {
