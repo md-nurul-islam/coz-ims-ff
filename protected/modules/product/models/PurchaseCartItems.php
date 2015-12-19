@@ -173,21 +173,22 @@ class PurchaseCartItems extends CActiveRecord {
         $command->select('t.id, pd.product_name, t.reference_number, t.cost, t.price, t.quantity, pse.purchase_date');
 
         $command->where('reference_number = 0 OR reference_number = "" OR reference_number IS NULL');
-        $itemList = $this->formatPurchaseBarcodeData($command->queryAll());
-
+        $data = $command->queryAll();
+        
+        $itemList = $this->formatPurchaseBarcodeData($data);
         return $itemList;
     }
 
     private function formatPurchaseBarcodeData($ar_data) {
 
         $formatted_data = array();
-        $date = date('ymd');
-
+        
+        
         foreach ($ar_data as $row) {
-
+            
             $_data['id'] = $row['id'];
+            
             $_data['code'] = (empty($row['reference_number'])) ? Settings::getUniqueId($_data['id']) : $row['reference_number'];
-
             $_data['purchase_price'] = $row['cost'];
             $_data['selling_price'] = $row['price'];
             $_data['product_name'] = $row['product_name'];
@@ -196,7 +197,7 @@ class PurchaseCartItems extends CActiveRecord {
 
             $formatted_data[] = $_data;
         }
-
+        
         return $formatted_data;
     }
 

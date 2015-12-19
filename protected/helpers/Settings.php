@@ -93,7 +93,7 @@ class Settings {
     }
 
     public static function getUniqueId($id = 0, $max_length = 12) {
-        
+
         $id_len = strlen($id);
         $max_len = $max_length - $id_len;
 
@@ -102,13 +102,18 @@ class Settings {
 
         $n_unique_id = substr($unique_id, $id_len);
         $n_unique_id_len = strlen($n_unique_id);
-        
+
         $nn_unique_id = '';
-        if ($n_unique_id_len > $max_len) {
-            $nn_unique_id = substr($n_unique_id, -$max_len);
+        $nn_unique_id = substr($n_unique_id, -$max_len);
+
+        $ref_num = $id . $nn_unique_id;
+        if (strlen($ref_num) < $max_length) {
+            for ($i = strlen($ref_num); $i < $max_length; $i++) {
+                $ref_num .= '3';
+            }
         }
-        
-        return $id . $nn_unique_id;
+
+        return $ref_num;
     }
 
 }

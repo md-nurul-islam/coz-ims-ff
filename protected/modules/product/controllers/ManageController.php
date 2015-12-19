@@ -283,10 +283,10 @@ class ManageController extends Controller {
     public function actionBarcode() {
 
         ini_set('max_execution_time', 0);
-
+        
         $modPurchase = new PurchaseCartItems();
         $purchaseRecords = $modPurchase->itemListForBarcode();
-
+        
         $barcode['filetype'] = 'PNG';
         $barcode['dpi'] = 300;
         $barcode['scale'] = 1;
@@ -295,7 +295,7 @@ class ManageController extends Controller {
         $barcode['font_size'] = 7;
         $barcode['thickness'] = 35;
         $barcode['codetype'] = 'BCGean13';
-
+        
         $mPDF1 = Yii::app()->ePdf->mpdf();
         
         $this->render('barcode', array(
