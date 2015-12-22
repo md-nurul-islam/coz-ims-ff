@@ -1,6 +1,6 @@
 var cart_row = 1;
 function add_to_cart(prod_id, prod_name, cur_stock, price, vat, discount, reference_number) {
-
+    
     var prod_bg_color_class = 'label label-default';
     var cart_row_html = '';
     var row_exists_id = check_exists(prod_name, prod_id);
@@ -62,7 +62,7 @@ function calculate_sub_total(cart_row_id) {
     var price = parseFloat(cart_body.find('tr#' + cart_row_id + ' td:eq(2) .sell_price').val());
     var sub_total = parseFloat(qty * price);
     var reference_number = parseInt(cart_body.find('tr#' + cart_row_id + ' td:eq(2) .cart_reference_number').val());
-
+    
     cart_body.find('tr#' + cart_row_id + ' td:eq(2) .cart_qty_lbl').text(qty);
     cart_body.find('tr#' + cart_row_id + ' td:eq(3)').text(sub_total.toFixed(2));
 

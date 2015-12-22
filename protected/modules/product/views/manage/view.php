@@ -1,16 +1,13 @@
-<?php $this->widget('zii.widgets.CDetailView', array(
-	'data'=>$model,
-	'attributes'=>array(
-		array(
-            'name' => 'category_id',
-            'value' => $model->category->category_name,
-        ),
-		array(
-            'name' => 'supplier_id',
-            'value' => $model->supplier->supplier_name,
-        ),
-		'product_name',
-		'purchase_price',
-		'selling_price',
-	),
-)); ?>
+<?php
+$this->renderPartial('_view', array(
+    'data' => $model,
+));
+?>
+
+<div class="clearfix"></div>
+
+<?php
+Yii::app()->clientScript->registerCoreScript('jquery');
+$cs = Yii::app()->getClientScript();
+$cs->registerScriptFile('/js/custom/item_barcode.js', CClientScript::POS_END);
+?>

@@ -553,18 +553,23 @@ class SaleController extends Controller {
 
         $response = array();
         $ref_num = Yii::app()->request->getParam('ref_num');
+        
+        $checksum = substr($ref_num, -1);
+        $ref_number = substr($ref_num, 0, 12);
+        
         $prod_id = Yii::app()->request->getParam('prod_id');
         $prod_id = (!empty($prod_id)) ? $prod_id : '';
 
         $cur_stock = 0;
 
-        $model = new PurchaseCartItems();
-        $model = $model->getProductStockInfo($prod_id, $ref_num, true);
-
+        $model = new ReferenceNumbers();
+        $model = $model->getProductStockInfo($prod_id, $ref_number, $checksum, true);
+        
         if (!empty($model)) {
-            $romatted_data = $this->formatProdInfo($model);
+            $romatted_data = $this->formatProdInfo($model, $ref_number);
             $response['response'] = $romatted_data;
         }
+        
         echo CJSON::encode($response);
         Yii::app()->end();
     }
@@ -578,18 +583,18 @@ class SaleController extends Controller {
         return $max_id = 'SD' . $max_id;
     }
 
-    private function formatProdInfo($prods) {
+    private function formatProdInfo($prods, $ref_num) {
 
         $response = array();
         foreach ($prods as $row) {
 
             $_data['product_id'] = $row['product_details_id'];
             $_data['product_name'] = $row['product_name'];
-            $_data['price'] = (empty($row['selling_price']) || ($row['selling_price'] <= 0) ) ? $row['selling_price'] : $row['selling_price'];
+            $_data['price'] = (empty($row['selling_price']) || ($row['selling_price'] <= 0) ) ? $row['price'] : $row['selling_price'];
             $_data['cur_stock'] = $row['quantity'];
             $_data['vat'] = (empty($row['vat']) || ($row['vat'] <= 0) ) ? Settings::$_vat : $row['vat'];
             $_data['discount'] = (empty($row['discount']) || ($row['discount'] <= 0) ) ? Settings::$_discount : $row['discount'];
-            $_data['reference_number'] = (empty($row['reference_number']) || ($row['reference_number'] <= 0) ) ? Settings::$_discount : $row['reference_number'];
+            $_data['reference_number'] = $ref_num;
             $response[] = $_data;
         }
 

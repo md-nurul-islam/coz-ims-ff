@@ -33,3 +33,22 @@
     margin-left: auto;
     margin-right: auto;
 }
+.view .border-right {
+    border-right: 1px solid #dddddd;
+}
+.view .label-wrapper, .view .info-wrapper {
+    padding-bottom: 10px;
+    padding-top: 10px;
+    float: left;
+}
+.view .label-wrapper {
+    width: 25%;
+}
+.view .info-wrapper {
+    padding-left: 15px;
+    width: 75%;
+}
+.view .list-group-item {
+    padding-bottom: 0;
+    padding-top: 0;
+}

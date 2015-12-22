@@ -81,7 +81,6 @@ class ProductDetails extends CActiveRecord {
                 )
             ),
             'productColor' => array(self::HAS_MANY, 'ProductColor', 'product_details_id',
-//                'joinType' => 'LEFT JOIN',
                 'with' => array(
                     'color'
                 )
@@ -105,6 +104,10 @@ class ProductDetails extends CActiveRecord {
             'status' => 'Status',
         );
     }
+    
+    /**
+     * NEW CODES STARTS
+     */
 
     /**
      * @return array for Data Grid Headers customized attribute labels (name=>label)
@@ -228,8 +231,9 @@ class ProductDetails extends CActiveRecord {
         );
 
         $data = DataGridHelper::propagateActionLinks($command->queryAll(), array(
-//            'view',
-                    'update',
+            'view',
+            'update',
+            'barcode',
 //            'delete'
         ));
 
@@ -273,7 +277,7 @@ class ProductDetails extends CActiveRecord {
     }
 
     /**
-     * NEW CODES
+     * NEW CODES ENDS
      */
 
     /**

@@ -13,6 +13,7 @@ class DataGridHelper {
         'update' => 'fa fa-pencil-square-o text-green',
         'view' => 'fa fa-eye text-aqua',
         'delete' => 'fa fa-trash text-red',
+        'barcode' => 'fa fa-barcode text-info',
     );
 
     public static function processFilterableVars($query_object, $ar_filterable, $ar_filter_keys, $tab_prefix = 't', $sub_query_object = NULL) {

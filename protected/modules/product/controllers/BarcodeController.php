@@ -81,16 +81,8 @@ class BarcodeController extends Controller {
                 if (function_exists('mb_convert_encoding')) {
                     $text = mb_convert_encoding($text, 'ISO-8859-1', 'UTF-8');
                 }
-
+                
                 $code_generated->parse($text);
-                
-                $ref_num = $text.$code_generated->getChecksum();
-                
-                $command = Yii::app()->db->createCommand();
-                $command->update(PurchaseCartItems::model()->tableName(), array(
-                    'reference_number' => $ref_num,
-                        ), 'id=:id', array(':id' => $pid));
-                
             }
         } catch (Exception $exception) {
             $drawException = $exception;
@@ -127,7 +119,7 @@ class BarcodeController extends Controller {
     }
 
     private function baseCustomSetup($barcode, $get) {
-        
+
         $bcdir = Yii::getPathOfAlias('application.vendors.barcodegen');
         $font_dir = $bcdir . DIRECTORY_SEPARATOR . 'font';
 

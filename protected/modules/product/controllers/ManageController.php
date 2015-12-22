@@ -53,6 +53,7 @@ class ManageController extends Controller {
      */
     public function actionView($id) {
         $this->pageTitle = Yii::app()->name . ' - Product Details';
+        $this->pageHeader = 'Product Details';
 
         $this->render('view', array(
             'model' => $this->loadModel($id),
@@ -354,7 +355,7 @@ class ManageController extends Controller {
         $criteria->compare('t.id', $id);
         $criteria->compare('t.store_id', $store_id);
 
-        $model = ProductDetails::model()->with(array('category', 'supplier', 'productGrade'))->find($criteria);
+        $model = ProductDetails::model()->with(array('category', 'supplier', 'productGrade', 'productSize', 'productColor'))->find($criteria);
 
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');

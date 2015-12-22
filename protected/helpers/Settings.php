@@ -12,6 +12,10 @@ class Settings {
         return time();
     }
 
+    public static $_default_status = array(
+        '1' => 'Active',
+        '0' => 'Inactive'
+    );
     public static $_payment_types = array('1' => 'Cash', '2' => 'Cheque');
     public static $_month_full_name_for_datepicker = array('January', 'Februaru', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
     public static $_user_types = array(

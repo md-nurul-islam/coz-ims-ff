@@ -66,7 +66,7 @@ class SiteController extends Controller {
         }
         $this->render('contact', array('model' => $model));
     }
-    
+
     public function actionTest() {
         $this->layout = false;
         $this->render('test');
@@ -126,6 +126,52 @@ class SiteController extends Controller {
 //        var_dump($mPDF1->Output());exit;
         # Outputs ready PDF
 //        $mPDF1->Output();
+    }
+
+    public function actionUpdate() {
+
+        $purchase_refs = Yii::app()->db->createCommand()
+                ->select('t.id, t.product_details_id, t.reference_number, psa.quantity')
+                ->from(PurchaseCartItems::model()->tableName() . ' t')
+                ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = t.product_details_id')
+                ->join(ProductStockAvail::model()->tableName() . ' psa', 'psa.product_details_id = pd.id')
+                ->queryAll();
+        
+        $i = 1;
+        foreach ($purchase_refs as $row) {
+
+            $now = date('Y-m-d H:i:s', Settings::getBdLocalTime());
+
+            $len_ref = strlen($row['reference_number']);
+            $checksum = 1;
+            if ($len_ref > 12) {
+                $checksum = substr($row['reference_number'], -1);
+                $ref_number = substr($row['reference_number'], 0, 12);
+            } else {
+                $ref_number = $row['reference_number'];
+            }
+
+            $ref_nums = new ReferenceNumbers;
+            $ref_nums->reference_number = $ref_number;
+//            $ref_nums->checksum_digit = $checksum;
+            $ref_nums->purchase_cart_item_id = $row['id'];
+            $ref_nums->created_date = $now;
+            $ref_nums->updated_date = $now;
+            $ref_nums->status = 1;
+            $ref_nums->left_number_of_usage = $row['quantity'];
+            $ref_nums->insert();
+
+            $ref_nums_id = $ref_nums->id;
+
+            Yii::app()->db->createCommand()
+                    ->update(PurchaseCartItems::model()->tableName(), array(
+                        'reference_number' => $ref_nums_id
+                            ), 'id = :id', array(':id' => $row['id']));
+            $i++;
+        }
+
+        var_dump($i);
+        exit;
     }
 
 }
