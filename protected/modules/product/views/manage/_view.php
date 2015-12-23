@@ -121,6 +121,9 @@
                         <li class="list-group-item clearfix">
                             <div class="barcode-container"></div>
                         </li>
+                        <li class="list-group-item clearfix">
+                            <a style="margin: 10px;" class="btn btn-primary pull-right" href="/product/manage/downloadBarcode?barcode=<?php echo md5($data->id) . '_barcodes.pdf'?>">Export as PDF</a>
+                        </li>
                     </ul>
 
                 </div>

@@ -11,13 +11,19 @@
             <div class="clearfix"></div>
 
             <div class="form-group col-lg-12">
-                <?php $this->renderPartial('_barcode_partial', array('purchaseRecords' => $purchaseRecords, 'pdf' => $pdf, 'barcode' => $barcode,)); ?>
+                <?php
+                $this->renderPartial('_barcode_partial', array(
+                    'purchaseRecords' => $purchaseRecords,
+                    'pdf' => $pdf,
+                    'barcode' => $barcode,
+                ));
+                ?>
             </div>
 
             <div class="clearfix"></div>
-            
+
             <div class="form-group col-lg-12" id="file_list" style="display: none;">
-                
+
             </div>
 
         </div>

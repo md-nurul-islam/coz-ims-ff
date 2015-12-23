@@ -311,35 +311,54 @@ class ManageController extends Controller {
             echo 'Bad Request';
             Yii::app()->end();
         }
+        
+        $now = date('Y-m-d H:i:s', Settings::getBdLocalTime());
+        $store_id = 1;
+        if (!Yii::app()->user->isSuperAdmin) {
+            $store_id = Yii::app()->user->storeId;
+        }
 
         ini_set('max_execution_time', 0);
 
         $product_details_id = Yii::app()->request->getParam('product_details_id');
+        $num_barcode = Yii::app()->request->getParam('num_barcode');
         
-        $command = Yii::app()->db->createCommand()
-                ->from(ReferenceNumbers::model()->tableName() . ' t')
-                ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = t.product_details_id')
-        ;
+        $item = Yii::app()->db->createCommand()->select('t.id, t.product_name, t.purchase_price, t.selling_price, ps.quantity')
+                ->from(ProductDetails::model()->tableName() . ' t')
+                ->join(ProductStockAvail::model()->tableName() . ' ps', 't.id = ps.product_details_id')
+                ->where('t.id = :pid', array(':pid' => $product_details_id))
+                ->queryRow();
+        
+        $criteria = new CDbCriteria();
+        $criteria->select = 't.id, t.product_details_id, t.reference_number';
+        $criteria->condition = 't.purchase_cart_item_id = 0 OR t.purchase_cart_item_id = "" OR t.purchase_cart_item_id IS NULL';
+        $criteria->compare('t.product_details_id', $product_details_id);
+        $ref_num = ReferenceNumbers::model()->find($criteria);
+        
+        if (!empty($ref_num)) {
+            $ref_num->left_number_of_usage = $num_barcode;
+            $ref_num->updated_date = $now;
+            $ref_num->update();
+        } else {
+            $ref_num = new ReferenceNumbers();
+            $ref_num->reference_number = Settings::getUniqueId($product_details_id);
+            $ref_num->purchase_cart_item_id = 0;
+            $ref_num->product_details_id = $product_details_id;
+            $ref_num->created_date = $now;
+            $ref_num->updated_date = $now;
+            $ref_num->status = 1;
+            $ref_num->left_number_of_usage = $num_barcode;
+            $ref_num->store_id = $store_id;
+            $ref_num->insert();
+        }
+        
+        $_data[0]['id'] = $product_details_id;
 
-        $command->select('t.id, t.product_details_id, t.reference_number, pd.product_name, pd.purchase_price, pd.selling_price');
-        
-        $command->andWhere('t.purchase_cart_item_id = 0 OR t.purchase_cart_item_id = "" OR t.purchase_cart_item_id IS NULL');
-        $command->andWhere('t.product_details_id = :pid', array(':pid' => $product_details_id));
-        $data = $command->queryRow();
-        
-        var_dump($data);
-        exit;
-        
-        $purchaseRecords = $modPurchase->itemListForBarcode();
-        
-        $_data['id'] = $row['id'];
-
-        $_data['code'] = (empty($row['reference_number'])) ? Settings::getUniqueId($_data['id']) : $row['reference_number'];
-        $_data['purchase_price'] = $row['cost'];
-        $_data['selling_price'] = $row['price'];
-        $_data['product_name'] = $row['product_name'];
-        $_data['quantity'] = $row['quantity'];
-        $_data['purchase_date'] = str_replace('-', '', $row['purchase_date']);
+        $_data[0]['code'] = $ref_num->reference_number;
+        $_data[0]['purchase_price'] = $item['purchase_price'];
+        $_data[0]['selling_price'] = $item['selling_price'];
+        $_data[0]['product_name'] = $item['product_name'];
+        $_data[0]['quantity'] = $num_barcode;
 
         $barcode['filetype'] = 'PNG';
         $barcode['dpi'] = 300;
@@ -349,14 +368,15 @@ class ManageController extends Controller {
         $barcode['font_size'] = 7;
         $barcode['thickness'] = 35;
         $barcode['codetype'] = 'BCGean13';
-
+        
         $mPDF1 = Yii::app()->ePdf->mpdf();
-
-        $this->render('barcode', array(
-            'purchaseRecords' => ($purchaseRecords) ? $purchaseRecords : array(),
+        
+        echo $this->renderPartial('_barcode_partial', array(
+            'purchaseRecords' => ($_data) ? $_data : array(),
+            'singleItem' => TRUE,
             'pdf' => $mPDF1,
             'barcode' => $barcode,
-        ));
+        ), TRUE);
     }
 
     public function actionDownloadBarcode() {

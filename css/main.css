@@ -55,3 +55,6 @@
 .view .barcode-wrapper {
     display: none;
 }
+.view .barcode-container {
+    padding: 15px 0;
+}

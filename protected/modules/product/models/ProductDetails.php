@@ -233,7 +233,7 @@ class ProductDetails extends CActiveRecord {
         $data = DataGridHelper::propagateActionLinks($command->queryAll(), array(
             'view',
             'update',
-            'barcode',
+//            'barcode',
 //            'delete'
         ));
 

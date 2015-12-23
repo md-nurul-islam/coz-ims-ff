@@ -41,7 +41,7 @@ if (!empty($purchaseRecords)) {
     }
 } else {
     ?>
-                <label class="control-label">No Product available to generate barcode.</label>
+    <label class="control-label">No Product available to generate barcode.</label>
 <?php } ?>
 
 
@@ -89,6 +89,11 @@ if (!empty($purchaseRecords)) {
     $pdf = Yii::app()->ePdf->mpdf('', 'A4');
     $pdf->SetDisplayMode('fullpage');
     $pdf->WriteHTML($s_pdf_content);
-    $pdf->Output($pdfs_path . $now . '_barcodes.pdf', 'F');
+
+    if (isset($singleItem) && $singleItem) {
+        $pdf->Output($pdfs_path . md5($purchaseRecords[0]['id']) . '_barcodes.pdf', 'F');
+    } else {
+        $pdf->Output($pdfs_path . $now . '_barcodes.pdf', 'F');
+    }
 }
 ?>

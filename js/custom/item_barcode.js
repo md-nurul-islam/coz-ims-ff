@@ -12,19 +12,20 @@ $(document).ready(function () {
         $.ajax({
             url: '/product/manage/itembarcode',
             type: 'post',
-            dataType: 'json',
+            dataType: 'html',
             data: {
                 product_details_id: $('#product_details_id').val(),
                 num_barcode: num_barcode
             },
         }).done(function (data) {
-            console.log(data);
+            
+            $('.barcode-container').html('');
+            $('.barcode-container').html(data);
+            $('.barcode-wrapper').show('slow');
+            
         }).fail(function (e) {
-
+            console.log(e);
         });
-
-//        alert(num_barcode);
-        return false;
 
     });
 
