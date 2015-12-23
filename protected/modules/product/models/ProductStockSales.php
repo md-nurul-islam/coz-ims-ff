@@ -401,7 +401,21 @@ class ProductStockSales extends CActiveRecord {
             $command->andWhere('t.id = :id', array(':id' => $id));
         }
 
-        $command->select('t.id, t.billnumber, t.sale_date, t.store_id , c.discount, c.vat, c.grand_total, c.discount, c.vat, ci.price, ci.quantity, ci.sub_total, pd.product_name');
+        $command->select('
+            t.id, t.billnumber,
+            t.sale_date,
+            t.store_id ,
+            c.discount,
+            c.vat,
+            c.grand_total,
+            c.grand_total_paid,
+            c.grand_total_balance,
+            c.discount,
+            c.vat,
+            ci.price,
+            ci.quantity,
+            ci.sub_total,
+            pd.product_name');
 
         $data = $command->queryAll();
         return $data;

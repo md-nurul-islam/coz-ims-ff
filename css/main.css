@@ -52,3 +52,6 @@
     padding-bottom: 0;
     padding-top: 0;
 }
+.view .barcode-wrapper {
+    display: none;
+}

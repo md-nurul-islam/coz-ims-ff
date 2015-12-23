@@ -148,8 +148,7 @@ class CartController extends Controller {
         $cart_type = $post_data['type'];
 
         $data = call_user_func_array(array($this, 'proccess' . $cart_type), array($cart_id, $post_data));
-        $data['payment_amount'] = $post_data['payment_amount'];
-        
+
         if (!empty($data)) {
 
             $respons['success'] = TRUE;
@@ -165,16 +164,19 @@ class CartController extends Controller {
     }
 
     private function proccessSale($cart_id, $post_data) {
-
+        
         $response = [];
         $tmp_cart = new TmpCart;
         $tmp_cart_data = $tmp_cart->getCart($cart_id);
-        
+
+        $cart_grand_total = (floatval($tmp_cart_data[0]['grand_total']) + floatval($tmp_cart_data[0]['total_discount'])) - floatval($tmp_cart_data[0]['total_vat']);
+
         $cart = new Cart;
-        $cart->grand_total = $tmp_cart_data[0]['grand_total'];
+        $cart->grand_total = $cart_grand_total;
+        $cart->grand_total_paid = $post_data['payment_amount'];
         $cart->discount = $tmp_cart_data[0]['total_discount'];
         $cart->vat = $tmp_cart_data[0]['total_vat'];
-
+        
         $bill_number = $post_data['bill_number'];
         $sale_date = date('Y-m-d', strtotime($post_data['sale_date']));
         $due_payment_date = date('Y-m-d', strtotime($post_data['due_payment_date']));
@@ -206,7 +208,12 @@ class CartController extends Controller {
         }
 
         $i = 1;
+
+        $sum_of_sub_totals = 0.00;
+        $sum_of_sub_discount = 0.00;
+        $sum_of_sub_vat = 0.00;
         foreach ($tmp_cart_data as $tmp_cart) {
+
             $cart_item = new CartItems;
             $cart_item->cart_id = $cart->id;
             $cart_item->product_details_id = $tmp_cart['product_details_id'];
@@ -216,24 +223,40 @@ class CartController extends Controller {
             $cart_item->sub_total = $tmp_cart['sub_total'];
             $cart_item->discount = $tmp_cart['item_discount'];
             $cart_item->vat = $tmp_cart['item_vat'];
-            
+
+            $sum_of_sub_totals += floatval($tmp_cart['sub_total']);
+            $sum_of_sub_discount += floatval($tmp_cart['item_discount']);
+            $sum_of_sub_vat += floatval($tmp_cart['item_vat']);
+
             $cart_item->insert();
             $i++;
-            
+
             $stock_info = ProductStockAvail::model()->findByAttributes(array(
                 'product_details_id' => $cart_item->product_details_id
             ));
-            
+
             $stock_info->quantity = ((int) $stock_info->quantity - (int) $tmp_cart['quantity']);
             $stock_info->update();
         }
+
+        $cart->grand_total = $sum_of_sub_totals;
+        if ($cart->discount <= 0) {
+            $cart->discount = $sum_of_sub_discount;
+        }
+
+        if ($cart->vat <= 0) {
+            $cart->vat = $sum_of_sub_vat;
+        }
+        
+        $cart->grand_total_balance = $cart->grand_total_paid - (($cart->grand_total + $cart->vat) - $cart->discount);
+        $cart->update();
 
         Yii::app()->db->createCommand()
                 ->delete(TmpCartItems::model()->tableName(), 'cart_id = :cid', array(':cid' => $cart_id));
 
         $sold_data = new ProductStockSales;
         $response['data'] = $sold_data->getSaleData($sales->id);
-
+        
         return $response;
     }
 

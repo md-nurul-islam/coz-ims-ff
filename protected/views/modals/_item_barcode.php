@@ -10,7 +10,7 @@
             </div>
 
             <div class="modal-body">
-                <form class="form-horizontal">
+                <form id="item_barcode" class="form-horizontal">
 
                     <div class="form-group">
                         <?php echo CHtml::label('Number of Bar-code', 'num_barcode', array('class' => 'col-sm-4 control-label')); ?>
@@ -30,7 +30,7 @@
 
             <div class="modal-footer">
                 <div class="col-md-11">
-                    <button type="button" class="btn btn-info" data-dismiss="modal">Generate</button>
+                    <button id="btn_get_barcode" type="button" class="btn btn-info" data-dismiss="modal">Generate</button>
                 </div>
             </div>
             

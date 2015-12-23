@@ -5,6 +5,8 @@
             <div class="panel panel-default">
                 <!-- Default panel contents -->
                 <div class="panel-heading">
+                    <?php echo CHtml::hiddenField('product_details_id', $data->id); ?>
+                    <?php echo CHtml::hiddenField('current_stock', $data->productStockAvails->quantity); ?>
                     <h4><b><?php echo CHtml::encode($data->product_name); ?></b></h4>
                 </div>
 
@@ -71,6 +73,14 @@
                         </li>
                         <li class="list-group-item clearfix">
                             <div class="label-wrapper border-right">
+                                <?php echo CHtml::label(CHtml::encode('Current Stock'), ''); ?>
+                            </div>
+                            <div class="info-wrapper">
+                                <?php echo CHtml::encode($data->productStockAvails->quantity); ?>
+                            </div>
+                        </li>
+                        <li class="list-group-item clearfix">
+                            <div class="label-wrapper border-right">
                                 <?php echo CHtml::label(CHtml::encode($data->getAttributeLabel('purchase_price')), ''); ?>
                             </div>
                             <div class="info-wrapper">
@@ -89,7 +99,7 @@
                             <div class="label-wrapper border-right">
                                 <?php echo CHtml::label(CHtml::encode($data->getAttributeLabel('status')), ''); ?>
                             </div>
-                            <div class="info-wrapper">
+                            <div class="info-wrapper" style="padding-bottom: 5px; padding-top: 6px;">
                                 <?php
                                 $str_class = 'btn btn-danger';
                                 $status = 0;
@@ -105,10 +115,18 @@
                         </li>
                     </ul>
 
+                    <div class="clearfix"></div>
+
+                    <ul class="barcode-wrapper list-group">
+                        <li class="list-group-item clearfix">
+                            <div class="barcode-container"></div>
+                        </li>
+                    </ul>
+
                 </div>
 
-                <div class="panel-footer pull-right">
-                    <?php echo CHtml::button('Get Barcode', array('id' => 'gen-barcode', 'class' => 'btn btn-info')); ?>
+                <div class="panel-footer pull-right" style="width: 100%">
+                    <?php echo CHtml::button('Get Barcode', array('id' => 'gen-barcode', 'class' => 'btn btn-info', 'style' => 'float: right;')); ?>
                 </div>
 
             </div>

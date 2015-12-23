@@ -142,7 +142,8 @@ class User extends CActiveRecord {
 
             if ($userIdentity->authenticate()) {
                 
-                $duration = ($this->rememberMe == 1) ? 86400 : 0; // 1 Day
+//                $duration = ($this->rememberMe == 1) ? 86400 : 0; // 1 Day
+                $duration = 86400; // 1 Day
                 
                 Yii::app()->user->login($userIdentity, $duration);
                 

@@ -1,10 +1,11 @@
 <?php
 $global_grand_total = $data[0]['grand_total'];
+$global_total_paid = $data[0]['grand_total_paid'];
+$global_total_balance = $data[0]['grand_total_balance'];
 $global_discount = $data[0]['discount'];
 $global_vat = $data[0]['vat'];
 $bill_number = $data[0]['billnumber'];
 $sale_date = $data[0]['sale_date'];
-$payment_amount = $payment_amount;
 $total_subtotal = 0;
 ?>
 
@@ -37,7 +38,7 @@ $total_subtotal = 0;
                     $total_qty += $row['quantity'];
                     echo $row['quantity'];
                     ?></td>
-                <td><?php echo $row['sub_total']; ?></td>
+                <td><?php echo number_format($row['sub_total'], 2); ?></td>
             </tr>
             <?php
             $i++;
@@ -49,15 +50,15 @@ $total_subtotal = 0;
     <tfoot id="cart-total">
         <tr>
             <th colspan="3" class="vat_cell">Total</th>
-            <th class="vat_cell_val"><?php echo $total_subtotal; ?></th>
+            <th class="vat_cell_val"><?php echo number_format($total_subtotal, 2); ?></th>
         </tr>
         <tr>
             <th colspan="3" class="vat_cell">Vat</th>
-            <th class="vat_cell_val"><?php echo $global_vat; ?></th>
+            <th class="vat_cell_val"><?php echo number_format($global_vat, 2); ?></th>
         </tr>
         <tr>
             <th colspan="3" class="discount_cell">Discount</th>
-            <th class="discount_cell_val"><?php echo $global_discount; ?></th>
+            <th class="discount_cell_val"><?php echo number_format($global_discount, 2); ?></th>
         </tr>
         <tr>
             <th colspan="3">Total Items</th>
@@ -69,15 +70,15 @@ $total_subtotal = 0;
         </tr>
         <tr>
             <th colspan="3">Gross</th>
-            <th><?php echo $global_grand_total; ?></th>
+            <th><?php echo number_format((($global_grand_total + $global_vat) - $global_discount), 2); ?></th>
         </tr>
         <tr>
             <th colspan="3">Paid</th>
-            <th><?php echo $payment_amount; ?></th>
+            <th><?php echo number_format($global_total_paid, 2); ?></th>
         </tr>
         <tr>
             <th colspan="3">Changes</th>
-            <th><?php echo $payment_amount - $global_grand_total; ?></th>
+            <th><?php echo number_format($global_total_balance, 2); ?></th>
         </tr>
     </tfoot>
 

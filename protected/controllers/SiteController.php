@@ -131,24 +131,24 @@ class SiteController extends Controller {
     public function actionUpdate() {
 
         $purchase_refs = Yii::app()->db->createCommand()
-                ->select('t.id, t.product_details_id, t.reference_number, psa.quantity')
+                ->select('t.id, t.product_details_id, t.reference_number_id, psa.quantity')
                 ->from(PurchaseCartItems::model()->tableName() . ' t')
                 ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = t.product_details_id')
                 ->join(ProductStockAvail::model()->tableName() . ' psa', 'psa.product_details_id = pd.id')
                 ->queryAll();
-        
+
         $i = 1;
         foreach ($purchase_refs as $row) {
 
             $now = date('Y-m-d H:i:s', Settings::getBdLocalTime());
 
-            $len_ref = strlen($row['reference_number']);
+            $len_ref = strlen($row['reference_number_id']);
             $checksum = 1;
             if ($len_ref > 12) {
-                $checksum = substr($row['reference_number'], -1);
-                $ref_number = substr($row['reference_number'], 0, 12);
+                $checksum = substr($row['reference_number_id'], -1);
+                $ref_number = substr($row['reference_number_id'], 0, 12);
             } else {
-                $ref_number = $row['reference_number'];
+                $ref_number = $row['reference_number_id'];
             }
 
             $ref_nums = new ReferenceNumbers;
@@ -165,9 +165,43 @@ class SiteController extends Controller {
 
             Yii::app()->db->createCommand()
                     ->update(PurchaseCartItems::model()->tableName(), array(
-                        'reference_number' => $ref_nums_id
+                        'reference_number_id' => $ref_nums_id
                             ), 'id = :id', array(':id' => $row['id']));
             $i++;
+        }
+
+        var_dump($i);
+        exit;
+    }
+
+    public function actionFixsales() {
+
+        $carts = Cart::model()->findAll();
+
+        $i = 1;
+        foreach ($carts as $row) {
+
+            $carts_items = CartItems::model()->findAllByAttributes(array('cart_id' => $row->id));
+
+            $cart_grand_total = 0.00;
+            $cart_grand_discount = 0.00;
+            $cart_grand_vat = 0.00;
+
+            foreach ($carts_items as $cart) {
+                $cart_grand_total += $cart->sub_total;
+                $cart_grand_discount += $cart->discount;
+                $cart_grand_vat += $cart->vat;
+            }
+
+            if (floatval($row->grand_total) != $cart_grand_total) {
+                $row->grand_total = $cart_grand_total;
+                
+                $row->discount = ($row->discount <= 0) ? $cart_grand_discount : $row->discount;
+                $row->vat = ($row->vat <= 0) ? $cart_grand_vat : $row->vat ;
+                
+                $row->update();
+                $i++;
+            }
         }
 
         var_dump($i);

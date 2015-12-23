@@ -38,7 +38,7 @@ class ManageController extends Controller {
                 'users' => array('@'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('update_stock', 'delete', 'barcode', 'downloadBarcode', 'barcodeFileList'),
+                'actions' => array('update_stock', 'delete', 'barcode', 'itembarcode', 'downloadBarcode', 'barcodeFileList'),
                 'expression' => '(!Yii::app()->user->isGuest) && (Yii::app()->user->isSuperAdmin || Yii::app()->user->isStoreAdmin)',
             ),
             array('deny', // deny all users
@@ -161,25 +161,25 @@ class ManageController extends Controller {
         $this->pageTitle = Yii::app()->name . ' - Update Product';
         $this->pageHeader = 'Update Product';
         $done = FALSE;
-        
+
         $model = ProductDetails::model()->getDetails($id);
-        
+
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
         } else {
             $store_id = 1;
         }
-        
+
         $grades = Grade::model()->findAll();
         $sizes = Sizes::model()->findAll();
         $colors = Color::model()->findAll();
-        
-        if( isset($_POST) && !empty($_POST['product_details_id']) ) {
-            
+
+        if (isset($_POST) && !empty($_POST['product_details_id'])) {
+
             $id = $_POST['product_details_id'];
-            
-            $prod_model =  ProductDetails::model()->findByAttributes(array('id' => $id));
-            
+
+            $prod_model = ProductDetails::model()->findByAttributes(array('id' => $id));
+
             $prod_model->category_id = $_POST['category_id'];
             $prod_model->supplier_id = $_POST['supplier_id'];
             $prod_model->product_name = $_POST['product_name'];
@@ -189,38 +189,37 @@ class ManageController extends Controller {
             $prod_model->status = $_POST['status'];
             $prod_model->vat = 0.00;
             $prod_model->discount = 0.00;
-            
+
             $color_model = ProductColor::model()->findByAttributes(array('product_details_id' => $id));
             $color_model->color_id = $_POST['color_id'];
-            
+
             $size_model = ProductSize::model()->findByAttributes(array('product_details_id' => $id));
             $size_model->size_id = $_POST['size_id'];
-            
+
             $grade_model = ProductGrade::model()->findByAttributes(array('product_details_id' => $id));
             $grade_model->grade_id = $_POST['grade_id'];
-            
+
             $transaction = Yii::app()->db->beginTransaction();
-            
+
             try {
-                
+
                 $prod_model->update();
                 $color_model->update();
                 $size_model->update();
                 $grade_model->update();
-                
+
                 $transaction->commit();
                 $done = TRUE;
-                
             } catch (CDbException $exc) {
                 $transaction->rollback();
             }
-            
-            if($done) {
+
+            if ($done) {
                 Yii::app()->user->setFlash('success', 'Product successfully updated.');
                 $this->redirect(array('manage/'));
             }
         }
-        
+
         $this->render('update', array(
             'model' => $model,
             'grades' => $grades,
@@ -284,10 +283,10 @@ class ManageController extends Controller {
     public function actionBarcode() {
 
         ini_set('max_execution_time', 0);
-        
+
         $modPurchase = new PurchaseCartItems();
         $purchaseRecords = $modPurchase->itemListForBarcode();
-        
+
         $barcode['filetype'] = 'PNG';
         $barcode['dpi'] = 300;
         $barcode['scale'] = 1;
@@ -296,9 +295,63 @@ class ManageController extends Controller {
         $barcode['font_size'] = 7;
         $barcode['thickness'] = 35;
         $barcode['codetype'] = 'BCGean13';
-        
+
         $mPDF1 = Yii::app()->ePdf->mpdf();
+
+        $this->render('barcode', array(
+            'purchaseRecords' => ($purchaseRecords) ? $purchaseRecords : array(),
+            'pdf' => $mPDF1,
+            'barcode' => $barcode,
+        ));
+    }
+
+    public function actionItembarcode() {
+
+        if (!Yii::app()->request->isAjaxRequest) {
+            echo 'Bad Request';
+            Yii::app()->end();
+        }
+
+        ini_set('max_execution_time', 0);
+
+        $product_details_id = Yii::app()->request->getParam('product_details_id');
         
+        $command = Yii::app()->db->createCommand()
+                ->from(ReferenceNumbers::model()->tableName() . ' t')
+                ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = t.product_details_id')
+        ;
+
+        $command->select('t.id, t.product_details_id, t.reference_number, pd.product_name, pd.purchase_price, pd.selling_price');
+        
+        $command->andWhere('t.purchase_cart_item_id = 0 OR t.purchase_cart_item_id = "" OR t.purchase_cart_item_id IS NULL');
+        $command->andWhere('t.product_details_id = :pid', array(':pid' => $product_details_id));
+        $data = $command->queryRow();
+        
+        var_dump($data);
+        exit;
+        
+        $purchaseRecords = $modPurchase->itemListForBarcode();
+        
+        $_data['id'] = $row['id'];
+
+        $_data['code'] = (empty($row['reference_number'])) ? Settings::getUniqueId($_data['id']) : $row['reference_number'];
+        $_data['purchase_price'] = $row['cost'];
+        $_data['selling_price'] = $row['price'];
+        $_data['product_name'] = $row['product_name'];
+        $_data['quantity'] = $row['quantity'];
+        $_data['purchase_date'] = str_replace('-', '', $row['purchase_date']);
+
+        $barcode['filetype'] = 'PNG';
+        $barcode['dpi'] = 300;
+        $barcode['scale'] = 1;
+        $barcode['rotation'] = 0;
+        $barcode['font_family'] = 'Arial.ttf';
+        $barcode['font_size'] = 7;
+        $barcode['thickness'] = 35;
+        $barcode['codetype'] = 'BCGean13';
+
+        $mPDF1 = Yii::app()->ePdf->mpdf();
+
         $this->render('barcode', array(
             'purchaseRecords' => ($purchaseRecords) ? $purchaseRecords : array(),
             'pdf' => $mPDF1,
@@ -355,7 +408,7 @@ class ManageController extends Controller {
         $criteria->compare('t.id', $id);
         $criteria->compare('t.store_id', $store_id);
 
-        $model = ProductDetails::model()->with(array('category', 'supplier', 'productGrade', 'productSize', 'productColor'))->find($criteria);
+        $model = ProductDetails::model()->with(array('productStockAvails', 'category', 'supplier', 'productGrade', 'productSize', 'productColor'))->find($criteria);
 
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
