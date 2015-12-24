@@ -112,7 +112,7 @@ class CategoryDetails extends CActiveRecord {
      */
     public function dataGridHeaders() {
         return array(
-            'id' => array('label' => 'ID', 'sortable' => 'true', 'width' => 50),
+            'id' => array('label' => 'ID', 'sortable' => 'true', 'width' => 50, 'hidden' => TRUE),
             'category_name' => array('label' => 'Category Name', 'sortable' => 'true', 'width' => 50),
             'category_description' => array('label' => 'Description', 'sortable' => 'true', 'width' => 180),
             'status' => array('label' => 'Status', 'sortable' => 'true', 'width' => 80)

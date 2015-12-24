@@ -115,7 +115,7 @@ class ProductDetails extends CActiveRecord {
      */
     public function dataGridHeaders() {
         return array(
-            'id' => array('label' => 'ID', 'sortable' => 'true', 'width' => 50),
+            'id' => array('label' => 'ID', 'sortable' => 'true', 'width' => 50, 'hidden' => TRUE),
             'category_name' => array('label' => 'Category Name', 'sortable' => 'true', 'width' => 80),
             'supplier_name' => array('label' => 'Supplier Name', 'sortable' => 'true', 'width' => 80),
             'product_name' => array('label' => 'Product Name', 'sortable' => 'true', 'width' => 180),
@@ -233,7 +233,7 @@ class ProductDetails extends CActiveRecord {
         $data = DataGridHelper::propagateActionLinks($command->queryAll(), array(
             'view',
             'update',
-//            'barcode',
+            'barcode',
 //            'delete'
         ));
 
