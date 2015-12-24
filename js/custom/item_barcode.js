@@ -4,7 +4,7 @@ $(document).ready(function () {
         $('#itemModalView').modal('hide');
     });
     
-    $(document).off('click', '.fa-barcode').on('click', '.fa-barcode', function (e) {
+    $(document).off('click', '.datagrid .fa-barcode').on('click', '.datagrid .fa-barcode', function (e) {
         e.preventDefault();
 
         var row = $(this).closest('tr');
