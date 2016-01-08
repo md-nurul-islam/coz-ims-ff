@@ -43,13 +43,12 @@ class ExchangeProducts extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('main_product_details_id, exchange_product_details_id, payment_method, store_id', 'numerical', 'integerOnly' => true),
+            array('exchange_billnumber, payment_method, store_id', 'numerical', 'integerOnly' => true),
             array('sales_id', 'length', 'max' => 15),
-            array('grand_total_payable, grand_total_paid, grand_total_balance, dis_amount', 'length', 'max' => 13),
-            array('due_payment_date, note', 'safe'),
+            array('note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, sales_id, main_product_details_id, exchange_product_details_id, grand_total_payable, grand_total_paid, grand_total_balance, due_payment_date, payment_method, note, dis_amount, store_id', 'safe', 'on' => 'search'),
+            array('id, exchange_billnumber, payment_method, note, store_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -74,19 +73,11 @@ class ExchangeProducts extends CActiveRecord {
         return array(
             'id' => 'ID',
             'sales_id' => 'Sale ID',
-            'main_product_details_id' => 'Main Item',
-            'exchange_product_details_id' => 'Item',
-            'grand_total_payable' => 'Grand Total',
-            'grand_total_paid' => 'Total Paid',
-            'grand_total_balance' => 'Return',
             'due_payment_date' => 'Due Date',
             'payment_method' => 'Method',
             'note' => 'Note',
-            'dis_amount' => 'Dis Amount',
             'store_id' => 'Store',
             'exchange_date' => 'Date',
-            'exchange_product_subtotal' => 'Total',
-            'exchange_product_quantity' => 'Qty',
         );
     }
 
@@ -109,15 +100,9 @@ class ExchangeProducts extends CActiveRecord {
 
         $criteria->compare('id', $this->id);
         $criteria->compare('sales_id', $this->sales_id, true);
-        $criteria->compare('main_product_details_id', $this->main_product_details_id);
-        $criteria->compare('exchange_product_details_id', $this->exchange_product_details_id);
-        $criteria->compare('grand_total_payable', $this->grand_total_payable, true);
-        $criteria->compare('grand_total_paid', $this->grand_total_paid, true);
-        $criteria->compare('grand_total_balance', $this->grand_total_balance, true);
-        $criteria->compare('due_payment_date', $this->due_payment_date, true);
         $criteria->compare('payment_method', $this->payment_method);
+        $criteria->compare('exchange_date', $this->exchange_date);
         $criteria->compare('note', $this->note, true);
-        $criteria->compare('dis_amount', $this->dis_amount, true);
         $criteria->compare('store_id', $this->store_id);
 
         return new CActiveDataProvider($this, array(

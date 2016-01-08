@@ -57,109 +57,11 @@ class ExchangeController extends Controller {
             $store_id = Yii::app()->user->storeId;
         }
         
-        if (isset($_POST['ExchangeProducts']) && ($_POST['yt0'] == 'Start') ) {
-            
-            $_SESSION['main_product'] = $_POST['ExchangeProducts'];
-            
-            $stock_info = new ProductStockAvail;
-            
-            $exchange_date = date('Y-m-d', Settings::getBdLocalTime());
-            
-            $limit = sizeof($_POST['ExchangeProducts']['product_details_id']);
-            $count = 0;
-            
-            $main_prod_total = 0;
-            
-            for ($i = 0; $i < $limit; $i++) {
-                
-                $model = new ExchangeProducts;
-                
-                $model->sales_id = $_POST['sales_id'];
-                $model->main_product_details_id = $_POST['ExchangeProducts']['product_details_id'][$i];
-                $model->main_product_quantity = $_POST['ExchangeProducts']['quantity'][$i];
-                $model->main_product_subtotal = $_POST['ExchangeProducts']['item_subtotal'][$i];
-                $model->store_id = $store_id;
-                $model->exchange_date = $exchange_date;
-                
-                $main_prod_total += $model->main_product_subtotal;
-                
-                if ($model->insert()) {
-                    
-                    $stock_info = $stock_info->getStockByProdId((int) $model->main_product_details_id, $store_id);
-
-                    $cur_stock = intval($stock_info->quantity);
-                    $new_stock = $cur_stock + $model->main_product_quantity;
-
-                    $stock_info->quantity = $new_stock;
-                    $stock_info->update();
-                    
-                    $count++;
-                }
-                
-            }
-            
-            $this->exchangeProduct($model->sales_id, $main_prod_total);
-            Yii::app()->end();
-        }
-        
-        elseif (isset($_POST['ExchangeProducts']) && ($_POST['yt0'] == 'Exchange') ) {
-            
-            $stock_info = new ProductStockAvail;
-            
-            $exchange_date = date('Y-m-d', Settings::getBdLocalTime());
-            //$exchange_date = date('Y-m-d', strtotime($_POST['ExchangeProducts']['exchange_date']));
-            $dis_amount = $_POST['ExchangeProducts']['dis_amount'];
-            $grand_total_payable = $_POST['ExchangeProducts']['grand_total_payable'];
-            $grand_total_paid = $_POST['ExchangeProducts']['grand_total_paid'];
-            $grand_total_balance = $_POST['ExchangeProducts']['grand_total_balance'];
-            $due_payment_date = date('Y-m-d', strtotime($_POST['ExchangeProducts']['due_payment_date']));
-            $payment_type = $_POST['ExchangeProducts']['payment_method'];
-            $note = $_POST['ExchangeProducts']['note'];
-            $exchange_adjust_amount = $_POST['balance'];
-            
-            $limit = sizeof($_POST['ExchangeProducts']['product_details_id']);
-            $count = 0;
-            
-            for ($i = 0; $i < $limit; $i++) {
-                
-                $model = new ExchangeProducts;
-                $model->sales_id = $_POST['sales_id'];
-                
-                $model->exchange_product_details_id = $_POST['ExchangeProducts']['product_details_id'][$i];
-                $model->exchange_ref_num = $_POST['ExchangeProducts']['ref_num'][$i];
-                $model->exchange_product_quantity = $_POST['ExchangeProducts']['quantity'][$i];
-                $model->exchange_product_subtotal = $_POST['ExchangeProducts']['item_subtotal'][$i];
-                $model->exchange_date = $exchange_date;
-                $model->exchange_adjust_amount = $exchange_adjust_amount;
-                $model->grand_total_payable = $grand_total_payable;
-                $model->grand_total_paid = $grand_total_paid;
-                $model->grand_total_balance = $grand_total_balance;
-                $model->due_payment_date = $due_payment_date;
-                $model->payment_method = $payment_type;
-                $model->note = $note;
-                $model->dis_amount = (!empty($dis_amount)) ? $dis_amount : 0.00;
-                $model->store_id = $store_id;
-                
-                if ($model->insert()) {
-                    
-                    $stock_info = $stock_info->getStockByProdId((int) $model->exchange_product_details_id, $store_id);
-
-                    $cur_stock = intval($stock_info->quantity);
-                    $new_stock = $cur_stock - $model->exchange_product_quantity;
-
-                    $stock_info->quantity = $new_stock;
-                    $stock_info->update();
-                    
-                    $count++;
-                }
-                
-            }
-            
-            $this->redirect(array('view', 'id' => $model->sales_id));
-        }
+        $sale_model = new ProductStockSales;
         
         $this->render('create', array(
             'model' => $model,
+            'sale_model' => $sale_model,
         ));
 
     }
