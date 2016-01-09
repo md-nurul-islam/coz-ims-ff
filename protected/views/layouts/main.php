@@ -92,6 +92,11 @@
 
                 <!-- Main content -->
                 <section class="content">
+
+                    <div class="cssload-container">
+                        <div class="cssload-whirlpool"></div>
+                    </div>
+
                     <?php echo $content; ?>
                 </section>
                 <!-- /.content -->

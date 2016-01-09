@@ -380,7 +380,7 @@ class ProductStockSales extends CActiveRecord {
      * @param integer id, if not set then fetch all sales information
      * @return assocciative array of sale and related data
      */
-    public function getSaleData($id = 0) {
+    public function getSaleData($id = 0, $billnumber = 0) {
 
         $store_id = 1;
 
@@ -400,6 +400,10 @@ class ProductStockSales extends CActiveRecord {
         if ($id > 0) {
             $command->andWhere('t.id = :id', array(':id' => $id));
         }
+        
+        if ($billnumber > 0) {
+            $command->andWhere('t.billnumber = :bn', array(':bn' => $billnumber));
+        }
 
         $command->select('
             t.id, t.billnumber,
@@ -414,7 +418,11 @@ class ProductStockSales extends CActiveRecord {
             c.vat,
             ci.price,
             ci.quantity,
+            ci.discount AS item_discount,
+            ci.vat AS item_vat,
+            ci.quantity,
             ci.sub_total,
+            ci.reference_number,
             pd.product_name');
 
         $data = $command->queryAll();

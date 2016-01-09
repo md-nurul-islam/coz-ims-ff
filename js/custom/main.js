@@ -1,7 +1,7 @@
 $(function () {
 
     $(document).ready(function () {
-
+        
         var cur_url = readCookie('current_url');
 
         if (cur_url == null) {
@@ -19,6 +19,12 @@ $(function () {
                 $(this).addClass('text-aqua');
             }
 
+        });
+
+        $(document).bind("ajaxSend", function () {
+            $(".cssload-container").show();
+        }).bind("ajaxComplete", function () {
+            $(".cssload-container").hide();
         });
 
     });
