@@ -423,6 +423,7 @@ class ProductStockSales extends CActiveRecord {
             ci.quantity,
             ci.sub_total,
             ci.reference_number,
+            pd.id AS product_id,
             pd.product_name');
 
         $data = $command->queryAll();

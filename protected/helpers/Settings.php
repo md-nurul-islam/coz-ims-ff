@@ -26,6 +26,7 @@ class Settings {
     public static $_cart_types = array(
         'sale' => '1',
         'purchase' => '2',
+        'exchange' => '3',
     );
     public static $_vat = 1.5;
     public static $_vat_mode = '%';

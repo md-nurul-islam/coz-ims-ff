@@ -3,7 +3,7 @@
 
         <div class="report_table">
 
-            <table class="table table-bordered table-striped table-hover table-condensed">
+            <table class="table table-bordered table-striped table-hover table-condensed exchangables">
 
                 <thead>
                     <tr>
@@ -14,7 +14,7 @@
                         <th>Discount</th>
                         <th>Vat</th>
                         <th>Item Total</th>
-                        <th><?php echo CHtml::checkBox('exchange_all', '', array('class' => 'exchange_all')); ?></th>
+                        <th>&nbsp;</th>
                     </tr>
                 </thead>
 
@@ -31,7 +31,7 @@
                         ?>
                         <tr>
                             <td><?php echo $v['reference_number']; ?></td>
-                            <td><?php echo $v['product_name']; ?></td>
+                            <td class="product_info" data-id="<?php echo $v['product_id']; ?>"><?php echo $v['product_name']; ?></td>
                             <td class="quantity"><?php echo $v['quantity']; ?></td>
                             <td class="price"><?php echo $v['price']; ?></td>
                             <td class="item_discount"><?php echo $v['item_discount']; ?></td>

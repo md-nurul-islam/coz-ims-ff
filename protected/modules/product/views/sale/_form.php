@@ -244,11 +244,15 @@
         display: none;
     }
 
-    table.payment tr:first-child > th {
+    table.payment tr th {
+        cursor: pointer;
+    }
+    table.payment tr:first-child > th, table.payment tr:nth-child(2) > th, table.payment tr:nth-child(3) > th {
         border-bottom: 1px solid #ccc !important;
     }
     table.payment tr th:first-child {
-        border-right: 1px solid #ccc;
+        border-right: 1px solid #ccc !important;
+        border-left: 1px solid #ccc !important;
     }
 
     #div_buttons_wrapper {

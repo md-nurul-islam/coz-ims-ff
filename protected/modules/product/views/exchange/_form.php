@@ -16,6 +16,11 @@
     <div class="col-sm-12">
 
         <input type="hidden" id="cart_id" value="0" />
+        <input type="hidden" id="global_vat" name="global_vat" value="<?php echo Settings::$_vat; ?>" />
+        <input type="hidden" id="global_vat_mode" name="global_vat_mode" value="<?php echo Settings::$_vat_mode; ?>" />
+        <input type="hidden" id="global_discount" name="global_discount" value="<?php echo Settings::$_discount; ?>" />
+        <input type="hidden" id="global_discount_mode" name="global_discount_mode" value="<?php echo Settings::$_discount_mode; ?>" />
+
 
         <div class="col-sm-12">
             <div class="box box-info">
@@ -78,7 +83,7 @@
                     <div class="panel panel-default">
 
                         <div class="printable">
-                            <table class="table table-hover table-bordered table-responsive table-condensed">
+                            <table class="table table-hover table-bordered table-responsive table-condensed exchange-with">
 
                                 <thead>
                                     <tr>
@@ -146,21 +151,63 @@
     <?php $this->endWidget(); ?>
 </div>
 
+<div id="quantityModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            
+            <div class="modal-body">
+                <form id="item_quantity" class="form-horizontal">
+                    
+                    <input type="hidden" id="row_index_val" value="" />
+                    
+                    <div class="form-group">
+                        <?php echo CHtml::label('Exchanging Quantity', 'exchanging_qty', array('class' => 'col-sm-4 control-label')); ?>
+                        <div class="col-sm-7">
+                            <?php
+                            echo CHtml::textField('exchanging_qty', '', array(
+                                'class' => 'form-control',
+                                'placeholder' => 'Exchanging Quantity',
+                            ));
+                            ?>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="modal-footer">
+                <div class="col-md-11">
+                    <button id="btn_exchanging_qty" type="button" class="btn btn-info" data-dismiss="modal">Apply</button>
+                </div>
+            </div>
+            
+        </div>
+
+    </div>
+</div>
+
+
 <?php $this->renderPartial('//modals/_price'); ?>
 <?php $this->renderPartial('//modals/_vat'); ?>
-<?php $this->renderPartial('//modals/_payment'); ?>
+<?php $this->renderPartial('//modals/_exchange_payment'); ?>
 <?php $this->renderPartial('//print/print'); ?>
 
 <style type="text/css">
     .card_information {
         display: none;
     }
-
-    table.payment tr:first-child > th {
+    table.payment tr th {
+        cursor: pointer;
+    }
+    table.payment tr:first-child > th, table.payment tr:nth-child(2) > th, table.payment tr:nth-child(3) > th {
         border-bottom: 1px solid #ccc !important;
     }
     table.payment tr th:first-child {
-        border-right: 1px solid #ccc;
+        border-right: 1px solid #ccc !important;
+        border-left: 1px solid #ccc !important;
     }
 
     #div_buttons_wrapper {
@@ -208,7 +255,7 @@
         background-color: #A4DCCF;
         color: #666666;
     }
-    #paymentModal .modal-header, #paymentModal .modal-footer {
+    .modal-header, .modal-footer {
         background-color: #3c8dbc;
         color: #ffffff;
     }
@@ -244,3 +291,14 @@ $cs = Yii::app()->getClientScript();
 $cs->registerScriptFile('/js/custom/exchange_cart.js', CClientScript::POS_END);
 $cs->registerScriptFile('/js/custom/print.js', CClientScript::POS_END);
 ?>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".select2").select2({
+            minimumResultsForSearch: Infinity,
+            width: '100%'
+        });
+        $(".select2").tooltip();
+        $(".select2").tooltip('disable');
+    });
+</script>

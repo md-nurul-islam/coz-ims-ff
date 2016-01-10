@@ -13,7 +13,7 @@
  * @property string $sub_total
  * @property string $discount
  * @property string $vat
- * @property integer $is_returned_or_exchanged
+ * @property integer $is_returned
  */
 class ExchangeCartItems extends CActiveRecord {
 
@@ -32,12 +32,12 @@ class ExchangeCartItems extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('cart_id, product_details_id, price, quantity', 'required'),
-            array('product_details_id, quantity, is_returned_or_exchanged', 'numerical', 'integerOnly' => true),
+            array('product_details_id, quantity, is_returned', 'numerical', 'integerOnly' => true),
             array('cart_id', 'length', 'max' => 10),
             array('reference_number_id, price, sub_total, discount, vat', 'length', 'max' => 13),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, cart_id, product_details_id, reference_number_id, price, quantity, sub_total, discount, vat, is_returned_or_exchanged', 'safe', 'on' => 'search'),
+            array('id, cart_id, product_details_id, reference_number_id, price, quantity, sub_total, discount, vat, is_returned', 'safe', 'on' => 'search'),
         );
     }
 
@@ -65,7 +65,7 @@ class ExchangeCartItems extends CActiveRecord {
             'sub_total' => 'Sub Total',
             'discount' => 'Discount',
             'vat' => 'Vat',
-            'is_returned_or_exchanged' => 'Is Returned Or Exchanged',
+            'is_returned' => 'Is Taken Or Given',
         );
     }
 
@@ -95,7 +95,7 @@ class ExchangeCartItems extends CActiveRecord {
         $criteria->compare('sub_total', $this->sub_total, true);
         $criteria->compare('discount', $this->discount, true);
         $criteria->compare('vat', $this->vat, true);
-        $criteria->compare('is_returned_or_exchanged', $this->is_returned_or_exchanged);
+        $criteria->compare('is_returned', $this->is_returned);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

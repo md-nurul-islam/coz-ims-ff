@@ -1,6 +1,6 @@
 var cart_row = 1;
 function add_to_cart(prod_id, prod_name, cur_stock, price, vat, discount, reference_number) {
-    
+
     var prod_bg_color_class = 'label label-default';
     var cart_row_html = '';
     var row_exists_id = check_exists(prod_name, prod_id);
@@ -62,7 +62,7 @@ function calculate_sub_total(cart_row_id) {
     var price = parseFloat(cart_body.find('tr#' + cart_row_id + ' td:eq(2) .sell_price').val());
     var sub_total = parseFloat(qty * price);
     var reference_number = parseInt(cart_body.find('tr#' + cart_row_id + ' td:eq(2) .cart_reference_number').val());
-    
+
     cart_body.find('tr#' + cart_row_id + ' td:eq(2) .cart_qty_lbl').text(qty);
     cart_body.find('tr#' + cart_row_id + ' td:eq(3)').text(sub_total.toFixed(2));
 
@@ -160,7 +160,7 @@ function calculate_grand_total() {
     post_data['grand_total'] = grand_total;
     post_data['discount'] = total_discount;
     post_data['vat'] = total_vat;
-    post_data['type'] = 'sale';
+    post_data['type'] = 'exchange';
 
     $.ajax({
         url: '/cart/' + url_action,
@@ -212,32 +212,64 @@ $(document).ready(function () {
             return false;
         }
     });
-    
+
     /**
      * Exchange Products
      * */
     $(document).off('blur', '#ProductStockSales_billnumber').on('blur', '#ProductStockSales_billnumber', function () {
-        
-        $.ajax({
-            url: 'Get_sales',
-            type: 'post',
-            dataType: 'html',
-            data: {billnumber: $(this).val()},
-        }).done(function(response) {
-            
-            $('.sold-items').html(response);
-            
-            console.log(response);
-        }).fail(function(error) {
-            console.log(error);
-        });
-        
+
+        var billnumber = $(this).val();
+
+        if (billnumber != '') {
+            $.ajax({
+                url: 'Get_sales',
+                type: 'post',
+                dataType: 'html',
+                data: {billnumber: $(this).val()},
+            }).done(function (response) {
+                $('.sold-items').html(response);
+//                console.log(response);
+            }).fail(function (error) {
+                console.log(error);
+            });
+        }
+
     });
-    
+
+    $(document).off('click', '.exchange').on('click', '.exchange', function (e) {
+
+        if ($(this).is(':checked')) {
+            var quantity = parseInt($(this).closest('tr').find('td.quantity').text());
+            var row_index = $(this).closest('tr').index();
+            if (quantity > 1) {
+                $('#exchanging_qty').val(quantity);
+                $('#row_index_val').val(row_index);
+                $('#quantityModal').modal('show');
+            } else {
+                $(this).closest('tr').find('td.quantity').attr('data-exchanging_quantity', quantity);
+            }
+        }
+
+    });
+
+    $(document).off('click', '#btn_exchanging_qty').on('click', '#btn_exchanging_qty', function (e) {
+        var quantity = $('#exchanging_qty').val();
+
+        if (quantity != '' && parseInt(quantity) > 0) {
+            var row_index = parseInt($('#row_index_val').val()) + 1;
+            $('.exchangables').find('tr:eq(' + row_index + ') .quantity').attr('data-exchanging_quantity', quantity);
+            $('#quantityModal').modal('hide');
+        } else {
+            alert('Invalid quantity.');
+        }
+
+    });
+
+
     /**
      * Exchange Products
      * */
-    
+
     $(document).off('click', '.prod_modal').on('click', '.prod_modal', function () {
         var price = parseFloat($(this).parent('td').parent('tr').find('.sell_price').val());
         var cart_row_id = $(this).parent('td').parent('tr').attr('id');
@@ -368,7 +400,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: 'product_stock_info',
+            url: '/product/sale/product_stock_info',
             type: 'post',
             dataType: "json",
             data: {ref_num: ref_num},
@@ -421,7 +453,7 @@ $(document).ready(function () {
         var ref_num = $('#ref_num').val();
         var prod_id = $(this).val();
         $.ajax({
-            url: 'product_stock_info',
+            url: '/product/sale/product_stock_info',
             type: 'post',
             dataType: "json",
             data: {prod_id: prod_id, ref_num: ref_num},
@@ -451,16 +483,45 @@ $(document).ready(function () {
         var grand_total = parseFloat($('#cart-total tr:last-child th:eq(2)').text()).toFixed(2);
         var grand_total_items = $('#cart-total tr:last-child th:eq(1)').text();
         var cart_id = $('#cart_id').val();
+        var total_payable = 0.00;
 
-        $('#payment-total-items').text(grand_total_items);
-        $('#payment-total-payable').text(grand_total);
-        $('#payment_cart_row_id_container').val(cart_id);
+        var cnt_returning_items = 0;
+        var cnt_returning_qty = 0;
+        var payment_total_adjustable = 0.00;
+        $('.exchangables').find('.exchange').each(function () {
+            if ($(this).is(':checked')) {
+                var prod_id = $(this).closest('tr').find('td.product_info').attr('data-id');
+                var quantity = parseInt($(this).closest('tr').find('td.quantity').attr('data-exchanging_quantity'));
+                var price = parseFloat($(this).closest('tr').find('td.price').text());
+                var discount = parseFloat($(this).closest('tr').find('td.item_discount').text());
+                var vat = parseFloat($(this).closest('tr').find('td.item_vat').text());
+                var sub_btotal = parseFloat($(this).closest('tr').find('td.sub_btotal').text());
 
-        $('#paymentModal').modal('show');
+                payment_total_adjustable += quantity * price;
+                cnt_returning_qty += quantity;
+                cnt_returning_items++;
+            }
+        });
+
+        total_payable = grand_total - payment_total_adjustable;
+
+        if (total_payable >= 0) {
+            $('#returned-total-items').text(cnt_returning_items + '(' + cnt_returning_qty + ')');
+            $('#payment-total-items').text(grand_total_items);
+            $('#payment-total-amount').text(grand_total);
+            $('#payment-total-adjustable').text(payment_total_adjustable);
+            $('#payment-total-payable').text(total_payable.toFixed(2));
+            $('#exchange_payment_cart_row_id_container').val(cart_id);
+            
+            $('#exchangePaymentModal').modal('show');
+        } else {
+            alert('Payable should be greater than adjustable.');
+        }
+
     });
 
-    $(document).off('change', '#paymentModal #payment_mode').on('change', '#paymentModal #payment_mode', function (e) {
-        var payment_mode = parseInt($('#paymentModal #payment_mode').val());
+    $(document).off('change', '#exchangePaymentModal #payment_mode').on('change', '#exchangePaymentModal #payment_mode', function (e) {
+        var payment_mode = parseInt($('#exchangePaymentModal #payment_mode').val());
         var grand_total = parseFloat($('#cart-total tr:last-child th:eq(2)').text());
         var total_balance = 0.00;
 
@@ -482,7 +543,7 @@ $(document).ready(function () {
     $(document).off('keyup', '#paying_amount').on('keyup', '#paying_amount', function (e) {
 
         var amount = parseFloat($(this).val());
-        var grand_total = parseFloat($('#cart-total tr:last-child th:eq(2)').text());
+        var grand_total = parseFloat($('#payment-total-payable').text());
         var total_balance = 0.00;
 
         if (!isNaN(amount)) {
@@ -497,7 +558,7 @@ $(document).ready(function () {
 
     $(document).off('click', '#paymetn-btn-paid').on('click', '#paymetn-btn-paid', function (e) {
         e.preventDefault();
-        var cart_id = $('#payment_cart_row_id_container').val();
+        var cart_id = $('#exchange_payment_cart_row_id_container').val();
         var note = $('#note').val();
         var payment_method = $('#payment_mode').val();
         var payment_amount = $('#paying_amount').val();
@@ -509,7 +570,7 @@ $(document).ready(function () {
         var due_payment_date = $('#ProductStockSales_due_payment_date').val();
         var post_data = {};
 
-        post_data['type'] = 'sale';
+        post_data['type'] = 'exchange';
         post_data['note'] = note;
         post_data['payment_method'] = payment_method;
         post_data['payment_amount'] = payment_amount;
@@ -550,7 +611,7 @@ $(document).ready(function () {
                 }
             }
 
-            $('#paymentModal').modal('hide');
+            $('#exchangePaymentModal').modal('hide');
 
             window.location.reload();
         }).fail(function (e) {

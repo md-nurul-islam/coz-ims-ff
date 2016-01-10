@@ -17,9 +17,9 @@
 
         <link rel="stylesheet" href="/css/bootstrap/css/bootstrap.min.css" media="all" />
         <!-- Font Awesome -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
         <!-- Ionicons -->
-        <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
+        <link rel="stylesheet" href="/css/bootstrap/css/ionicons.min.css" />
         <!-- daterange picker -->
         <link rel="stylesheet" href="/js/plugins/daterangepicker/daterangepicker-bs3.css" />
         <!-- iCheck for checkboxes and radio inputs -->

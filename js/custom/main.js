@@ -1,7 +1,7 @@
 $(function () {
 
     $(document).ready(function () {
-        
+
         var cur_url = readCookie('current_url');
 
         if (cur_url == null) {
@@ -25,6 +25,14 @@ $(function () {
             $(".cssload-container").show();
         }).bind("ajaxComplete", function () {
             $(".cssload-container").hide();
+
+            if ($('input[type="checkbox"].flat-red').length > 0) {
+                $('input[type="checkbox"].flat-red').iCheck({
+                    checkboxClass: 'icheckbox_square-blue',
+                    radioClass: 'iradio_square-blue'
+                });
+            }
+
         });
 
     });

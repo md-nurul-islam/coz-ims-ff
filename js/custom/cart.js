@@ -343,7 +343,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: 'product_stock_info',
+            url: '/product/sale/product_stock_info',
             type: 'post',
             dataType: "json",
             data: {ref_num: ref_num},
@@ -396,7 +396,7 @@ $(document).ready(function () {
         var ref_num = $('#ref_num').val();
         var prod_id = $(this).val();
         $.ajax({
-            url: 'product_stock_info',
+            url: '/product/sale/product_stock_info',
             type: 'post',
             dataType: "json",
             data: {prod_id: prod_id, ref_num: ref_num},
