@@ -202,7 +202,7 @@
     table.payment tr th {
         cursor: pointer;
     }
-    table.payment tr:first-child > th, table.payment tr:nth-child(2) > th, table.payment tr:nth-child(3) > th {
+    table.payment tr:first-child > th, table.payment tr:nth-child(2) > th, table.payment tr:nth-child(3) > th, table.payment tr:nth-child(4) > th {
         border-bottom: 1px solid #ccc !important;
     }
     table.payment tr th:first-child {

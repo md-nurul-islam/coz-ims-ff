@@ -45,10 +45,14 @@
                     <?php } ?>
 
                     <tr>
-                        <td colspan="4" style="text-align: right;">Total</td>
-                        <td><?php echo number_format($total_discount, 2); ?></td>
-                        <td><?php echo number_format($total_vat, 2); ?></td>
+                        <td colspan="4" style="text-align: right;">&nbsp;</td>
+                        <td class="total_discount"><?php echo number_format($total_discount, 2); ?></td>
+                        <td class="total_vat"><?php echo number_format($total_vat, 2); ?></td>
                         <td><?php echo number_format($total_gross, 2); ?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" style="text-align: right;">Total</td>
+                        <td><?php echo number_format(($total_gross - $total_discount), 2); ?></td>
                     </tr>
 
                 </tbody>

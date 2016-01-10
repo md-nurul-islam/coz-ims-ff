@@ -487,7 +487,10 @@ $(document).ready(function () {
 
         var cnt_returning_items = 0;
         var cnt_returning_qty = 0;
-        var payment_total_adjustable = 0.00;
+        var total_payment_adjustable = 0.00;
+        var total_discount = parseFloat($('.exchangables .total_discount').text());
+        var total_vat = parseFloat($('.exchangables .total_vat').text());
+        
         $('.exchangables').find('.exchange').each(function () {
             if ($(this).is(':checked')) {
                 var prod_id = $(this).closest('tr').find('td.product_info').attr('data-id');
@@ -497,19 +500,20 @@ $(document).ready(function () {
                 var vat = parseFloat($(this).closest('tr').find('td.item_vat').text());
                 var sub_btotal = parseFloat($(this).closest('tr').find('td.sub_btotal').text());
 
-                payment_total_adjustable += quantity * price;
+                total_payment_adjustable += quantity * price;
                 cnt_returning_qty += quantity;
                 cnt_returning_items++;
             }
         });
 
-        total_payable = grand_total - payment_total_adjustable;
+        total_payable = (grand_total - total_payment_adjustable) + total_discount;
 
         if (total_payable >= 0) {
             $('#returned-total-items').text(cnt_returning_items + '(' + cnt_returning_qty + ')');
             $('#payment-total-items').text(grand_total_items);
             $('#payment-total-amount').text(grand_total);
-            $('#payment-total-adjustable').text(payment_total_adjustable);
+            $('#payment-total-adjustable').text(total_payment_adjustable);
+            $('#payment-total-discount').text('-' + (total_discount.toFixed(2)));
             $('#payment-total-payable').text(total_payable.toFixed(2));
             $('#exchange_payment_cart_row_id_container').val(cart_id);
             

@@ -42,6 +42,12 @@
                                 </tr>
                                 <tr>
                                     <th colspan="2" class="col-sm-6">
+                                        <span class="pull-left">Discount</span>
+                                        <span class="pull-right" id="payment-total-discount"></span>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="2" class="col-sm-6">
                                         <span class="pull-left">Total Payable</span>
                                         <span class="pull-right" id="payment-total-payable"></span>
                                     </th>
