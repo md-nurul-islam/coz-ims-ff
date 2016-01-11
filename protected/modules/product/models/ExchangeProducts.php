@@ -24,7 +24,7 @@
  * @property ProductDetails $exchangeProductDetails
  */
 class ExchangeProducts extends CActiveRecord {
-    
+
     public $main_product_name;
     public $ex_product_name;
     public $pageSize;
@@ -43,12 +43,12 @@ class ExchangeProducts extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('exchange_billnumber, payment_method, store_id', 'numerical', 'integerOnly' => true),
+            array('exchange_billnumber, cart_id, payment_method, store_id', 'numerical', 'integerOnly' => true),
             array('sales_id', 'length', 'max' => 15),
             array('note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, exchange_billnumber, payment_method, note, store_id', 'safe', 'on' => 'search'),
+            array('id, exchange_billnumber, cart_id, payment_method, note, store_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -73,6 +73,7 @@ class ExchangeProducts extends CActiveRecord {
         return array(
             'id' => 'ID',
             'sales_id' => 'Sale ID',
+            'cart_id' => 'Cart ID',
             'due_payment_date' => 'Due Date',
             'payment_method' => 'Method',
             'note' => 'Note',
@@ -100,6 +101,7 @@ class ExchangeProducts extends CActiveRecord {
 
         $criteria->compare('id', $this->id);
         $criteria->compare('sales_id', $this->sales_id, true);
+        $criteria->compare('cart_id', $this->cart_id, true);
         $criteria->compare('payment_method', $this->payment_method);
         $criteria->compare('exchange_date', $this->exchange_date);
         $criteria->compare('note', $this->note, true);
@@ -116,12 +118,84 @@ class ExchangeProducts extends CActiveRecord {
      * @param string $className active record class name.
      * @return ExchangeProducts the static model class
      */
+
+    /**
+     * New Codes.
+     */
+    public function getExchange($sale_id = 0, $sale_billnumber = 0, $exchange_id = 0, $exchange_billnumber = 0) {
+        $store_id = 1;
+
+        if (!Yii::app()->user->isSuperAdmin) {
+            $store_id = Yii::app()->user->storeId;
+        }
+
+        $command = Yii::app()->db->createCommand()
+                ->from($this->tableName() . ' t')
+                ->join(ExchangeCart::model()->tableName() . ' c', 'c.id = t.cart_id')
+                ->join(ExchangeCartItems::model()->tableName() . ' ci', 'c.id = ci.cart_id')
+                ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = ci.product_details_id')
+                ->join(ProductStockSales::model()->tableName() . ' pss', 'pss.id = t.sales_id')
+        ;
+
+        $command->andWhere('t.store_id = :store_id', array(':store_id' => $store_id));
+
+        if ($sale_id > 0) {
+            $command->andWhere('t.sales_id = :sid', array(':sid' => $sale_id));
+        }
+        
+        if ($sale_billnumber > 0) {
+            $command->andWhere('pss.billnumber = :sbn', array(':sbn' => $sale_billnumber));
+        }
+        
+        if ($exchange_id > 0) {
+            $command->andWhere('t.id = :id', array(':id' => $exchange_id));
+        }
+
+        if ($exchange_billnumber > 0) {
+            $command->andWhere('t.exchange_billnumber = :bn', array(':bn' => $exchange_billnumber));
+        }
+
+        $command->select('
+            t.id,
+            t.exchange_billnumber,
+            t.sales_id,
+            t.exchange_date,
+            t.payment_method,
+            t.note,
+            t.cart_id,
+            t.store_id,
+            pss.billnumber,
+            pss.sale_date,
+            c.grand_total_bill,
+            c.grand_total_returnable,
+            c.grand_total_adjustable,
+            c.grand_total_paid,
+            c.grand_total_balance,
+            c.discount,
+            c.vat,
+            ci.price,
+            ci.quantity,
+            ci.discount AS item_discount,
+            ci.vat AS item_vat,
+            ci.sub_total,
+            ci.is_returned,
+            ci.reference_number,
+            pd.id AS product_id,
+            pd.product_name');
+
+        $data = $command->queryAll();
+        return $data;
+    }
+
+    /**
+     * New Codes.
+     */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
-    
+
     public function exchangeList() {
-        
+
         $criteria = new CDbCriteria;
         $criteria->select = 't.sales_id AS id, t.grand_total_payable';
         $criteria->with = array(
@@ -129,20 +203,20 @@ class ExchangeProducts extends CActiveRecord {
                 'select' => 'GROUP_CONCAT(exchangeProductDetails.product_name) as ex_product_name',
             ),
         );
-        
+
         $criteria->compare('t.sales_id', $this->sales_id);
 //        $criteria->compare('main_product_name', $this->main_product_name, true);
         $criteria->addCondition("t.exchange_product_details_id IS NOT NULL");
         $criteria->compare('ex_product_name', $this->ex_product_name, true);
-        
+
         if (!Yii::app()->user->isSuperAdmin) {
             $criteria->compare('t.store_id', Yii::app()->user->storeId);
         }
-        
+
         $criteria->together = true;
         $criteria->group = 't.sales_id';
         $criteria->order = 't.id DESC';
-        
+
         return new CActiveDataProvider($this, array(
             'pagination' => array(
                 'pageSize' => $this->pageSize,
@@ -150,52 +224,52 @@ class ExchangeProducts extends CActiveRecord {
             'criteria' => $criteria,
         ));
     }
-    
+
     public function getExchanges($id, $b_ex = false) {
-        
+
         $store_id = 1;
-        
+
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
         }
-        
+
         $criteria = new CDbCriteria;
-        
-        if($b_ex) {
+
+        if ($b_ex) {
             $ar_with = array('exchangeProductDetails');
             $criteria->addCondition("t.exchange_product_details_id IS NOT NULL");
             $criteria->compare('exchangeProductDetails.store_id', $store_id);
-        }else{
+        } else {
             $ar_with = array('mainProductDetails');
             $criteria->addCondition("t.main_product_details_id IS NOT NULL");
             $criteria->compare('mainProductDetails.store_id', $store_id);
         }
-        
+
         $criteria->with = $ar_with;
-        
+
         $criteria->compare('sales_id', $id);
-        
+
         if (!Yii::app()->user->isSuperAdmin) {
             $criteria->compare('t.store_id', Yii::app()->user->storeId);
         }
-        
+
         $criteria->order = 't.id DESC';
 
         $data = $this->findAll($criteria);
         $data = $this->formatExchangesRecords($data, $b_ex);
         return $data;
     }
-    
+
     public function formatExchangesRecords($obj_sales, $b_ex = FALSE) {
-        
+
         $ar_cart = array();
-        
+
         $key = 'mainProductDetails';
         $qty = 'main_product_quantity';
         $sub_total = 'main_product_subtotal';
-        
-        if($b_ex){
-            
+
+        if ($b_ex) {
+
             $date = date('d-m-Y', strtotime($obj_sales[0]->exchange_date));
             $bill_no = $obj_sales[0]->sales_id;
             $adjust = $obj_sales[0]->exchange_adjust_amount;
@@ -203,7 +277,7 @@ class ExchangeProducts extends CActiveRecord {
             $g_total_paid = $obj_sales[0]->grand_total_paid;
             $g_total_balance = $obj_sales[0]->grand_total_balance;
             $dis_amount = (!empty($obj_sales[0]->dis_amount) || (floatval($obj_sales[0]->dis_amount) > 0) ) ? floatval($obj_sales[0]->dis_amount) : 0.00;
-            
+
             $ar_cart['bill_no'] = $bill_no;
             $ar_cart['g_total_payable'] = $g_total_payable;
             $ar_cart['g_total_paid'] = $g_total_paid;
@@ -211,114 +285,111 @@ class ExchangeProducts extends CActiveRecord {
             $ar_cart['dis_amount'] = $dis_amount;
             $ar_cart['adjust'] = $adjust;
             $ar_cart['date'] = $date;
-            
+
             $key = 'exchangeProductDetails';
             $qty = 'exchange_product_quantity';
             $sub_total = 'exchange_product_subtotal';
-        
         }
 
         foreach ($obj_sales as $row) {
-            
+
             $_data['prod_name'] = $row->$key->product_name;
             $_data['qty'] = $row->$qty;
             $_data['sub_total'] = $row->$sub_total;
 
             $ar_cart[] = $_data;
         }
-        
+
         return $ar_cart;
     }
-    
+
     public function exchangeReportData($from_date, $to_date, $b_ex = FALSE) {
-        
+
         $from_date = (!empty($from_date)) ? $from_date : date('Y-m-d', Settings::getBdLocalTime());
         $to_date = (!empty($to_date)) ? $to_date : date('Y-m-d', Settings::getBdLocalTime());
-        
+
         $criteria = new CDbCriteria;
         $criteria->select = 't.id, t.sales_id, t.main_product_quantity, t.main_product_subtotal, t.exchange_ref_num, t.exchange_product_quantity, t.exchange_product_subtotal, t.dis_amount, t.grand_total_paid, t.grand_total_balance, t.grand_total_payable, t.exchange_adjust_amount';
-        
-        if($b_ex) {
+
+        if ($b_ex) {
             $ar_with = array('exchangeProductDetails');
             $criteria->addCondition("t.exchange_product_details_id IS NOT NULL");
-        }else{
+        } else {
             $ar_with = array('mainProductDetails');
             $criteria->addCondition("t.main_product_details_id IS NOT NULL");
         }
-        
+
         $criteria->with = $ar_with;
 
         $criteria->compare('DATE(t.exchange_date) >', $from_date);
         $criteria->compare('DATE(t.exchange_date) <', $to_date);
-        
+
         if (!Yii::app()->user->isSuperAdmin) {
             $criteria->compare('t.store_id', Yii::app()->user->storeId);
         }
-        
+
         $criteria->together = true;
         $criteria->order = 't.id DESC';
-        
+
         $data = $this->findAll($criteria);
-        
+
         return (!empty($data)) ? $this->formatExchangeReportData($data, $b_ex) : FALSE;
     }
-    
+
     private function formatExchangeReportData($obj_data, $b_ex = FALSE) {
-        
+
         $formatted_data = array();
-        
+
         $key = 'mainProductDetails';
         $qty = 'main_product_quantity';
         $sub_total = 'main_product_subtotal';
-        
-        if($b_ex){
-            
+
+        if ($b_ex) {
+
             $key = 'exchangeProductDetails';
             $qty = 'exchange_product_quantity';
             $sub_total = 'exchange_product_subtotal';
-        
         }
-        
+
         foreach ($obj_data as $row) {
             $sale_ids[] = $row->sales_id;
         }
-        
+
         $sale_ids = array_unique($sale_ids);
-        
-        foreach ($sale_ids as $sale_id){
-            
+
+        foreach ($sale_ids as $sale_id) {
+
             $_data = array();
             foreach ($obj_data as $row) {
-                
-                if ($sale_id == $row->sales_id){
-                    
-                    if($b_ex){
-                        
+
+                if ($sale_id == $row->sales_id) {
+
+                    if ($b_ex) {
+
                         $_data['bill_total'] = ( empty($row->grand_total_payable) || ($row->grand_total_payable <= 0) ) ? 0.00 : $row->grand_total_payable;
                         $_data['amount_given'] = ( empty($row->grand_total_paid) || ($row->grand_total_paid <= 0) ) ? 0.00 : $row->grand_total_paid;
                         $_data['discount'] = ( empty($row->dis_amount) || ($row->dis_amount <= 0) ) ? 0.00 : $row->dis_amount;
                         $_data['balance'] = ( empty($row->grand_total_balance) || ($row->grand_total_balance <= 0) ) ? 0.00 : $row->grand_total_balance;
                         $_data['adjust'] = ( empty($row->exchange_adjust_amount) || ($row->exchange_adjust_amount <= 0) ) ? 0.00 : $row->exchange_adjust_amount;
-                        
+
                         $cart['ref_num'] = $row->exchange_ref_num;
                     }
-                    
+
                     $cart['prod_name'] = $row->$key->product_name;
                     $cart['qty'] = $row->$qty;
                     $cart['item_sub_total'] = $row->$sub_total;
-                    
+
                     $_data[] = $cart;
                 }
-                
             }
-            
-            if($b_ex){
+
+            if ($b_ex) {
                 $formatted_data[$sale_id]['ex_product'] = $_data;
-            }else{
+            } else {
                 $formatted_data[$sale_id]['main_product'] = $_data;
             }
         }
-        
+
         return $formatted_data;
     }
 

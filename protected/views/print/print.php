@@ -67,13 +67,23 @@
         <div class="clearfix"></div>
 
         <div class="bill-date">
-            Date: <span></span>
+            Sale Date: <span></span>
         </div>
 
         <div class="clearfix"></div>
 
         <div class="bill-number">
-            Number: <span></span>
+            Sale Number: <span></span>
+        </div>
+        
+        <div class="exchange-date">
+            Exchange Date: <span></span>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="exchange-bill-number">
+            Exchange Number: <span></span>
         </div>
 
         <div class="bill_table">

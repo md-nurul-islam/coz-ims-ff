@@ -111,10 +111,10 @@ class Settings {
         $nn_unique_id = '';
         $nn_unique_id = substr($n_unique_id, -$max_len);
 
-        $ref_num = $id . $nn_unique_id;
+        $ref_num = ($id > 0) ? $id . $nn_unique_id : $nn_unique_id;
         if (strlen($ref_num) < $max_length) {
             for ($i = strlen($ref_num); $i < $max_length; $i++) {
-                $ref_num .= '3';
+                $ref_num .= mt_rand(0, 9);
             }
         }
 

@@ -26,10 +26,10 @@ class ExchangeCart extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('grand_total_returnable, grand_total_adjustable, discount, vat', 'length', 'max' => 13),
+            array('grand_total_bill, grand_total_returnable, grand_total_adjustable, grand_total_paid, grand_total_balance, discount, vat', 'length', 'max' => 13),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, grand_total_returnable, grand_total_adjustable, discount, vat', 'safe', 'on' => 'search'),
+            array('id, grand_total_bill, grand_total_returnable, grand_total_adjustable, grand_total_paid, grand_total_balance, discount, vat', 'safe', 'on' => 'search'),
         );
     }
 
@@ -49,8 +49,11 @@ class ExchangeCart extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'grand_total_returnable' => 'Grand Total Returnable',
-            'grand_total_adjustable' => 'Grand Total Adjustable',
+            'grand_total_bill' => 'Total Bill Amount',
+            'grand_total_returnable' => 'Total Returnable Amount',
+            'grand_total_adjustable' => 'Total Adjustable Amount',
+            'grand_total_paid' => 'Total Amount Paid',
+            'grand_total_balance' => 'Total Amount Balance',
             'discount' => 'Discount',
             'vat' => 'Vat',
         );
@@ -74,10 +77,13 @@ class ExchangeCart extends CActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
-        $criteria->compare('grand_total_returnable', $this->grand_total_returnable, true);
-        $criteria->compare('grand_total_adjustable', $this->grand_total_adjustable, true);
-        $criteria->compare('discount', $this->discount, true);
-        $criteria->compare('vat', $this->vat, true);
+        $criteria->compare('grand_total_bill', $this->grand_total_bill);
+        $criteria->compare('grand_total_returnable', $this->grand_total_returnable);
+        $criteria->compare('grand_total_adjustable', $this->grand_total_adjustable);
+        $criteria->compare('grand_total_paid', $this->grand_total_paid);
+        $criteria->compare('grand_total_balance', $this->grand_total_balance);
+        $criteria->compare('discount', $this->discount);
+        $criteria->compare('vat', $this->vat);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

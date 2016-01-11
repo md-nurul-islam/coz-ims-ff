@@ -145,26 +145,19 @@ class CartController extends Controller {
         }
 
         $post_data = Yii::app()->request->getParam('post_data');
-        $cart_type = $post_data['type'];
+        $cart_type = ucfirst($post_data['type']);
 
-        $data = call_user_func_array(array($this, 'proccess' . $cart_type), array($cart_id, $post_data));
+        $data = call_user_func_array(array($this, 'proccess' . $cart_type), array(48, $post_data));
 
-        if (!empty($data)) {
+        var_dump($data);
+        exit;
 
-            $respons['success'] = TRUE;
-            $respons['message'] = 'Successfully paid.';
-            $respons['html'] = $this->renderPartial('//cart/_bill', $data, TRUE, true);
-        } else {
-            $respons['success'] = FALSE;
-            $respons['message'] = 'Payment failed.';
-        }
-
-        echo CJSON::encode($respons);
+        echo CJSON::encode($data);
         Yii::app()->end();
     }
 
     private function proccessSale($cart_id, $post_data) {
-        
+
         $response = [];
         $tmp_cart = new TmpCart;
         $tmp_cart_data = $tmp_cart->getCart($cart_id);
@@ -176,7 +169,7 @@ class CartController extends Controller {
         $cart->grand_total_paid = $post_data['payment_amount'];
         $cart->discount = $tmp_cart_data[0]['total_discount'];
         $cart->vat = $tmp_cart_data[0]['total_vat'];
-        
+
         $bill_number = $post_data['bill_number'];
         $sale_date = date('Y-m-d', strtotime($post_data['sale_date']));
         $due_payment_date = date('Y-m-d', strtotime($post_data['due_payment_date']));
@@ -247,7 +240,7 @@ class CartController extends Controller {
         if ($cart->vat <= 0) {
             $cart->vat = $sum_of_sub_vat;
         }
-        
+
         $cart->grand_total_balance = $cart->grand_total_paid - (($cart->grand_total + $cart->vat) - $cart->discount);
         $cart->update();
 
@@ -256,12 +249,191 @@ class CartController extends Controller {
 
         $sold_data = new ProductStockSales;
         $response['data'] = $sold_data->getSaleData($sales->id);
-        
+
+        if (!empty($response['data'])) {
+
+            $respons['success'] = TRUE;
+            $respons['message'] = 'Successfully paid.';
+            $respons['html'] = $this->renderPartial('//cart/_bill', $response, TRUE, true);
+        } else {
+            $respons['success'] = FALSE;
+            $respons['message'] = 'Payment failed.';
+        }
+
         return $response;
     }
 
     private function proccessPurchase($cart_id) {
         
+    }
+
+    private function proccessExchange($cart_id, $post_data) {
+
+        $response = [];
+        $done = false;
+        $error = '';
+        
+        $tmp_cart = new TmpCart;
+        $tmp_cart_data = $tmp_cart->getCart($cart_id, $post_data['type']);
+
+        $sales_data = ProductStockSales::model()->getSaleData(0, $post_data['bill_number']);
+
+        $grand_total_bill = 0.00;
+        $grand_total_returnable = 0.00;
+        $grand_total_adjustable = 0.00;
+        $grand_total_paid = 0.00;
+        $grand_total_balance = 0.00;
+
+        foreach ($sales_data as $sale) {
+
+            if (isset($post_data['exchange_data'][$sale['product_id']])) {
+                $grand_total_returnable += floatval($sale['price']) * intval($post_data['exchange_data'][$sale['product_id']]['exchanging_quantity']);
+            }
+        }
+
+        $grand_total_returnable = $grand_total_returnable - floatval($sales_data[0]['discount']);
+        $grand_total_bill = (floatval($tmp_cart_data[0]['grand_total']) + floatval($tmp_cart_data[0]['total_discount'])) - floatval($tmp_cart_data[0]['total_vat']);
+        $grand_total_adjustable = $grand_total_bill - $grand_total_returnable;
+        $grand_total_paid = floatval($post_data['payment_amount']);
+        $grand_total_balance = $grand_total_paid - $grand_total_adjustable;
+
+        $cart = new ExchangeCart;
+        $cart->grand_total_bill = $grand_total_bill;
+        $cart->grand_total_returnable = $grand_total_returnable;
+        $cart->grand_total_adjustable = $grand_total_adjustable;
+        $cart->grand_total_paid = $grand_total_paid;
+        $cart->grand_total_balance = $grand_total_balance;
+        $cart->discount = $tmp_cart_data[0]['total_discount'];
+        $cart->vat = $tmp_cart_data[0]['total_vat'];
+
+        $sales_id = $sales_data[0]['id'];
+        $payment_method = $post_data['payment_method'];
+        $note = $post_data['note'];
+
+        $store_id = Yii::app()->user->storeId;
+        $card_type = $post_data['card_type'];
+
+        $exchange_billnumber = Settings::getUniqueId(0, 5);
+
+        $transaction = Yii::app()->db->beginTransaction();
+        
+        /** Transaction Starts * */
+        try {
+
+            $cart->insert();
+
+            $exchange = new ExchangeProducts;
+            $exchange->exchange_billnumber = $exchange_billnumber;
+            $exchange->sales_id = $sales_id;
+            $exchange->cart_id = $cart->id;
+            $exchange->exchange_date = date('Y-m-d H:i:s', Settings::getBdLocalTime());
+            $exchange->payment_method = $payment_method;
+            $exchange->store_id = $store_id;
+            $exchange->note = $note;
+            $exchange->card_type = $card_type;
+
+            $exchange->insert();
+
+//            Yii::app()->db->createCommand()
+//                    ->delete(TmpCart::model()->tableName(), 'id = :id', array(':id' => $cart_id));
+
+            foreach ($sales_data as $sale) {
+                if (isset($post_data['exchange_data'][$sale['product_id']])) {
+
+                    $qty = intval($post_data['exchange_data'][$sale['product_id']]['exchanging_quantity']);
+
+                    $cart_item_return = new ExchangeCartItems;
+                    $cart_item_return->cart_id = $cart->id;
+                    $cart_item_return->product_details_id = $sale['product_id'];
+                    $cart_item_return->reference_number = $sale['reference_number'];
+                    $cart_item_return->price = floatval($sale['price']);
+                    $cart_item_return->quantity = $qty;
+                    $cart_item_return->sub_total = floatval($sale['price']) * $qty;
+                    $cart_item_return->is_returned = 1;
+                    
+                    $cart_item_return->insert();
+
+                    $stock_info = ProductStockAvail::model()->findByAttributes(array(
+                        'product_details_id' => $cart_item_return->product_details_id
+                    ));
+
+                    $stock_info->quantity = ((int) $stock_info->quantity + $qty);
+                    $stock_info->update();
+                }
+            }
+
+            $i = 1;
+            $sum_of_sub_totals = 0.00;
+            $sum_of_sub_discount = 0.00;
+            $sum_of_sub_vat = 0.00;
+
+            foreach ($tmp_cart_data as $tmp_cart) {
+
+                $cart_item = new ExchangeCartItems;
+                $cart_item->cart_id = $cart->id;
+                $cart_item->product_details_id = $tmp_cart['product_details_id'];
+                $cart_item->reference_number = $tmp_cart['reference_number'];
+                $cart_item->price = $tmp_cart['price'];
+                $cart_item->quantity = $tmp_cart['quantity'];
+                $cart_item->sub_total = $tmp_cart['sub_total'];
+                $cart_item->discount = $tmp_cart['item_discount'];
+                $cart_item->vat = $tmp_cart['item_vat'];
+                $cart_item->is_returned = 0;
+
+                $sum_of_sub_totals += floatval($tmp_cart['sub_total']);
+                $sum_of_sub_discount += floatval($tmp_cart['item_discount']);
+                $sum_of_sub_vat += floatval($tmp_cart['item_vat']);
+
+                $cart_item->insert();
+                $i++;
+
+                $stock_info = ProductStockAvail::model()->findByAttributes(array(
+                    'product_details_id' => $cart_item->product_details_id
+                ));
+
+                $stock_info->quantity = ((int) $stock_info->quantity - (int) $tmp_cart['quantity']);
+                $stock_info->update();
+            }
+
+            $cart->grand_total_bill = $sum_of_sub_totals;
+
+            if ($cart->discount <= 0) {
+                $cart->discount = $sum_of_sub_discount;
+            }
+
+            if ($cart->vat <= 0) {
+                $cart->vat = $sum_of_sub_vat;
+            }
+
+            $cart->update();
+            
+            $transaction->commit();
+            $done = TRUE;
+//            Yii::app()->db->createCommand()
+//                    ->delete(TmpCartItems::model()->tableName(), 'cart_id = :cid', array(':cid' => $cart_id));
+        } catch (CDbException $exc) {
+            $transaction->rollback();
+            $error = $exc->getMessage();
+        }
+        
+        /** Transaction Ends * */
+        $response['data'] = ExchangeProducts::model()->getExchange($sales_id);
+var_dump($response);
+        exit;
+        if (!empty($response['data'])) {
+
+            $respons['success'] = TRUE;
+            $respons['message'] = 'Successfully paid.';
+            $respons['html'] = $this->renderPartial('//cart/_exchange_bill', $response, TRUE, true);
+        } else {
+            $respons['success'] = FALSE;
+            $respons['message'] = $error;
+        }
+        
+        var_dump($respons);
+        exit;
+        
+        return $response;
     }
 
 }

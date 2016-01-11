@@ -490,7 +490,7 @@ $(document).ready(function () {
         var total_payment_adjustable = 0.00;
         var total_discount = parseFloat($('.exchangables .total_discount').text());
         var total_vat = parseFloat($('.exchangables .total_vat').text());
-        
+
         $('.exchangables').find('.exchange').each(function () {
             if ($(this).is(':checked')) {
                 var prod_id = $(this).closest('tr').find('td.product_info').attr('data-id');
@@ -516,7 +516,7 @@ $(document).ready(function () {
             $('#payment-total-discount').text('-' + (total_discount.toFixed(2)));
             $('#payment-total-payable').text(total_payable.toFixed(2));
             $('#exchange_payment_cart_row_id_container').val(cart_id);
-            
+
             $('#exchangePaymentModal').modal('show');
         } else {
             alert('Payable should be greater than adjustable.');
@@ -573,6 +573,7 @@ $(document).ready(function () {
         var sale_date = $('#ProductStockSales_sale_date').val();
         var due_payment_date = $('#ProductStockSales_due_payment_date').val();
         var post_data = {};
+        var exchange_data = {};
 
         post_data['type'] = 'exchange';
         post_data['note'] = note;
@@ -585,6 +586,26 @@ $(document).ready(function () {
         post_data['sale_date'] = sale_date;
         post_data['due_payment_date'] = due_payment_date;
 
+        $('.exchangables').find('.exchange').each(function () {
+            if ($(this).is(':checked')) {
+                var exchange_data_cart = {};
+                
+                var prod_id = $(this).closest('tr').find('td.product_info').attr('data-id');
+                var quantity = parseInt($(this).closest('tr').find('td.quantity').attr('data-exchanging_quantity'));
+                var price = parseFloat($(this).closest('tr').find('td.price').text());
+                var discount = parseFloat($(this).closest('tr').find('td.item_discount').text());
+                var vat = parseFloat($(this).closest('tr').find('td.item_vat').text());
+                var sub_btotal = parseFloat($(this).closest('tr').find('td.sub_btotal').text());
+                
+                exchange_data_cart['prod_id'] = prod_id;
+                exchange_data_cart['exchanging_quantity'] = quantity;
+                
+                exchange_data[prod_id] = exchange_data_cart;
+            }
+        });
+
+        post_data['exchange_data'] = exchange_data;
+        
         $.ajax({
             url: '/cart/payment',
             type: 'post',
@@ -601,12 +622,20 @@ $(document).ready(function () {
 
                     var bill_number = $('.print .hidden_bill_number').text().trim();
                     var sale_date = $('.print .hidden_sale_date').text().trim();
+                    var exchange_bill_number = $('.print .hidden_exchange_bill_number').text().trim();
+                    var exchange_date = $('.print .hidden_exchange_date').text().trim();
 
                     $('.print .bill-date span').html('');
                     $('.print .bill-date span').html(sale_date);
+                    
+                    $('.print .exchange-date span').html('');
+                    $('.print .exchange-date span').html(exchange_date);
 
                     $('.print .bill-number span').html('');
                     $('.print .bill-number span').html(bill_number);
+                    
+                    $('.print .exchange-bill-number span').html('');
+                    $('.print .exchange-bill-number span').html(exchange_bill_number);
 
                     $('.print').find('table').attr('cellspacing', '0');
                     $('.print .bill-date span').html(sale_date);

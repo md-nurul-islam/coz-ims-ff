@@ -7,7 +7,7 @@
  * @property integer $id
  * @property string $cart_id
  * @property integer $product_details_id
- * @property string $reference_number_id
+ * @property string $reference_number
  * @property string $price
  * @property integer $quantity
  * @property string $sub_total
@@ -34,10 +34,10 @@ class ExchangeCartItems extends CActiveRecord {
             array('cart_id, product_details_id, price, quantity', 'required'),
             array('product_details_id, quantity, is_returned', 'numerical', 'integerOnly' => true),
             array('cart_id', 'length', 'max' => 10),
-            array('reference_number_id, price, sub_total, discount, vat', 'length', 'max' => 13),
+            array('reference_number, price, sub_total, discount, vat', 'length', 'max' => 13),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, cart_id, product_details_id, reference_number_id, price, quantity, sub_total, discount, vat, is_returned', 'safe', 'on' => 'search'),
+            array('id, cart_id, product_details_id, reference_number, price, quantity, sub_total, discount, vat, is_returned', 'safe', 'on' => 'search'),
         );
     }
 
@@ -59,7 +59,7 @@ class ExchangeCartItems extends CActiveRecord {
             'id' => 'ID',
             'cart_id' => 'Cart',
             'product_details_id' => 'Product Details',
-            'reference_number_id' => 'Reference Number',
+            'reference_number' => 'Reference Number',
             'price' => 'Price',
             'quantity' => 'Quantity',
             'sub_total' => 'Sub Total',
@@ -89,12 +89,12 @@ class ExchangeCartItems extends CActiveRecord {
         $criteria->compare('id', $this->id);
         $criteria->compare('cart_id', $this->cart_id, true);
         $criteria->compare('product_details_id', $this->product_details_id);
-        $criteria->compare('reference_number_id', $this->reference_number_id, true);
-        $criteria->compare('price', $this->price, true);
+        $criteria->compare('reference_number', $this->reference_number);
+        $criteria->compare('price', $this->price);
         $criteria->compare('quantity', $this->quantity);
-        $criteria->compare('sub_total', $this->sub_total, true);
-        $criteria->compare('discount', $this->discount, true);
-        $criteria->compare('vat', $this->vat, true);
+        $criteria->compare('sub_total', $this->sub_total);
+        $criteria->compare('discount', $this->discount);
+        $criteria->compare('vat', $this->vat);
         $criteria->compare('is_returned', $this->is_returned);
 
         return new CActiveDataProvider($this, array(
