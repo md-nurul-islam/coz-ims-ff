@@ -217,17 +217,20 @@ $(document).ready(function () {
      * Exchange Products
      * */
     $(document).off('blur', '#ProductStockSales_billnumber').on('blur', '#ProductStockSales_billnumber', function () {
-
+        
+        $('.show-later').hide();
         var billnumber = $(this).val();
 
         if (billnumber != '') {
             $.ajax({
-                url: 'Get_sales',
+                url: '/product/exchange/get_sales',
                 type: 'post',
                 dataType: 'html',
                 data: {billnumber: $(this).val()},
             }).done(function (response) {
+                $('.sold-items').html('');
                 $('.sold-items').html(response);
+                $('.show-later').show('slow');
 //                console.log(response);
             }).fail(function (error) {
                 console.log(error);

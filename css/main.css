@@ -56,8 +56,6 @@
     -moz-animation: cssload-rotate 2300ms linear infinite;
 }
 
-
-
 @keyframes cssload-rotate {
     100% {
         transform: rotate(360deg);
@@ -87,10 +85,11 @@
         -moz-transform: rotate(360deg);
     }
 }
-
 /* Loader */
 
-
+.show-later {
+    display: none;
+}
 .report_table .table-bordered > tbody > tr > td,
 .report_table .table-bordered > tbody > tr > th,
 .report_table .table-bordered > tfoot > tr > td,

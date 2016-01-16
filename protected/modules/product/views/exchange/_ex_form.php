@@ -2,6 +2,8 @@
     <div class="panel-body">
 
         <div class="report_table">
+            
+            <div class="alert alert-error"><strong>*** NOTE: Only select the items taking back.</strong></div>
 
             <table class="table table-bordered table-striped table-hover table-condensed exchangables">
 

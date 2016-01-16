@@ -26,7 +26,17 @@ class ExchangeController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'get_sales', 'view', 'create', 'update', 'product_stock_info', 'print'),
+                'actions' => array(
+                    'index',
+                    'get_sales',
+                    'view',
+                    'create',
+                    'update',
+                    'product_stock_info',
+                    'print',
+                    'getdata',
+                    'getStatusComboData'
+                ),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -52,32 +62,30 @@ class ExchangeController extends Controller {
         $this->pageTitle = Yii::app()->name . ' - Exchange';
 
         $model = new ExchangeProducts;
-        
+
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
         }
-        
+
         $sale_model = new ProductStockSales;
-        
+
         $this->render('create', array(
             'model' => $model,
             'sale_model' => $sale_model,
         ));
-
     }
-    
+
     public function exchangeProduct($sales_id, $total = 0) {
-        
+
         $model = new ExchangeProducts;
         $edit = FALSE;
-        
+
         $this->render('ex_form', array(
             'model' => $model,
             'main_prod_total' => $total,
             'sales_id' => $sales_id,
             'edit' => $edit,
         ));
-
     }
 
     public function actionPrint() {
@@ -90,13 +98,13 @@ class ExchangeController extends Controller {
 //        var_dump($model_main);
 //        exit;
         $model_ex = $model->getExchanges($id, true);
-        
+
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
-        }  else {
+        } else {
             $store_id = 1;
         }
-        
+
         $store = StoreDetails::model()->findByPk($store_id);
 
         $this->render('print', array(
@@ -132,7 +140,7 @@ class ExchangeController extends Controller {
 
             if (!Yii::app()->user->isSuperAdmin) {
                 $store_id = Yii::app()->user->storeId;
-            }  else {
+            } else {
                 $store_id = 1;
             }
 
@@ -222,18 +230,19 @@ class ExchangeController extends Controller {
             'edit' => $edit,
         ));
     }
-    
+
     public function actionGet_sales() {
 
         $billnumber = Yii::app()->request->getParam('billnumber');
-        
+
         $model = new ProductStockSales;
         $model_data = $model->getSaleData(0, $billnumber);
-        
+
         echo $this->renderPartial('_ex_form', array(
             'model' => $model_data,
-        ), TRUE);
+                ), TRUE);
     }
+
     /**
      * Deletes a particular model.
      * If deletion is successful, the browser will be redirected to the 'admin' page.
@@ -252,38 +261,51 @@ class ExchangeController extends Controller {
      */
     public function actionIndex() {
 
-        $model = new ExchangeProducts();
-        $pageSize = 0;
+        $this->pageTitle = Yii::app()->name . ' - Exchange List';
+        $this->pageHeader = 'Exchange List';
 
-        $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['ExchangeProducts'])) {
-            if (isset($_GET['ExchangeProducts']['id']) && !empty($_GET['ExchangeProducts']['id'])) {
-                $model->sales_id = $_GET['ExchangeProducts']['id'];
-            }
+        $this->render('index');
+    }
 
-            if (isset($_GET['ExchangeProducts']['product_name']) && !empty($_GET['ExchangeProducts']['product_name'])) {
-                $model->product_name = $_GET['ExchangeProducts']['product_name'];
-            }
+    /*
+     * Grid functions
+     */
 
-            if (isset($_GET['ExchangeProducts']['grand_total_paid']) && !empty($_GET['ExchangeProducts']['grand_total_paid'])) {
-                $model->grand_total_paid = $_GET['ExchangeProducts']['grand_total_paid'];
-            }
+    public function actionGetdata() {
+
+        foreach (DataGridHelper::$_ar_non_filterable_vars as $nfv_key => $nfv_var_name) {
+            ${$nfv_var_name} = Yii::app()->request->getParam($nfv_key);
         }
 
-        if (isset($_GET['pageSize'])) {
-            $pageSize = (int) $_GET['pageSize'];
-            $model->pageSize = $pageSize;
-            unset($_GET['pageSize']);
+        $rows = array();
+        $offest = 0;
+
+        if (${DataGridHelper::$_ar_non_filterable_vars['page']} > 1) {
+            $offest = (${DataGridHelper::$_ar_non_filterable_vars['page']} - 1) * ${DataGridHelper::$_ar_non_filterable_vars['rows']};
         }
-        
-        if (!Yii::app()->user->isSuperAdmin) {
-            $model->store_id = Yii::app()->user->storeId;
+
+        $productExchange = new ExchangeProducts();
+
+        $productExchange->pageSize = 20;
+        $query_params = array(
+            'offset' => $offest,
+            'order' => ${DataGridHelper::$_ar_non_filterable_vars['sort']} . ' ' . ${DataGridHelper::$_ar_non_filterable_vars['order']},
+            'where' => $_POST,
+        );
+
+        $result['rows'] = $productExchange->dataGridRows($query_params);
+//        var_dump($result['rows']);exit;
+        $result["total"] = 0;
+
+        if (($result['rows'])) {
+            $result["total"] = $result['rows'][0]['total_rows'];
         }
-        
-        $this->render('index', array(
-            'model' => $model,
-            'pageSize' => $pageSize,
-        ));
+        echo CJSON::encode($result);
+        Yii::app()->end();
+    }
+
+    public function actionGetStatusComboData() {
+        echo CJSON::encode(ProductStockSales::model()->statusComboData());
     }
 
     /**
@@ -335,7 +357,7 @@ class ExchangeController extends Controller {
             $romatted_data = $this->formatProdInfo($model);
             $response['response'] = $romatted_data;
         }
-        
+
         echo CJSON::encode($response);
         Yii::app()->end();
     }

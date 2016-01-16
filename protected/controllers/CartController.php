@@ -23,6 +23,10 @@ class CartController extends Controller {
                 'actions' => array('add', 'edit', 'add_items', 'remove_item', 'payment'),
                 'users' => array('@'),
             ),
+            array('allow', // allow authenticated user to perform 'create' and 'update' actions
+                'actions' => array('PaymentTest'),
+                'users' => array('*'),
+            ),
             array('deny', // deny all users
                 'users' => array('*'),
             ),
@@ -136,6 +140,21 @@ class CartController extends Controller {
         Yii::app()->end();
     }
 
+    public function actionPaymentTest() {
+
+        $cart_id = 49;
+        $cart_type = 'exchange';
+
+        $post_data = Yii::app()->request->getParam('post_data');
+
+        /** Transaction Ends * */
+        $response['data'] = ExchangeProducts::model()->getExchange(53, 0, 19);
+
+//        var_dump($response['data']);exit;
+
+        echo $this->renderPartial('//cart/_exchange_bill', $response, TRUE, true);
+    }
+
     public function actionPayment() {
 
         $cart_id = Yii::app()->request->getParam('cart_id');
@@ -147,11 +166,8 @@ class CartController extends Controller {
         $post_data = Yii::app()->request->getParam('post_data');
         $cart_type = ucfirst($post_data['type']);
 
-        $data = call_user_func_array(array($this, 'proccess' . $cart_type), array(48, $post_data));
-
-        var_dump($data);
-        exit;
-
+        $data = call_user_func_array(array($this, 'proccess' . $cart_type), array($cart_id, $post_data));
+//        var_dump($data);exit;
         echo CJSON::encode($data);
         Yii::app()->end();
     }
@@ -251,7 +267,6 @@ class CartController extends Controller {
         $response['data'] = $sold_data->getSaleData($sales->id);
 
         if (!empty($response['data'])) {
-
             $respons['success'] = TRUE;
             $respons['message'] = 'Successfully paid.';
             $respons['html'] = $this->renderPartial('//cart/_bill', $response, TRUE, true);
@@ -260,7 +275,7 @@ class CartController extends Controller {
             $respons['message'] = 'Payment failed.';
         }
 
-        return $response;
+        return $respons;
     }
 
     private function proccessPurchase($cart_id) {
@@ -272,7 +287,7 @@ class CartController extends Controller {
         $response = [];
         $done = false;
         $error = '';
-        
+
         $tmp_cart = new TmpCart;
         $tmp_cart_data = $tmp_cart->getCart($cart_id, $post_data['type']);
 
@@ -316,7 +331,7 @@ class CartController extends Controller {
         $exchange_billnumber = Settings::getUniqueId(0, 5);
 
         $transaction = Yii::app()->db->beginTransaction();
-        
+
         /** Transaction Starts * */
         try {
 
@@ -334,8 +349,8 @@ class CartController extends Controller {
 
             $exchange->insert();
 
-//            Yii::app()->db->createCommand()
-//                    ->delete(TmpCart::model()->tableName(), 'id = :id', array(':id' => $cart_id));
+            Yii::app()->db->createCommand()
+                    ->delete(TmpCart::model()->tableName(), 'id = :id', array(':id' => $cart_id));
 
             foreach ($sales_data as $sale) {
                 if (isset($post_data['exchange_data'][$sale['product_id']])) {
@@ -350,7 +365,7 @@ class CartController extends Controller {
                     $cart_item_return->quantity = $qty;
                     $cart_item_return->sub_total = floatval($sale['price']) * $qty;
                     $cart_item_return->is_returned = 1;
-                    
+
                     $cart_item_return->insert();
 
                     $stock_info = ProductStockAvail::model()->findByAttributes(array(
@@ -367,22 +382,22 @@ class CartController extends Controller {
             $sum_of_sub_discount = 0.00;
             $sum_of_sub_vat = 0.00;
 
-            foreach ($tmp_cart_data as $tmp_cart) {
+            foreach ($tmp_cart_data as $tmp_cart_row) {
 
                 $cart_item = new ExchangeCartItems;
                 $cart_item->cart_id = $cart->id;
-                $cart_item->product_details_id = $tmp_cart['product_details_id'];
-                $cart_item->reference_number = $tmp_cart['reference_number'];
-                $cart_item->price = $tmp_cart['price'];
-                $cart_item->quantity = $tmp_cart['quantity'];
-                $cart_item->sub_total = $tmp_cart['sub_total'];
-                $cart_item->discount = $tmp_cart['item_discount'];
-                $cart_item->vat = $tmp_cart['item_vat'];
+                $cart_item->product_details_id = $tmp_cart_row['product_details_id'];
+                $cart_item->reference_number = $tmp_cart_row['reference_number'];
+                $cart_item->price = $tmp_cart_row['price'];
+                $cart_item->quantity = $tmp_cart_row['quantity'];
+                $cart_item->sub_total = $tmp_cart_row['sub_total'];
+                $cart_item->discount = $tmp_cart_row['item_discount'];
+                $cart_item->vat = $tmp_cart_row['item_vat'];
                 $cart_item->is_returned = 0;
 
-                $sum_of_sub_totals += floatval($tmp_cart['sub_total']);
-                $sum_of_sub_discount += floatval($tmp_cart['item_discount']);
-                $sum_of_sub_vat += floatval($tmp_cart['item_vat']);
+                $sum_of_sub_totals += floatval($tmp_cart_row['sub_total']);
+                $sum_of_sub_discount += floatval($tmp_cart_row['item_discount']);
+                $sum_of_sub_vat += floatval($tmp_cart_row['item_vat']);
 
                 $cart_item->insert();
                 $i++;
@@ -391,7 +406,7 @@ class CartController extends Controller {
                     'product_details_id' => $cart_item->product_details_id
                 ));
 
-                $stock_info->quantity = ((int) $stock_info->quantity - (int) $tmp_cart['quantity']);
+                $stock_info->quantity = ((int) $stock_info->quantity - (int) $tmp_cart_row['quantity']);
                 $stock_info->update();
             }
 
@@ -406,22 +421,21 @@ class CartController extends Controller {
             }
 
             $cart->update();
-            
+
+            Yii::app()->db->createCommand()
+                    ->delete(TmpCartItems::model()->tableName(), 'cart_id = :cid', array(':cid' => $cart_id));
+
             $transaction->commit();
             $done = TRUE;
-//            Yii::app()->db->createCommand()
-//                    ->delete(TmpCartItems::model()->tableName(), 'cart_id = :cid', array(':cid' => $cart_id));
         } catch (CDbException $exc) {
             $transaction->rollback();
             $error = $exc->getMessage();
         }
-        
-        /** Transaction Ends * */
-        $response['data'] = ExchangeProducts::model()->getExchange($sales_id);
-var_dump($response);
-        exit;
-        if (!empty($response['data'])) {
 
+        /** Transaction Ends * */
+        $response['data'] = ExchangeProducts::model()->getExchange($sales_id, 0, $exchange->id);
+        
+        if (!empty($response['data'])) {
             $respons['success'] = TRUE;
             $respons['message'] = 'Successfully paid.';
             $respons['html'] = $this->renderPartial('//cart/_exchange_bill', $response, TRUE, true);
@@ -429,11 +443,8 @@ var_dump($response);
             $respons['success'] = FALSE;
             $respons['message'] = $error;
         }
-        
-        var_dump($respons);
-        exit;
-        
-        return $response;
+
+        return $respons;
     }
 
 }

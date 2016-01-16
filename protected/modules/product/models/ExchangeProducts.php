@@ -135,6 +135,9 @@ class ExchangeProducts extends CActiveRecord {
                 ->join(ExchangeCartItems::model()->tableName() . ' ci', 'c.id = ci.cart_id')
                 ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = ci.product_details_id')
                 ->join(ProductStockSales::model()->tableName() . ' pss', 'pss.id = t.sales_id')
+                ->join(Cart::model()->tableName() . ' cs', 'cs.id = pss.cart_id')
+                ->join(CartItems::model()->tableName() . ' csi', 'cs.id = csi.cart_id')
+                ->group('ci.id')
         ;
 
         $command->andWhere('t.store_id = :store_id', array(':store_id' => $store_id));
@@ -142,11 +145,11 @@ class ExchangeProducts extends CActiveRecord {
         if ($sale_id > 0) {
             $command->andWhere('t.sales_id = :sid', array(':sid' => $sale_id));
         }
-        
+
         if ($sale_billnumber > 0) {
             $command->andWhere('pss.billnumber = :sbn', array(':sbn' => $sale_billnumber));
         }
-        
+
         if ($exchange_id > 0) {
             $command->andWhere('t.id = :id', array(':id' => $exchange_id));
         }
@@ -166,6 +169,7 @@ class ExchangeProducts extends CActiveRecord {
             t.store_id,
             pss.billnumber,
             pss.sale_date,
+            cs.discount AS sale_discount,
             c.grand_total_bill,
             c.grand_total_returnable,
             c.grand_total_adjustable,
@@ -185,6 +189,125 @@ class ExchangeProducts extends CActiveRecord {
 
         $data = $command->queryAll();
         return $data;
+    }
+
+    /**
+     * @return array for Data Grid Headers customized attribute labels (name=>label)
+     * remove the attributes don't needed in the Grid
+     */
+    public function dataGridHeaders() {
+        return array(
+            'id' => array('label' => 'ID', 'sortable' => 'true', 'width' => 50),
+            'billnumber' => array('label' => 'Sale Bill Number', 'sortable' => 'true', 'width' => 50),
+            'exchange_billnumber' => array('label' => 'Ex. Bill Number', 'sortable' => 'true', 'width' => 50),
+            'grand_total_bill' => array('label' => 'Bill Amount', 'sortable' => 'true', 'width' => 50),
+            'grand_total_returnable' => array('label' => 'Returned Amount', 'sortable' => 'true', 'width' => 50),
+            'grand_total_adjustable' => array('label' => 'Adjustable Amount', 'sortable' => 'true', 'width' => 50),
+        );
+    }
+
+    public function dataGridFilters() {
+        return array(
+            'billnumber' => array('id' => 'billnumber', 'class' => 'easyui-textbox', 'label' => 'Bill Number: ', 'style' => 'width:80px;'),
+            'exchange_billnumber' => array('id' => 'exchange_billnumber', 'class' => 'easyui-textbox', 'label' => 'Ex. Bill Number: ', 'style' => 'width:80px;'),
+        );
+    }
+
+    public function statusComboData() {
+
+        return array(
+            array(
+                'id' => '',
+                'text' => 'Select',
+            ),
+            array(
+                'id' => '1',
+                'text' => 'Active',
+            ),
+            array(
+                'id' => '0',
+                'text' => 'Inactive',
+            ),
+        );
+    }
+
+    public function dataGridRows($params = array()) {
+
+        $offset = 0;
+        if (isset($params['offset']) && $params['offset'] > 0) {
+            $offset = $params['offset'];
+        }
+
+        $order = 'id DESC';
+        if (isset($params['order']) && !empty($params['order'])) {
+            $order = $params['order'];
+        }
+
+        $command = Yii::app()->db->createCommand()
+                ->from($this->tableName() . ' t')
+                ->join(ExchangeCart::model()->tableName() . ' c', 'c.id = t.cart_id')
+                ->join(ExchangeCartItems::model()->tableName() . ' ci', 'c.id = ci.cart_id')
+                ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = ci.product_details_id')
+                ->join(ProductStockSales::model()->tableName() . ' pss', 'pss.id = t.sales_id')
+                ->join(Cart::model()->tableName() . ' cs', 'cs.id = pss.cart_id')
+                ->join(CartItems::model()->tableName() . ' csi', 'cs.id = csi.cart_id')
+                ->offset($offset)
+                ->limit($this->pageSize)
+                ->order($order)
+                ->group('t.cart_id')
+        ;
+
+        $sub_command = Yii::app()->db->createCommand()
+                ->select('count( DISTINCT t.cart_id )')
+                ->from($this->tableName() . ' t')
+                ->join(ExchangeCart::model()->tableName() . ' c', 'c.id = t.cart_id')
+                ->join(ExchangeCartItems::model()->tableName() . ' ci', 'c.id = ci.cart_id')
+                ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = ci.product_details_id')
+                ->join(ProductStockSales::model()->tableName() . ' pss', 'pss.id = t.sales_id')
+                ->join(Cart::model()->tableName() . ' cs', 'cs.id = pss.cart_id')
+                ->join(CartItems::model()->tableName() . ' csi', 'cs.id = csi.cart_id')
+                ->where('t.cart_id IS NOT NULL')
+        ;
+
+        $filter_keys = array_keys($this->dataGridFilters());
+        if (isset($params['where']) && !empty($params['where'])) {
+            $new_command_objs = DataGridHelper::processFilterableVars($command, $params['where'], $filter_keys, 't', $sub_command);
+            $command = $new_command_objs[0];
+            $sub_command = $new_command_objs[1];
+        }
+
+        $command->select(
+            't.id,
+            t.exchange_billnumber,
+            t.sales_id,
+            t.exchange_date,
+            t.payment_method,
+            t.note,
+            t.cart_id,
+            t.store_id,
+            pss.billnumber,
+            pss.sale_date,
+            cs.discount AS sale_discount,
+            c.grand_total_bill,
+            c.grand_total_returnable,
+            c.grand_total_adjustable,
+            c.grand_total_paid,
+            c.grand_total_balance,
+            c.discount,
+            c.vat,
+            ci.price,
+            ci.quantity,
+            ci.discount AS item_discount,
+            ci.vat AS item_vat,
+            ci.sub_total,
+            ci.is_returned,
+            ci.reference_number,
+            pd.id AS product_id,
+            pd.product_name,
+            (' . $sub_command->getText() . ') AS total_rows'
+        );
+
+        return $command->queryAll();
     }
 
     /**

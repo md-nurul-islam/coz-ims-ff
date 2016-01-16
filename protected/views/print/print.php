@@ -33,7 +33,7 @@
             margin-bottom: 15px;
             text-align: center;
         }
-        .bill-date, .bill-number {
+        .bill-date, .bill-number, .exchange-date, .exchange-bill-number {
             float: right;
             font-size: 14px;
             margin-bottom: 2px;
@@ -75,6 +75,8 @@
         <div class="bill-number">
             Sale Number: <span></span>
         </div>
+        
+        <div class="clearfix"></div>
         
         <div class="exchange-date">
             Exchange Date: <span></span>

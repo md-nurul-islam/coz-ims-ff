@@ -46,14 +46,11 @@
         </div>
     </div>
 
-    <div class="col-sm-12">
+    <div class="col-sm-12 show-later">
+        
         <div class="col-sm-6">
             <div class="box box-info">
-                <div class="box-body sold-items">
-
-
-
-                </div>
+                <div class="box-body sold-items"></div>
             </div>
         </div>
 
@@ -188,7 +185,6 @@
 
     </div>
 </div>
-
 
 <?php $this->renderPartial('//modals/_price'); ?>
 <?php $this->renderPartial('//modals/_vat'); ?>
