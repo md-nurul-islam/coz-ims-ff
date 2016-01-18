@@ -309,10 +309,66 @@ class ExchangeProducts extends CActiveRecord {
 
         return $command->queryAll();
     }
+    
+    public function getExchangeDataForReport($from_date, $to_date) {
+        
+        $from_date = (!empty($from_date)) ? $from_date : date('Y-m-d', Settings::getBdLocalTime());
+        $to_date = (!empty($to_date)) ? $to_date : date('Y-m-d', Settings::getBdLocalTime());
+        
+        $order = 't.id DESC';
+        $command = Yii::app()->db->createCommand()
+                ->from($this->tableName() . ' t')
+                ->join(ExchangeCart::model()->tableName() . ' c', 'c.id = t.cart_id')
+                ->join(ExchangeCartItems::model()->tableName() . ' ci', 'c.id = ci.cart_id')
+                ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = ci.product_details_id')
+                ->join(ProductStockSales::model()->tableName() . ' pss', 'pss.id = t.sales_id')
+                ->join(Cart::model()->tableName() . ' cs', 'cs.id = pss.cart_id')
+                ->join(CartItems::model()->tableName() . ' csi', 'cs.id = csi.cart_id')
+                ->order($order)
+        ;
+        
+        $command->andWhere('t.exchange_date >= :start', array(':start' => $from_date));
+        $command->andWhere('t.exchange_date >= :end', array(':start' => $to_date));
+        
+        $command->select(
+            't.id,
+            t.exchange_billnumber,
+            t.sales_id,
+            t.exchange_date,
+            t.payment_method,
+            t.note,
+            t.cart_id,
+            t.store_id,
+            pss.billnumber,
+            pss.sale_date,
+            cs.discount AS sale_discount,
+            c.grand_total_bill,
+            c.grand_total_returnable,
+            c.grand_total_adjustable,
+            c.grand_total_paid,
+            c.grand_total_balance,
+            c.discount,
+            c.vat,
+            ci.price,
+            ci.quantity,
+            ci.discount AS item_discount,
+            ci.vat AS item_vat,
+            ci.sub_total,
+            ci.is_returned,
+            ci.reference_number,
+            pd.id AS product_id,
+            pd.product_name'
+        );
+
+        return $command->queryAll();
+        
+    }
 
     /**
      * New Codes.
      */
+    
+    
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }

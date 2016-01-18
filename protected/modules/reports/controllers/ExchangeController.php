@@ -37,59 +37,50 @@ class ExchangeController extends Controller {
 
     public function actionIndex() {
         
-        $model_data = false;
-        $msg = '';
+        $this->pageTitle = Yii::app()->name . ' - Exchange Report';
+        $this->pageHeader = 'Exchange Report';
         
+        $model = false;
+        $msg = '';
+
         $today = date('Y-m-d', Settings::getBdLocalTime());
         $from_date = $today;
         $to_date = $today;
-        
+
         $ar_final_data = array();
-        if( Yii::app()->request->isPostRequest && !empty($_POST) ){
-            
+        if (Yii::app()->request->isPostRequest && !empty($_POST)) {
+
             $from_date = Yii::app()->request->getPost('from_date');
-            
             $to_date = Yii::app()->request->getPost('to_date');
-            
-            $model = new ExchangeProducts;
-            
-            $model_ex = $model->exchangeReportData($from_date, $to_date, true);
-            
-            if($model_ex){
-                
-                $model_main = $model->exchangeReportData($from_date, $to_date);
-                $model_data = $this->__merge_arrays($model_main, $model_ex);
-            }
-            
-            if(!$model_data){
+
+            $model = ExchangeProducts::model()->getExchangeDataForReport($from_date, $to_date);
+            if (!$model) {
                 $msg = 'No Record Found in the given date range.';
             }
-            
         }
-        
+
         $this->render('index', array(
-            'model_data' => $model_data,
+            'model' => $model,
             'msg' => $msg,
             'today' => $today,
             'from_date' => $from_date,
             'to_date' => $to_date,
         ));
     }
-    
-    private function __merge_arrays($ar_1, $ar_2){
-        
+
+    private function __merge_arrays($ar_1, $ar_2) {
+
 //        echo '<pre>';
 //        var_dump($ar_2);exit;
-        
+
         foreach ($ar_1 as $key => $value) {
-            if(array_key_exists($key, $ar_2)){
+            if (array_key_exists($key, $ar_2)) {
                 $ar_1[$key]['ex_product'] = $ar_2[$key]['ex_product'];
             }
         }
 //        echo '<pre>';
 //        var_dump($ar_1);exit;
         return $ar_1;
-        
     }
 
 }
