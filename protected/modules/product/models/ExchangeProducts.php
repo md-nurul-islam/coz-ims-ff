@@ -371,7 +371,11 @@ class ExchangeProducts extends CActiveRecord {
             return false;
         }
         
+        $ar_sale_bills = array_map(function ($row) {
+            var_dump($row);exit;
+        }, $param);
         
+        var_dump($param);exit;
         
     }
 
