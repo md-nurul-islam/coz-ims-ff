@@ -325,10 +325,11 @@ class ExchangeProducts extends CActiveRecord {
                 ->join(Cart::model()->tableName() . ' cs', 'cs.id = pss.cart_id')
                 ->join(CartItems::model()->tableName() . ' csi', 'cs.id = csi.cart_id')
                 ->order($order)
+                ->group('ci.id')
         ;
         
-        $command->andWhere('t.exchange_date >= :start', array(':start' => $from_date));
-        $command->andWhere('t.exchange_date >= :end', array(':start' => $to_date));
+        $command->andWhere('DATE(t.exchange_date) >= :start', array(':start' => $from_date));
+        $command->andWhere('DATE(t.exchange_date) <= :end', array(':end' => $to_date));
         
         $command->select(
             't.id,
@@ -360,7 +361,17 @@ class ExchangeProducts extends CActiveRecord {
             pd.product_name'
         );
 
-        return $command->queryAll();
+        return $this->prepareExchageReportData($command->queryAll());
+        
+    }
+    
+    public function prepareExchageReportData($param) {
+        
+        if(empty($param)) {
+            return false;
+        }
+        
+        
         
     }
 

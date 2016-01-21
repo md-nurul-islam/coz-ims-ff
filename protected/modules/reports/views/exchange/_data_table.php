@@ -6,7 +6,7 @@
         <div class="box-body">
 
             <div class="center col-lg-7">
-                <h3 class="text-aqua">Sales Report Starting from <?php echo $from_date; ?> till <?php echo $to_date; ?></h3>
+                <h3 class="text-aqua">Exchange Report Starting from <?php echo $from_date; ?> till <?php echo $to_date; ?></h3>
             </div>
 
             <legend></legend>
@@ -16,6 +16,9 @@
                 <table class="table table-bordered table-striped table-hover table-condensed">
 
                     <thead>
+                        <tr>
+                            <th colspan="5">Returned items for Bill Number: </th>
+                        </tr>
                         <tr>
                             <th>Bill Number</th>
                             <th>Ref. Number</th>
@@ -51,9 +54,6 @@
                             $vat = $v['vat'];
                             unset($v['vat']);
 
-                            $is_advance = $v['is_advance'];
-                            unset($v['is_advance']);
-
                             $balance = $v['balance'];
                             unset($v['balance']);
 
@@ -74,7 +74,7 @@
 
                                 <tr>
                                     <?php if ($i == 0) { ?>
-                                        <td rowspan="<?php echo $num_rows; ?>"><?php echo $k; ?><?php echo ($is_advance == 1) ? ' (Adv)' : ''; ?></td>
+                                        <td rowspan="<?php echo $num_rows; ?>"><?php echo $k; ?></td>
                                     <?php } ?>
 
                                     <td><?php echo $c['ref_num']; ?></td>

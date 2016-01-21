@@ -54,6 +54,7 @@ class ExchangeController extends Controller {
             $to_date = Yii::app()->request->getPost('to_date');
 
             $model = ExchangeProducts::model()->getExchangeDataForReport($from_date, $to_date);
+            var_dump($model);exit;
             if (!$model) {
                 $msg = 'No Record Found in the given date range.';
             }
