@@ -277,7 +277,7 @@ class ExchangeProducts extends CActiveRecord {
         }
 
         $command->select(
-            't.id,
+                't.id,
             t.exchange_billnumber,
             t.sales_id,
             t.exchange_date,
@@ -309,12 +309,18 @@ class ExchangeProducts extends CActiveRecord {
 
         return $command->queryAll();
     }
-    
+
     public function getExchangeDataForReport($from_date, $to_date) {
-        
+
+        $store_id = 1;
+
+        if (!Yii::app()->user->isSuperAdmin) {
+            $store_id = Yii::app()->user->storeId;
+        }
+
         $from_date = (!empty($from_date)) ? $from_date : date('Y-m-d', Settings::getBdLocalTime());
         $to_date = (!empty($to_date)) ? $to_date : date('Y-m-d', Settings::getBdLocalTime());
-        
+
         $order = 't.id DESC';
         $command = Yii::app()->db->createCommand()
                 ->from($this->tableName() . ' t')
@@ -327,12 +333,13 @@ class ExchangeProducts extends CActiveRecord {
                 ->order($order)
                 ->group('ci.id')
         ;
-        
+
         $command->andWhere('DATE(t.exchange_date) >= :start', array(':start' => $from_date));
         $command->andWhere('DATE(t.exchange_date) <= :end', array(':end' => $to_date));
-        
+        $command->andWhere('t.store_id = :sid', array(':sid' => $store_id));
+
         $command->select(
-            't.id,
+                't.id,
             t.exchange_billnumber,
             t.sales_id,
             t.exchange_date,
@@ -362,28 +369,83 @@ class ExchangeProducts extends CActiveRecord {
         );
 
         return $this->prepareExchageReportData($command->queryAll());
-        
     }
-    
-    public function prepareExchageReportData($param) {
-        
-        if(empty($param)) {
+
+    public function prepareExchageReportData($ar_exchange_data) {
+
+        if (empty($ar_exchange_data)) {
             return false;
         }
-        
-        $ar_sale_bills = array_map(function ($row) {
-            var_dump($row);exit;
-        }, $param);
-        
-        var_dump($param);exit;
-        
+
+        $ar_sales_ids = array_map(function ($row) {
+            return $row['billnumber'];
+        }, $ar_exchange_data);
+
+        $ar_sales_ids = array_unique($ar_sales_ids);
+
+        $grand_sum_exchanged_sub_total = 0.00;
+        $grand_real_returned_sub_total = 0.00;
+        $grand_sum_adjustable = 0.00;
+
+        foreach ($ar_sales_ids as $sale_id) {
+
+            $_data = array();
+            $sum_returned_sub_total = 0.00;
+            $sum_exchanged_sub_total = 0.00;
+            $real_returned_sub_total = 0.00;
+            
+            foreach ($ar_exchange_data as $row) {
+
+
+                if ($sale_id == $row['billnumber']) {
+
+                    if ($row['is_returned'] == 1) {
+                        $_data_returned_items['reference_number'] = $row['reference_number'];
+                        $_data_returned_items['product_name'] = $row['product_name'];
+                        $_data_returned_items['quantity'] = $row['quantity'];
+                        $_data_returned_items['price'] = $row['price'];
+                        $_data_returned_items['sub_total'] = $row['sub_total'];
+                        $sum_returned_sub_total += floatval($row['sub_total']);
+                        
+                        $_data[$sale_id][$row['exchange_billnumber']]['returned_items'][] = $_data_returned_items;
+                    } else {
+                        $_data_exchanged_items['reference_number'] = $row['reference_number'];
+                        $_data_exchanged_items['product_name'] = $row['product_name'];
+                        $_data_exchanged_items['quantity'] = $row['quantity'];
+                        $_data_exchanged_items['price'] = $row['price'];
+                        $_data_exchanged_items['sub_total'] = $row['sub_total'];
+                        $sum_exchanged_sub_total += floatval($row['sub_total']);
+
+                        $_data[$sale_id][$row['exchange_billnumber']]['exchanged_items'][] = $_data_exchanged_items;
+                    }
+                    $real_returned_sub_total = $sum_returned_sub_total - floatval($row['sale_discount']);
+                    $sum_adjustable = $sum_exchanged_sub_total - $real_returned_sub_total;
+                }
+
+                $_data[$sale_id]['sum_returned_sub_total'] = $real_returned_sub_total;
+                $_data[$sale_id]['sum_exchanged_sub_total'] = $sum_exchanged_sub_total;
+                $_data[$sale_id]['sum_adjustable'] = $sum_adjustable;
+            }
+            
+            $grand_real_returned_sub_total += $real_returned_sub_total;
+            $grand_sum_exchanged_sub_total += $sum_exchanged_sub_total;
+            $grand_sum_adjustable += $sum_adjustable;
+            
+            $response['grand_real_returned_sub_total'] = $grand_real_returned_sub_total;
+            $response['grand_sum_exchanged_sub_total'] = $grand_sum_exchanged_sub_total;
+            $response['grand_sum_adjustable'] = $grand_sum_adjustable;
+            $response[] = $_data;
+        }
+
+//        echo '<pre>';
+//        CVarDumper::dump($response);
+//        exit;
+        return $response;
     }
 
     /**
      * New Codes.
      */
-    
-    
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }

@@ -1,3 +1,12 @@
+<?php
+$grand_real_returned_sub_total = $model['grand_real_returned_sub_total'];
+$grand_sum_exchanged_sub_total = $model['grand_sum_exchanged_sub_total'];
+$grand_sum_adjustable = $model['grand_sum_adjustable'];
+
+unset($model['grand_real_returned_sub_total']);
+unset($model['grand_sum_exchanged_sub_total']);
+unset($model['grand_sum_adjustable']);
+?>
 
 <div class="col-lg-12">
 
@@ -17,9 +26,6 @@
 
                     <thead>
                         <tr>
-                            <th colspan="5">Returned items for Bill Number: </th>
-                        </tr>
-                        <tr>
                             <th>Bill Number</th>
                             <th>Ref. Number</th>
                             <th>Item</th>
@@ -32,154 +38,67 @@
                     <tbody>
 
                         <?php
-                        $j = 0;
-                        $num_records = sizeof($model);
+                        $i = 0;
+                        foreach ($model as $data) {
 
-                        $total_gross = 0.00;
-                        $total_discount = 0.00;
-                        $total_vat = 0.00;
+                            foreach ($data as $sale_bill_number => $records) {
+                                $sum_returned_sub_total = $records['sum_returned_sub_total'];
+                                $sum_exchanged_sub_total = $records['sum_exchanged_sub_total'];
+                                $sum_adjustable = $records['sum_adjustable'];
 
-                        $total_balance = 0.00;
-                        $total_amount_given = 0.00;
-
-                        $total_net = 0.00;
-
-                        foreach ($model as $k => $v) {
-
-                            $j++;
-
-                            $discount = $v['discount'];
-                            unset($v['discount']);
-
-                            $vat = $v['vat'];
-                            unset($v['vat']);
-
-                            $balance = $v['balance'];
-                            unset($v['balance']);
-
-                            $gross = $v['bill_total'] + $vat;
-                            unset($v['bill_total']);
-
-                            $net = ($gross - $discount) - $vat;
-
-                            $amount_given = $v['amount_given'];
-                            unset($v['amount_given']);
-                            ?>
-
-                            <?php
-                            $num_rows = sizeof($v['cart_items']);
-                            $i = 0;
-                            foreach ($v['cart_items'] as $c) {
+                                unset($records['sum_returned_sub_total']);
+                                unset($records['sum_exchanged_sub_total']);
+                                unset($records['sum_adjustable']);
                                 ?>
 
                                 <tr>
-                                    <?php if ($i == 0) { ?>
-                                        <td rowspan="<?php echo $num_rows; ?>"><?php echo $k; ?></td>
-                                    <?php } ?>
-
-                                    <td><?php echo $c['ref_num']; ?></td>
-                                    <td>
-                                        <?php echo $c['prod_name']; ?>
-                                        <span class="label label-warning"><?php echo $c['color_name']; ?></span>
-                                        <span class="label label-success "><?php echo $c['size_name']; ?></span>
-                                        <span class="label label-info"><?php echo $c['grade_name']; ?></span>
-                                    </td>
-                                    <td><?php echo $c['qty']; ?></td>
-                                    <td><?php echo $c['price']; ?></td>
-                                    <td><?php echo number_format($c['item_sub_total'], 2); ?></td>
-                                    <?php ?>
+                                    <td colspan="6">Exchange record for Bill Number: <?php echo $sale_bill_number; ?></td>
                                 </tr>
 
                                 <?php
-                                $i++;
+//        echo '<pre>';
+//        CVarDumper::dump($records);
+//        exit;
+                                foreach ($records as $exchange_bill_number => $exchange_data) {
+                                    $num_rows = count($exchange_data['returned_items']) + count($exchange_data['exchanged_items']);
+                                    $j = 0;
+                                    foreach ($exchange_data['returned_items'] as $ret_item) {
+//                                            var_dump($ret_item);
+//                                            exit;
+                                        ?>
+                                        <tr>
+                                            <?php // if ($j == 0) { ?>
+                                                <!--<td rowspan="<?php echo $num_rows; ?>"><?php echo $exchange_bill_number; ?></td>-->
+                                            <?php // } ?>
+                                            <td>&nbsp;</td>
+                                            <td>
+                                                <?php echo '&nbsp;'; ?>
+                                                <span class="label label-warning"><?php echo '&nbsp;'; ?></span>
+                                                <span class="label label-success "><?php echo '&nbsp;'; ?></span>
+                                                <span class="label label-info"><?php echo '&nbsp;'; ?></span>
+                                            </td>
+                                            <td><?php echo '&nbsp;'; ?></td>
+                                            <td><?php echo '&nbsp;'; ?></td>
+                                            <td><?php echo '&nbsp;'; ?></td>
+                                            <td><?php echo '&nbsp;'; ?></td>
+                                            <?php ?>
+                                        </tr>
+                                        <?php
+                                        $j++;
+                                    }
+                                }
+                                ?>
+
+
+
+
+                                <?php
                             }
-                            ?>
 
-                            <?php if ($advance_sale_list) { ?>
-                                <tr>
-                                    <td colspan="5" style="text-align: right;">Advance</td>
-                                    <td><?php echo number_format($amount_given, 2); ?></td>
-                                </tr>
-                            <?php } ?>
-
-                            <?php if ($advance_sale_list) { ?>
-                                <tr>
-                                    <td colspan="5" style="text-align: right;">Due</td>
-                                    <td><?php echo number_format($balance, 2); ?></td>
-                                </tr>
-                            <?php } ?>
-
-                            <tr>
-                                <td colspan="5" style="text-align: right;">Vat</td>
-                                <td><?php echo number_format($vat, 2); ?></td>
-                            </tr>
-
-                            <tr>
-                                <td colspan="5" style="text-align: right;">Discount</td>
-                                <td><?php echo number_format($discount, 2); ?></td>
-                            </tr>
-
-                            <tr>
-                                <td colspan="5" style="text-align: right;">Gross</td>
-                                <td><?php echo number_format($gross, 2); ?></td>
-                            </tr>
-
-                            <tr>
-                                <td colspan="5" style="text-align: right;">Net</td>
-                                <td><?php echo number_format($net, 2); ?></td>
-                            </tr>
-
-                            <?php if ($j < $num_records) { ?>
-                                <tr><td colspan="6">&nbsp;</td></tr>
-                            <?php } ?>
-                            <?php
-                            $total_gross += $gross;
-                            $total_vat += $vat;
-                            $total_net += $net;
-
-                            if ($advance_sale_list) {
-                                $total_amount_given += $amount_given;
-                            }
-                            $total_discount += $discount;
-                            $total_balance += $balance;
+                            $i++;
                         }
                         ?>
-                        <tr><td colspan="6" style="border-bottom: none;">&nbsp;</td></tr>
-                        <tr><td colspan="6" style="border-top: none;">&nbsp;</td></tr>
 
-                        <tr>
-                            <td colspan="5" style="text-align: right;">Total Gross</td>
-                            <td><?php echo number_format($total_gross, 2); ?></td>
-                        </tr>
-
-                        <?php if ($advance_sale_list) { ?>
-                            <tr>
-                                <td colspan="5" style="text-align: right;">Total Advance</td>
-                                <td><?php echo number_format($total_amount_given, 2); ?></td>
-                            </tr>
-                        <?php } ?>
-
-                        <tr>
-                            <td colspan="5" style="text-align: right;">Total Vat</td>
-                            <td><?php echo number_format($total_vat, 2); ?></td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="5" style="text-align: right;">Total Discount</td>
-                            <td><?php echo number_format($total_discount, 2); ?></td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="5" style="text-align: right;">Total Net</td>
-                            <td><?php echo number_format($total_net, 2); ?></td>
-                        </tr>
-
-                        <?php if ($advance_sale_list) { ?>
-                            <tr>
-                                <td colspan="5" style="text-align: right;">Total Due</td>
-                                <td><?php echo number_format($total_balance, 2); ?></td>
-                            </tr>
-                        <?php } ?>
 
                     </tbody>
 
