@@ -217,7 +217,7 @@ $(document).ready(function () {
      * Exchange Products
      * */
     $(document).off('blur', '#ProductStockSales_billnumber').on('blur', '#ProductStockSales_billnumber', function () {
-        
+
         $('.show-later').hide();
         var billnumber = $(this).val();
 
@@ -396,9 +396,15 @@ $(document).ready(function () {
 
     });
 
-    $(document).off('blur', '#ref_num').on('blur', '#ref_num', function () {
+    $(document).off('blur', '#ref_num').on('blur', '#ref_num', function (e) {
         var ref_num = $(this).val();
         if (ref_num == '') {
+            return false;
+        }
+
+        if ($('.exchangables').find('.exchange:checkbox:checked').length < 1) {
+            alert('No items selected to exchange.');
+            e.preventDefault();
             return false;
         }
 
@@ -482,7 +488,14 @@ $(document).ready(function () {
         });
     });
 
-    $(document).off('click', '.btn-payment').on('click', '.btn-payment', function () {
+    $(document).off('click', '.btn-payment').on('click', '.btn-payment', function (e) {
+
+        if ($('.exchangables').find('.exchange:checkbox:checked').length < 1) {
+            alert('No items selected to exchange.');
+            e.preventDefault();
+            return false;
+        }
+
         var grand_total = parseFloat($('#cart-total tr:last-child th:eq(2)').text()).toFixed(2);
         var grand_total_items = $('#cart-total tr:last-child th:eq(1)').text();
         var cart_id = $('#cart_id').val();
@@ -592,23 +605,23 @@ $(document).ready(function () {
         $('.exchangables').find('.exchange').each(function () {
             if ($(this).is(':checked')) {
                 var exchange_data_cart = {};
-                
+
                 var prod_id = $(this).closest('tr').find('td.product_info').attr('data-id');
                 var quantity = parseInt($(this).closest('tr').find('td.quantity').attr('data-exchanging_quantity'));
                 var price = parseFloat($(this).closest('tr').find('td.price').text());
                 var discount = parseFloat($(this).closest('tr').find('td.item_discount').text());
                 var vat = parseFloat($(this).closest('tr').find('td.item_vat').text());
                 var sub_btotal = parseFloat($(this).closest('tr').find('td.sub_btotal').text());
-                
+
                 exchange_data_cart['prod_id'] = prod_id;
                 exchange_data_cart['exchanging_quantity'] = quantity;
-                
+
                 exchange_data[prod_id] = exchange_data_cart;
             }
         });
 
         post_data['exchange_data'] = exchange_data;
-        
+
         $.ajax({
             url: '/cart/payment',
             type: 'post',
@@ -630,13 +643,13 @@ $(document).ready(function () {
 
                     $('.print .bill-date span').html('');
                     $('.print .bill-date span').html(sale_date);
-                    
+
                     $('.print .exchange-date span').html('');
                     $('.print .exchange-date span').html(exchange_date);
 
                     $('.print .bill-number span').html('');
                     $('.print .bill-number span').html(bill_number);
-                    
+
                     $('.print .exchange-bill-number span').html('');
                     $('.print .exchange-bill-number span').html(exchange_bill_number);
 

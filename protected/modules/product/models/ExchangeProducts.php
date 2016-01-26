@@ -396,7 +396,6 @@ class ExchangeProducts extends CActiveRecord {
             
             foreach ($ar_exchange_data as $row) {
 
-
                 if ($sale_id == $row['billnumber']) {
 
                     if ($row['is_returned'] == 1) {
@@ -421,9 +420,10 @@ class ExchangeProducts extends CActiveRecord {
                     $real_returned_sub_total = $sum_returned_sub_total - floatval($row['sale_discount']);
                     $sum_adjustable = $sum_exchanged_sub_total - $real_returned_sub_total;
                 }
-
+                
                 $_data[$sale_id]['sum_returned_sub_total'] = $real_returned_sub_total;
                 $_data[$sale_id]['sum_exchanged_sub_total'] = $sum_exchanged_sub_total;
+//                var_dump($row['exchange_billnumber'] . '==' .$sum_exchanged_sub_total);
                 $_data[$sale_id]['sum_adjustable'] = $sum_adjustable;
             }
             
@@ -436,10 +436,11 @@ class ExchangeProducts extends CActiveRecord {
             $response['grand_sum_adjustable'] = $grand_sum_adjustable;
             $response[] = $_data;
         }
-
+        
 //        echo '<pre>';
 //        CVarDumper::dump($response);
 //        exit;
+//        
         return $response;
     }
 
