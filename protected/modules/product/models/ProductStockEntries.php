@@ -337,6 +337,7 @@ class ProductStockEntries extends CActiveRecord {
                 ->from($this->tableName() . ' t')
                 ->join(PurchaseCart::model()->tableName() . ' c', 'c.id = t.purchase_cart_id')
                 ->join(PurchaseCartItems::model()->tableName() . ' ci', 'c.id = ci.cart_id')
+                ->join(ReferenceNumbers::model()->tableName() . ' rn', 'rn.id = ci.reference_number_id')
                 ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = ci.product_details_id')
                 ->leftJoin(ProductColor::model()->tableName() . ' pc', 'pd.id = pc.product_details_id')
                 ->leftJoin(Color::model()->tableName() . ' cl', 'cl.id = pc.color_id')
@@ -361,7 +362,7 @@ class ProductStockEntries extends CActiveRecord {
                 c.discount,
                 c.vat,
                 c.grand_total,
-                ci.reference_number,
+                rn.reference_number,
                 ci.cost,
                 ci.price,
                 ci.quantity,
