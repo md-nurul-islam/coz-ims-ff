@@ -1,6 +1,6 @@
 var cart_row = 1;
 function add_to_cart(prod_id, prod_name, cur_stock, price, vat, discount, reference_number) {
-    
+
     var prod_bg_color_class = 'label label-default';
     var cart_row_html = '';
     var row_exists_id = check_exists(prod_name, prod_id);
@@ -62,7 +62,7 @@ function calculate_sub_total(cart_row_id) {
     var price = parseFloat(cart_body.find('tr#' + cart_row_id + ' td:eq(2) .sell_price').val());
     var sub_total = parseFloat(qty * price);
     var reference_number = parseInt(cart_body.find('tr#' + cart_row_id + ' td:eq(2) .cart_reference_number').val());
-    
+
     cart_body.find('tr#' + cart_row_id + ' td:eq(2) .cart_qty_lbl').text(qty);
     cart_body.find('tr#' + cart_row_id + ' td:eq(3)').text(sub_total.toFixed(2));
 
@@ -472,10 +472,12 @@ $(document).ready(function () {
 
     $(document).off('click', '#paymetn-btn-paid').on('click', '#paymetn-btn-paid', function (e) {
         e.preventDefault();
+        var total_balance = 0.00;
         var cart_id = $('#payment_cart_row_id_container').val();
         var note = $('#note').val();
         var payment_method = $('#payment_mode').val();
         var payment_amount = $('#paying_amount').val();
+        var payable = parseFloat($('#payment-cart-row #payment-total-payable').text());
         var card_number = $('#card_number').val();
         var card_cvc = $('#card_cvc').val();
         var card_type = $('#card_option').val();
@@ -483,6 +485,12 @@ $(document).ready(function () {
         var sale_date = $('#ProductStockSales_sale_date').val();
         var due_payment_date = $('#ProductStockSales_due_payment_date').val();
         var post_data = {};
+
+        if (parseFloat(payment_amount) < payable) {
+            total_balance = payable - payment_amount;
+            alert('Bill amount is not completly paid. Need BDT ' + total_balance + 'more to process the sale.');
+            return false;
+        }
 
         post_data['type'] = 'sale';
         post_data['note'] = note;

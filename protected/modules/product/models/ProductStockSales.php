@@ -40,7 +40,7 @@ class ProductStockSales extends CActiveRecord {
 
     public $product_name;
     public $pageSize = 20;
-    public $advance_sale_list = FALSE;
+    public $advance_sale = FALSE;
 
     /**
      * @return string the associated database table name

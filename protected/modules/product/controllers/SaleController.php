@@ -62,124 +62,19 @@ class SaleController extends Controller {
 
         $model = new ProductStockSales;
         $edit = FALSE;
-        $model->advance_sale_list = FALSE;
+        $model->advance_sale = FALSE;
 
         $this->pageTitle = Yii::app()->name . ' - Sale';
         $this->pageHeader = 'Sale Product';
-
+        
+        $store_id = 1;
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
-        } else {
-            $store_id = 1;
         }
-
+        
         $ar_cart = array();
-
-        if (isset($_POST['ProductStockSales'])) {
-            $stock_info = new ProductStockAvail;
-
-            $bill_number = $_POST['ProductStockSales']['billnumber'];
-            $sale_date = date('Y-m-d', strtotime($_POST['ProductStockSales']['sale_date']));
-            $dis_amount = $_POST['ProductStockSales']['dis_amount'];
-            $grand_total_payable = $_POST['ProductStockSales']['grand_total_payable'];
-            $grand_total_paid = $_POST['ProductStockSales']['grand_total_paid'];
-            $grand_total_balance = $_POST['ProductStockSales']['grand_total_balance'];
-            $due_payment_date = date('Y-m-d', strtotime($_POST['ProductStockSales']['due_payment_date']));
-            $payment_type = $_POST['ProductStockSales']['payment_method'];
-            $note = $_POST['ProductStockSales']['note'];
-            $sales_id = $this->generateSalesId();
-
-            $ar_product_details_id = array();
-            $ar_product_details_name = array();
-            $ar_ref_num = array();
-            $ar_quantity = array();
-            $ar_purchase_price = array();
-            $ar_selling_price = array();
-            $ar_item_subtotal = array();
-            $ar_serial_num = array();
-            $ar_cur_stock = array();
-
-            $limit = sizeof($_POST['ProductStockSales']['product_details_id']);
-            $count = 0;
-
-            for ($i = 0; $i < $limit; $i++) {
-
-                $model = new ProductStockSales;
-
-                $model->billnumber = $bill_number;
-                $model->sale_date = $sale_date;
-                $model->supplier_id = (!empty($supplier_id)) ? $supplier_id : NULL;
-                $model->dis_amount = $dis_amount;
-                $model->grand_total_payable = $grand_total_payable;
-
-                if (floatval($grand_total_paid) > 0) {
-                    $model->grand_total_paid = $grand_total_paid;
-                }
-
-                $model->grand_total_balance = $grand_total_balance;
-                $model->due_payment_date = $due_payment_date;
-                $model->payment_method = $payment_type;
-                $model->note = $note;
-                $model->sales_id = $sales_id;
-                $model->store_id = $store_id;
-
-                $model->product_details_id = $_POST['ProductStockSales']['product_details_id'][$i];
-                $model->ref_num = $_POST['ProductStockSales']['ref_num'][$i];
-                $model->quantity = intval($_POST['ProductStockSales']['quantity'][$i]);
-                $model->item_selling_price = $_POST['ProductStockSales']['item_selling_price'][$i];
-                $model->item_subtotal = $_POST['ProductStockSales']['item_subtotal'][$i];
-                $model->serial_num = $i;
-
-                if (!$model->validate()) {
-                    $ar_product_details_id[] = $model->product_details_id;
-                    $ar_product_details_name[] = $_POST['ProductStockSales']['product_details_name'][$i];
-                    $ar_ref_num[] = $model->ref_num;
-                    $ar_quantity[] = $model->quantity;
-                    $ar_selling_price[] = $model->item_selling_price;
-                    $ar_item_subtotal[] = $model->item_subtotal;
-                    $ar_serial_num[] = $model->serial_num;
-                    $ar_cur_stock[] = $_POST['cur_stock'][$i];
-                } else {
-
-                    $mod_pro_entr = new ProductStockEntries();
-                    $obj_pro_entr = $mod_pro_entr->findByAttributes(array('product_details_id' => $model->product_details_id, 'store_id' => $store_id, 'ref_num' => $model->ref_num));
-
-                    $stock_info = $stock_info->getStockByProdId((int) $model->product_details_id, $store_id, $obj_pro_entr->grade_id);
-
-                    $cur_stock = intval($stock_info->quantity);
-
-                    if (($cur_stock > 0) && ($model->quantity <= $cur_stock)) {
-
-                        $new_stock = $cur_stock - $model->quantity;
-
-                        $stock_info->quantity = $new_stock;
-                        $stock_info->update();
-
-                        if ($model->insert()) {
-                            $count++;
-                        }
-                    }
-                }
-            }
-
-            if ($count == $limit) {
-                Yii::app()->user->setFlash('success', 'Products successfully sold.');
-                $this->redirect(array('print', 'sales_id' => $model->sales_id));
-            }
-
-            $ar_cart['product_details_id'] = $ar_product_details_id;
-            $ar_cart['product_details_name'] = $ar_product_details_name;
-            $ar_cart['ref_num'] = $ar_ref_num;
-            $ar_cart['quantity'] = $ar_quantity;
-            $ar_cart['selling_price'] = $ar_selling_price;
-            $ar_cart['item_subtotal'] = $ar_item_subtotal;
-            $ar_cart['serial_num'] = $ar_serial_num;
-            $ar_cart['cur_stock'] = $ar_cur_stock;
-        }
-
         $this->render('create', array(
             'model' => $model,
-            'ar_cart' => $ar_cart,
             'edit' => $edit,
         ));
     }
@@ -188,121 +83,18 @@ class SaleController extends Controller {
 
         $model = new ProductStockSales;
         $edit = FALSE;
-        $model->advance_sale_list = TRUE;
+        $model->advance_sale = TRUE;
 
         $this->pageTitle = Yii::app()->name . ' - Advance Sale Order';
+        $this->pageHeader = 'Advance Sale Order';
 
+        $store_id = 1;
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
-        } else {
-            $store_id = 1;
         }
-
-        $ar_cart = array();
-
-        if (isset($_POST['ProductStockSales'])) {
-            $stock_info = new ProductStockAvail;
-
-            $bill_number = $_POST['ProductStockSales']['billnumber'];
-            $sale_date = date('Y-m-d', strtotime($_POST['ProductStockSales']['sale_date']));
-            $dis_amount = $_POST['ProductStockSales']['dis_amount'];
-            $grand_total_payable = $_POST['ProductStockSales']['grand_total_payable'];
-            $grand_total_paid = $_POST['ProductStockSales']['grand_total_paid'];
-            $grand_total_balance = $_POST['ProductStockSales']['grand_total_balance'];
-            $due_payment_date = date('Y-m-d', strtotime($_POST['ProductStockSales']['due_payment_date']));
-            $payment_type = $_POST['ProductStockSales']['payment_method'];
-            $note = $_POST['ProductStockSales']['note'];
-            $sales_id = $this->generateSalesId();
-
-            $ar_product_details_id = array();
-            $ar_product_details_name = array();
-            $ar_ref_num = array();
-            $ar_quantity = array();
-            $ar_purchase_price = array();
-            $ar_selling_price = array();
-            $ar_item_subtotal = array();
-            $ar_serial_num = array();
-            $ar_cur_stock = array();
-
-            $limit = sizeof($_POST['ProductStockSales']['product_details_id']);
-            $count = 0;
-
-            for ($i = 0; $i < $limit; $i++) {
-
-                $model = new ProductStockSales;
-
-                $model->billnumber = $bill_number;
-                $model->sale_date = $sale_date;
-                $model->supplier_id = (!empty($supplier_id)) ? $supplier_id : NULL;
-                $model->dis_amount = $dis_amount;
-                $model->grand_total_payable = $grand_total_payable;
-
-                if (floatval($grand_total_paid) > 0) {
-                    $model->grand_total_paid = $grand_total_paid;
-                }
-
-                $model->grand_total_balance = $grand_total_balance;
-                $model->due_payment_date = $due_payment_date;
-                $model->payment_method = $payment_type;
-                $model->note = $note;
-                $model->sales_id = $sales_id;
-                $model->store_id = $store_id;
-
-                $model->product_details_id = $_POST['ProductStockSales']['product_details_id'][$i];
-                $model->ref_num = $_POST['ProductStockSales']['ref_num'][$i];
-                $model->quantity = intval($_POST['ProductStockSales']['quantity'][$i]);
-                $model->item_selling_price = $_POST['ProductStockSales']['item_selling_price'][$i];
-                $model->item_subtotal = $_POST['ProductStockSales']['item_subtotal'][$i];
-                $model->serial_num = $i;
-                $model->is_advance = 1;
-
-                if (!$model->validate()) {
-                    $ar_product_details_id[] = $model->product_details_id;
-                    $ar_product_details_name[] = $_POST['ProductStockSales']['product_details_name'][$i];
-                    $ar_ref_num[] = $model->ref_num;
-                    $ar_quantity[] = $model->quantity;
-                    $ar_selling_price[] = $model->item_selling_price;
-                    $ar_item_subtotal[] = $model->item_subtotal;
-                    $ar_serial_num[] = $model->serial_num;
-                    $ar_cur_stock[] = $_POST['cur_stock'][$i];
-                } else {
-
-                    $stock_info = $stock_info->getStockByProdId((int) $model->product_details_id, $store_id);
-
-                    $cur_stock = intval($stock_info->quantity);
-
-                    if (($cur_stock > 0) && ($model->quantity <= $cur_stock)) {
-
-                        $new_stock = $cur_stock - $model->quantity;
-
-                        $stock_info->quantity = $new_stock;
-                        $stock_info->update();
-
-                        if ($model->insert()) {
-                            $count++;
-                        }
-                    }
-                }
-            }
-
-            if ($count == $limit) {
-                Yii::app()->user->setFlash('success', 'Products successfully sold.');
-                $this->redirect(array('print', 'sales_id' => $model->sales_id));
-            }
-
-            $ar_cart['product_details_id'] = $ar_product_details_id;
-            $ar_cart['product_details_name'] = $ar_product_details_name;
-            $ar_cart['ref_num'] = $ar_ref_num;
-            $ar_cart['quantity'] = $ar_quantity;
-            $ar_cart['selling_price'] = $ar_selling_price;
-            $ar_cart['item_subtotal'] = $ar_item_subtotal;
-            $ar_cart['serial_num'] = $ar_serial_num;
-            $ar_cart['cur_stock'] = $ar_cur_stock;
-        }
-
+        
         $this->render('create', array(
             'model' => $model,
-            'ar_cart' => $ar_cart,
             'edit' => $edit,
         ));
     }
@@ -337,7 +129,7 @@ class SaleController extends Controller {
         } else {
             $model->store_id = 1;
         }
-        $model->advance_sale_list = TRUE;
+        $model->advance_sale = TRUE;
 
         $this->render('index', array(
             'model' => $model,
@@ -381,10 +173,10 @@ class SaleController extends Controller {
         $cur_date = strtotime(date('Y-m-d', Settings::getBdLocalTime()));
         $sale_date = strtotime($model_data[0]->sale_date);
 
-        $model->advance_sale_list = FALSE;
+        $model->advance_sale = FALSE;
 
         if ($sale_date > $cur_date) {
-            $model->advance_sale_list = TRUE;
+            $model->advance_sale = TRUE;
         }
 
         if (!Yii::app()->user->isSuperAdmin) {

@@ -58,7 +58,7 @@
                             $time = Settings::getBdLocalTime();
                             $due_time = $time;
 
-                            if ($model->advance_sale_list) {
+                            if ($model->advance_sale) {
                                 $time = strtotime(date('Y-m-d', $time) . '+1 day');
                                 $due_time = strtotime(date('Y-m-d', $time) . '+1 day');
                             }
@@ -115,7 +115,7 @@
                                 ),
                                 'htmlOptions' => array(
                                     'style' => 'height: 34px;',
-                                    'readonly' => true,
+                                    'readonly' => (!$model->advance_sale) ? true : FALSE,
                                     'class' => 'form-control',
                                     'placeholder' => 'Due Payment Date',
                                 )
@@ -236,7 +236,13 @@
 
 <?php $this->renderPartial('//modals/_price'); ?>
 <?php $this->renderPartial('//modals/_vat'); ?>
-<?php $this->renderPartial('//modals/_payment'); ?>
+<?php
+if ($model->advance_sale) {
+    $this->renderPartial('//modals/_advance_payment');
+} else {
+    $this->renderPartial('//modals/_payment');
+}
+?>
 <?php $this->renderPartial('//print/print'); ?>
 
 <style type="text/css">
@@ -332,7 +338,11 @@
 
 <?php
 $cs = Yii::app()->getClientScript();
-$cs->registerScriptFile('/js/custom/cart.js', CClientScript::POS_END);
+if ($model->advance_sale) {
+    $cs->registerScriptFile('/js/custom/advance_sale_cart.js', CClientScript::POS_END);
+} else {
+    $cs->registerScriptFile('/js/custom/cart.js', CClientScript::POS_END);
+}
 $cs->registerScriptFile('/js/custom/print.js', CClientScript::POS_END);
 ?>
 <script type="text/javascript">

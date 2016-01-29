@@ -38,7 +38,7 @@ class ManageController extends Controller {
                 'users' => array('@'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('update_stock', 'delete', 'barcode', 'itembarcode', 'downloadBarcode', 'barcodeFileList'),
+                'actions' => array('delete', 'barcode', 'itembarcode', 'downloadBarcode', 'barcodeFileList'),
                 'expression' => '(!Yii::app()->user->isGuest) && (Yii::app()->user->isSuperAdmin || Yii::app()->user->isStoreAdmin)',
             ),
             array('deny', // deny all users
@@ -190,24 +190,43 @@ class ManageController extends Controller {
             $prod_model->vat = 0.00;
             $prod_model->discount = 0.00;
 
-            $color_model = ProductColor::model()->findByAttributes(array('product_details_id' => $id));
-            $color_model->color_id = $_POST['color_id'];
+            if (!isset($_POST['color_id']) && !empty($_POST['color_id'])) {
+                $color_model = ProductColor::model()->findByAttributes(array('product_details_id' => $id));
+                $color_model->color_id = $_POST['color_id'];
+            }
 
-            $size_model = ProductSize::model()->findByAttributes(array('product_details_id' => $id));
-            $size_model->size_id = $_POST['size_id'];
+            if (!isset($_POST['size_id']) && !empty($_POST['size_id'])) {
+                $size_model = ProductSize::model()->findByAttributes(array('product_details_id' => $id));
+                $size_model->size_id = $_POST['size_id'];
+            }
 
-            $grade_model = ProductGrade::model()->findByAttributes(array('product_details_id' => $id));
-            $grade_model->grade_id = $_POST['grade_id'];
+            if (!isset($_POST['grade_id']) && !empty($_POST['grade_id'])) {
+                $grade_model = ProductGrade::model()->findByAttributes(array('product_details_id' => $id));
+                $grade_model->grade_id = $_POST['grade_id'];
+            }
 
+            $stock_model = ProductStockAvail::model()->findByAttributes(array('product_details_id' => $id));
+            $stock_model->quantity = $_POST['available_stock'];
+            
             $transaction = Yii::app()->db->beginTransaction();
-
+            
             try {
 
                 $prod_model->update();
-                $color_model->update();
-                $size_model->update();
-                $grade_model->update();
+                $stock_model->update();
+                
+                if (!isset($_POST['color_id']) && !empty($_POST['color_id'])) {
+                    $color_model->update();
+                }
 
+                if (!isset($_POST['size_id']) && !empty($_POST['size_id'])) {
+                    $size_model->update();
+                }
+
+                if (!isset($_POST['grade_id']) && !empty($_POST['grade_id'])) {
+                    $grade_model->update();
+                }
+                
                 $transaction->commit();
                 $done = TRUE;
             } catch (CDbException $exc) {
@@ -247,37 +266,10 @@ class ManageController extends Controller {
      * Lists all models.
      */
     public function actionIndex() {
-        $model = new ProductDetails('search');
-
         $this->pageTitle = Yii::app()->name . ' - Product List';
         $this->pageHeader = 'Product List';
-        $pageSize = 0;
-
-        $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['ProductDetails'])) {
-            $model->attributes = $_GET['ProductDetails'];
-        }
-
-        if (isset($_GET['ProductDetails']['current_stock'])) {
-            $model->current_stock = $_GET['ProductDetails']['current_stock'];
-        }
-
-        if (isset($_GET['pageSize'])) {
-            $pageSize = (int) $_GET['pageSize'];
-            $model->pageSize = $pageSize;
-            unset($_GET['pageSize']);
-        }
-
-        if (!Yii::app()->user->isSuperAdmin) {
-            $model->store_id = Yii::app()->user->storeId;
-        } else {
-            $model->store_id = 1;
-        }
-
-        $this->render('index', array(
-            'model' => $model,
-            'pageSize' => $pageSize,
-        ));
+        
+        $this->render('index');
     }
 
     public function actionBarcode() {
@@ -311,7 +303,7 @@ class ManageController extends Controller {
             echo 'Bad Request';
             Yii::app()->end();
         }
-        
+
         $now = date('Y-m-d H:i:s', Settings::getBdLocalTime());
         $store_id = 1;
         if (!Yii::app()->user->isSuperAdmin) {
@@ -322,19 +314,19 @@ class ManageController extends Controller {
 
         $product_details_id = Yii::app()->request->getParam('product_details_id');
         $num_barcode = Yii::app()->request->getParam('num_barcode');
-        
+
         $item = Yii::app()->db->createCommand()->select('t.id, t.product_name, t.purchase_price, t.selling_price, ps.quantity')
                 ->from(ProductDetails::model()->tableName() . ' t')
                 ->join(ProductStockAvail::model()->tableName() . ' ps', 't.id = ps.product_details_id')
                 ->where('t.id = :pid', array(':pid' => $product_details_id))
                 ->queryRow();
-        
+
         $criteria = new CDbCriteria();
         $criteria->select = 't.id, t.product_details_id, t.reference_number';
         $criteria->condition = 't.purchase_cart_item_id = 0 OR t.purchase_cart_item_id = "" OR t.purchase_cart_item_id IS NULL';
         $criteria->compare('t.product_details_id', $product_details_id);
         $ref_num = ReferenceNumbers::model()->find($criteria);
-        
+
         if (!empty($ref_num)) {
             $ref_num->left_number_of_usage = $num_barcode;
             $ref_num->updated_date = $now;
@@ -351,7 +343,7 @@ class ManageController extends Controller {
             $ref_num->store_id = $store_id;
             $ref_num->insert();
         }
-        
+
         $_data[0]['id'] = $product_details_id;
 
         $_data[0]['code'] = $ref_num->reference_number;
@@ -368,15 +360,15 @@ class ManageController extends Controller {
         $barcode['font_size'] = 7;
         $barcode['thickness'] = 35;
         $barcode['codetype'] = 'BCGean13';
-        
+
         $mPDF1 = Yii::app()->ePdf->mpdf();
-        
+
         echo $this->renderPartial('_barcode_partial', array(
             'purchaseRecords' => ($_data) ? $_data : array(),
             'singleItem' => TRUE,
             'pdf' => $mPDF1,
             'barcode' => $barcode,
-        ), TRUE);
+                ), TRUE);
     }
 
     public function actionDownloadBarcode() {
@@ -465,34 +457,6 @@ class ManageController extends Controller {
 
             echo CJSON::encode($return_array);
         }
-    }
-
-    public function actionUpdate_stock($id) {
-
-        if (!Yii::app()->user->isSuperAdmin) {
-            $store_id = Yii::app()->user->storeId;
-        } else {
-            $store_id = 1;
-        }
-
-        $model = new ProductStockAvail;
-        $model = $model->getStockByProdId($id, $store_id);
-
-        if (isset($_POST['ProductStockAvail'])) {
-            $model->attributes = $_POST['ProductStockAvail'];
-
-            $model->store_id = $store_id;
-
-            if ($model->validate()) {
-                if ($model->update()) {
-                    Yii::app()->user->setFlash('success', 'Stock Successfully Updated.');
-                } else {
-                    Yii::app()->user->setFlash('error', 'Stock Could Not Be Updated.');
-                }
-            }
-        }
-
-        $this->render('update_stock', array('model' => $model));
     }
 
     /*

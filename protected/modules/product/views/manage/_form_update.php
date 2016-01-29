@@ -211,6 +211,22 @@
                     ?>
                 </div>
             </div>
+            
+            <?php if (!Yii::app()->user->isSuperAdmin) { ?>
+                <div class="form-group">
+                    <?php echo CHtml::label('Available Stock', 'available_stock', array('class' => 'col-sm-2 control-label')); ?>
+                    <div class="col-sm-10">
+                        <?php
+                        echo CHtml::textField('available_stock', $model['quantity'], array(
+                            'size' => 10,
+                            'maxlength' => 10,
+                            'class' => 'form-control',
+                            'placeholder' => 'Available Stock',
+                        ));
+                        ?>
+                    </div>
+                </div>
+            <?php } ?>
 
             <div class="form-group">
                 <?php
