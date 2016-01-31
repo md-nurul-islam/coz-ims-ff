@@ -276,149 +276,104 @@ class ProductDetails extends CActiveRecord {
         return $command->queryRow();
     }
 
-    public function getDifferentialReportData() {
+    public function getDifferentialReportData($from_date, $to_date) {
         
-        $sql = "SELECT
-	pd.id,
-	pd.product_name,
-	#cl.`name` AS color_name,
-	#gr.`name` AS grade_name,
-	#sz.`name` AS size_name,
-	(
-	SELECT SUM(ci.quantity) FROM `cims_cart_items` `ci`
-	INNER JOIN 
-		(SELECT cart_id, sale_date FROM `cims_product_stock_sales` WHERE sale_date >= '2015-01-01' AND sale_date <= '2016-01-31') `pss` ON ci.cart_id = pss.cart_id
-	WHERE ci.product_details_id = pd.id
-	) AS sold_quantity,
-	(
-	SELECT SUM(pci.quantity) FROM `cims_purchase_cart_items` `pci`
-	INNER JOIN 
-		(SELECT purchase_cart_id, purchase_date FROM `cims_product_stock_entries` WHERE purchase_date >= '2015-01-01' AND purchase_date <= '2016-01-31') `pse` ON pci.cart_id = pse.purchase_cart_id
-	WHERE pci.product_details_id = pd.id
-	) AS purchase_quantity,
-	(
-	SELECT SUM(ci.sub_total) FROM `cims_cart_items` `ci`
-	INNER JOIN 
-		(SELECT cart_id, sale_date FROM `cims_product_stock_sales` WHERE sale_date >= '2015-01-01' AND sale_date <= '2016-01-31') `pss` ON ci.cart_id = pss.cart_id
-	WHERE ci.product_details_id = pd.id
-	) AS sold_subtotal,
-	(
-	SELECT SUM(pci.sub_total) FROM `cims_purchase_cart_items` `pci`
-	INNER JOIN 
-		(SELECT purchase_cart_id, purchase_date FROM `cims_product_stock_entries` WHERE purchase_date >= '2015-01-01' AND purchase_date <= '2016-01-31') `pse` ON pci.cart_id = pse.purchase_cart_id
-	WHERE pci.product_details_id = pd.id
-	) AS purchase_subtotal
-FROM
-(
-SELECT ci.product_details_id, pd.id, pd.product_name, pss.sale_date, pd.store_id
-FROM cims_cart_items ci
-	INNER JOIN
-	(
-		SELECT pss.cart_id, pss.sale_date FROM cims_product_stock_sales pss
-		WHERE
-		DATE(pss.sale_date) >= '2015-01-01' AND DATE(pss.sale_date) <= '2016-01-31'
-	) AS pss ON ci.cart_id = pss.cart_id
-	INNER JOIN 
-	(
-			SELECT pd.id, pd.product_name, pd.store_id
-			FROM cims_product_details pd, cims_cart_items ci
-			WHERE
-				pd.id = ci.product_details_id
-			GROUP BY ci.product_details_id
-	) pd ON ci.product_details_id = pd.id	
-) AS pd
-
-INNER JOIN
-(
-SELECT pc.product_details_id, pc.color_id
-			FROM cims_product_color pc, cims_product_details pd
-			WHERE
-				pd.id = pc.product_details_id
-			GROUP BY pc.product_details_id
-) pc ON pc.product_details_id = pd.id
-LEFT JOIN `cims_color` cl ON pc.color_id = cl.id
-INNER JOIN
-(
-SELECT pg.product_details_id, pg.grade_id
-			FROM cims_product_grade pg, cims_product_details pd
-			WHERE
-				pd.id = pg.product_details_id
-			GROUP BY pg.product_details_id
-) pg ON pg.product_details_id = pd.id
-LEFT JOIN `cims_grades` gr ON pg.grade_id = gr.id
-INNER JOIN 
-(
-SELECT psz.product_details_id, psz.size_id
-			FROM cims_product_size psz, cims_product_details pd
-			WHERE
-				pd.id = psz.product_details_id
-			GROUP BY psz.product_details_id
-) psz ON psz.product_details_id = pd.id
-LEFT JOIN `cims_sizes` sz ON psz.size_id = sz.id
-WHERE
-		DATE(pd.sale_date) >= '2015-01-01' AND DATE(pd.sale_date) <= '2016-01-31'
-AND pd.store_id = 1
-;";
+        $sql = "
+            SELECT
+                pd.id,
+                pd.product_name,
+                cl.`name` AS color_name,
+                gr.`name` AS grade_name,
+                sz.`name` AS size_name,
+                (
+                SELECT SUM(ci.quantity) FROM `cims_cart_items` `ci`
+                INNER JOIN 
+                        (SELECT cart_id, DATE(sale_date) FROM `cims_product_stock_sales` WHERE DATE(sale_date) >= :from_date AND DATE(sale_date) <= :to_date) `pss` ON ci.cart_id = pss.cart_id
+                WHERE ci.product_details_id = pd.id
+                ) AS sold_quantity,
+                (
+                SELECT SUM(pci.quantity) FROM `cims_purchase_cart_items` `pci`
+                INNER JOIN 
+                        (SELECT purchase_cart_id, DATE(purchase_date) FROM `cims_product_stock_entries` WHERE DATE(purchase_date) >= :from_date AND DATE(purchase_date) <= :to_date) `pse` ON pci.cart_id = pse.purchase_cart_id
+                WHERE pci.product_details_id = pd.id
+                ) AS purchase_quantity,
+                (
+                SELECT SUM(ci.sub_total) FROM `cims_cart_items` `ci`
+                INNER JOIN 
+                        (SELECT cart_id, DATE(sale_date) FROM `cims_product_stock_sales` WHERE DATE(sale_date) >= :from_date AND DATE(sale_date) <= :to_date) `pss` ON ci.cart_id = pss.cart_id
+                WHERE ci.product_details_id = pd.id
+                ) AS sold_subtotal,
+                (
+                SELECT SUM(pci.sub_total) FROM `cims_purchase_cart_items` `pci`
+                INNER JOIN 
+                        (SELECT purchase_cart_id, DATE(purchase_date) FROM `cims_product_stock_entries` WHERE DATE(purchase_date) >= :from_date AND DATE(purchase_date) <= :to_date) `pse` ON pci.cart_id = pse.purchase_cart_id
+                WHERE pci.product_details_id = pd.id
+                ) AS purchase_subtotal
+            FROM
+            (
+                SELECT ci.product_details_id, pd.id, pd.product_name, pss.sale_date, pd.store_id
+                FROM cims_cart_items ci
+                INNER JOIN
+                (
+                        SELECT pss.cart_id, pss.sale_date FROM cims_product_stock_sales pss
+                        WHERE
+                        DATE(pss.sale_date) >= :from_date AND DATE(pss.sale_date) <= :to_date
+                ) AS pss ON ci.cart_id = pss.cart_id
+                INNER JOIN 
+                (
+                    SELECT pd.id, pd.product_name, pd.store_id
+                    FROM cims_product_details pd, cims_cart_items ci
+                    WHERE
+                        pd.id = ci.product_details_id
+                    GROUP BY ci.product_details_id
+                ) pd ON ci.product_details_id = pd.id	
+        ) AS pd
+        INNER JOIN
+        (
+            SELECT pc.product_details_id, pc.color_id
+            FROM cims_product_color pc, cims_product_details pd
+            WHERE
+                    pd.id = pc.product_details_id
+            GROUP BY pc.product_details_id
+        ) pc ON pc.product_details_id = pd.id
+        LEFT JOIN `cims_color` cl ON pc.color_id = cl.id
+        INNER JOIN
+        (
+        SELECT pg.product_details_id, pg.grade_id
+            FROM cims_product_grade pg, cims_product_details pd
+            WHERE
+                    pd.id = pg.product_details_id
+            GROUP BY pg.product_details_id
+        ) pg ON pg.product_details_id = pd.id
+        LEFT JOIN `cims_grades` gr ON pg.grade_id = gr.id
+        INNER JOIN 
+        (
+        SELECT psz.product_details_id, psz.size_id
+            FROM cims_product_size psz, cims_product_details pd
+            WHERE
+                    pd.id = psz.product_details_id
+            GROUP BY psz.product_details_id
+        ) psz ON psz.product_details_id = pd.id
+        LEFT JOIN `cims_sizes` sz ON psz.size_id = sz.id
+        WHERE
+            DATE(pd.sale_date) >= :from_date AND DATE(pd.sale_date) <= :to_date
+        AND pd.store_id = :sid
+        GROUP BY pd.id
+    ;";
 
         $store_id = 1;
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
         }
-
-        /** Sold Qty **/
-        $sub_command_sold_qty_join = Yii::app()->db->createCommand()
-                ->select('cart_id, sale_date')
-                ->from(ProductStockSales::model()->tableName() . ' t')
-                ->andWhere('DATE(t.sale_date) >= :from_date AND DATE(t.sale_date) <= :to_date', array(
-                    ':from_date' => $from_date,
-                    ':to_date' => $to_date,
-                ))
-        ;
         
-        $sub_command_sold_qty_join->bindValue($name, $value);
-        
-        $sub_command_sold_qty = Yii::app()->db->createCommand()
-                ->select('SUM(ci.quantity)')
-                ->from(CartItems::model()->tableName() . ' ci')
-                ->where('ci.product_details_id = psa.id')
-                ->join("({$sub_command_sold_qty_join->getText()}) pss", 'ci.cart_id = pss.cart_id')
-        ;
-        /** Sold Qty **/
-
-        
-        $sub_command_purchased_qty = Yii::app()->db->createCommand()
-                ->select('SUM(pci.quantity)')
-                ->from(PurchaseCartItems::model()->tableName() . ' pci')
-                ->where('pci.product_details_id = psa.id')
-        ;
-
-        $sub_command_table_name = Yii::app()->db->createCommand()
-                ->select('id, product_details_id, quantity, store_id')
-                ->from(ProductStockAvail::model()->tableName() . ' psa')
-                ->group('psa.product_details_id')
-        ;
-
-        $sub_command_join = Yii::app()->db->createCommand()
-                ->select('pd.id, pd.product_name')
-                ->from(ProductDetails::model()->tableName() . ' pd')
-                ->group('pd.id')
-        ;
-
-        $command = Yii::app()->db->createCommand();
-        $command->select(
-                "
-                pd.product_name,
-                psa.quantity AS current_quantity,
-                ({$sub_command_sold_qty->getText()}) AS sold_quantity,
-                ({$sub_command_purchased_qty->getText()}) AS purchased_quantity
-                "
-        );
-        $command->from("({$sub_command_table_name->getText()}) psa");
-        $command->join("({$sub_command_join->getText()}) pd", 'psa.product_details_id = pd.id');
-        $command->where('psa.store_id = :sid', array(':sid' => $store_id));
+        $command = Yii::app()->db->createCommand($sql);
+        $command->bindValues(array(
+            ':from_date' => $from_date,
+            ':to_date' => $to_date,
+            ':sid' => $store_id,
+        ));
         $data = $command->queryAll();
-
-
+        
         return (!empty($data)) ? $data : false;
     }
 

@@ -52,9 +52,6 @@ class DifferentialController extends Controller {
             $from_date = Yii::app()->request->getPost('from_date');
             $to_date = Yii::app()->request->getPost('to_date');
             $model = ProductDetails::model()->getDifferentialReportData($from_date, $to_date);
-
-            var_dump($model);
-            exit;
         }
 
         if (!$model) {
