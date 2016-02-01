@@ -55,8 +55,13 @@ class ManageController extends Controller {
         $this->pageTitle = Yii::app()->name . ' - Product Details';
         $this->pageHeader = 'Product Details';
 
+        $purchase = ProductStockEntries::model()->purchaseReportDataByProduct($id);
+        $sales = ProductStockSales::model()->salesReportDataByProduct($id);
+        
         $this->render('view', array(
             'model' => $this->loadModel($id),
+            'purchase' => $purchase,
+            'sales' => $sales,
         ));
     }
 
@@ -207,14 +212,14 @@ class ManageController extends Controller {
 
             $stock_model = ProductStockAvail::model()->findByAttributes(array('product_details_id' => $id));
             $stock_model->quantity = $_POST['available_stock'];
-            
+
             $transaction = Yii::app()->db->beginTransaction();
-            
+
             try {
 
                 $prod_model->update();
                 $stock_model->update();
-                
+
                 if (!isset($_POST['color_id']) && !empty($_POST['color_id'])) {
                     $color_model->update();
                 }
@@ -226,7 +231,7 @@ class ManageController extends Controller {
                 if (!isset($_POST['grade_id']) && !empty($_POST['grade_id'])) {
                     $grade_model->update();
                 }
-                
+
                 $transaction->commit();
                 $done = TRUE;
             } catch (CDbException $exc) {
@@ -268,7 +273,7 @@ class ManageController extends Controller {
     public function actionIndex() {
         $this->pageTitle = Yii::app()->name . ' - Product List';
         $this->pageHeader = 'Product List';
-        
+
         $this->render('index');
     }
 

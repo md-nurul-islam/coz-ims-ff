@@ -122,7 +122,7 @@
                             <div class="barcode-container"></div>
                         </li>
                         <li class="list-group-item clearfix">
-                            <a style="margin: 10px;" class="btn btn-primary pull-right" href="/product/manage/downloadBarcode?barcode=<?php echo md5($data->id) . '_barcodes.pdf'?>">Export as PDF</a>
+                            <a style="margin: 10px;" class="btn btn-primary pull-right" href="/product/manage/downloadBarcode?barcode=<?php echo md5($data->id) . '_barcodes.pdf' ?>">Export as PDF</a>
                         </li>
                     </ul>
 
@@ -136,6 +136,34 @@
 
         </div>
     </div>
+
+
+    <div class="box box-info">
+        <div class="box-body">
+
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">
+                    <h4 class="text-bold text-aqua">Latest 10 Purchase and Sale</h4>
+                </div>
+
+                <div class="panel-body">
+
+                    <!-- Purchase Data -->
+                    <?php $this->renderPartial('_purcahse_data_table', array('purchase' => $purchase,)); ?>
+                    <!-- Sale Data -->
+                    <?php $this->renderPartial('_sale_data_table', array('sales' => $sales,)); ?>
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+
 </div>
 
 <?php $this->renderPartial('//modals/_item_barcode'); ?>

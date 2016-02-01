@@ -379,6 +379,58 @@ class ProductStockEntries extends CActiveRecord {
         $data = $this->formatPurchaseReportData($command->queryAll());
         return $data;
     }
+    
+    public function purchaseReportDataByProduct($product_id, $limit = 10) {
+
+        $store_id = 1;
+        if (!Yii::app()->user->isSuperAdmin) {
+            $store_id = Yii::app()->user->storeId;
+        }
+
+        $command = Yii::app()->db->createCommand()
+                ->from($this->tableName() . ' t')
+                ->join(PurchaseCart::model()->tableName() . ' c', 'c.id = t.purchase_cart_id')
+                ->join(PurchaseCartItems::model()->tableName() . ' ci', 'c.id = ci.cart_id')
+                ->join(ReferenceNumbers::model()->tableName() . ' rn', 'rn.id = ci.reference_number_id')
+                ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = ci.product_details_id')
+                ->leftJoin(ProductColor::model()->tableName() . ' pc', 'pd.id = pc.product_details_id')
+                ->leftJoin(Color::model()->tableName() . ' cl', 'cl.id = pc.color_id')
+                ->leftJoin(ProductSize::model()->tableName() . ' ps', 'pd.id = ps.product_details_id')
+                ->leftJoin(Sizes::model()->tableName() . ' s', 's.id = ps.size_id')
+                ->leftJoin(ProductGrade::model()->tableName() . ' pg', 'pd.id = pg.product_details_id')
+                ->leftJoin(Grade::model()->tableName() . ' g', 'g.id = pg.grade_id')
+                ->order('t.id DESC')
+                ->limit($limit)
+        ;
+
+        $command->andWhere('t.store_id = :store_id', array(':store_id' => $store_id));
+        $command->andWhere('ci.product_details_id = :pid', array(':pid' => $product_id));
+        
+        $command->select(
+                't.id,
+                t.billnumber,
+                t.purchase_date,
+                t.store_id,
+                c.discount,
+                c.vat,
+                c.grand_total,
+                rn.reference_number,
+                ci.cost,
+                ci.price,
+                ci.quantity,
+                ci.discount AS item_discount,
+                ci.vat AS item_vat,
+                ci.sub_total,
+                pd.product_name,
+                cl.name AS color_name,
+                s.name AS size_name,
+                g.name AS grade_name
+                '
+        );
+        
+        $data = $this->formatPurchaseReportData($command->queryAll());
+        return $data;
+    }
 
     private function formatPurchaseReportData($ar_data) {
 
