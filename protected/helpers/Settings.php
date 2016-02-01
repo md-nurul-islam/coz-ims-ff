@@ -121,6 +121,22 @@ class Settings {
         return $ref_num;
     }
 
+    public static function generatePrettyError($ar_errors = array()) {
+        
+        $error_html = "";
+        
+        if (!empty($ar_errors)) {
+            $error_html .= "<div class=\"col-sm-12\"><ul class=\"list-group\">";
+            foreach ($ar_errors as $error_ar) {
+                foreach ($error_ar as $error) {
+                    $error_html .= "<li class=\"list-group-item text-danger\">{$error}</li>";
+                }
+            }
+            $error_html .= "</ul></div>";
+        }
+        return $error_html;
+    }
+
 }
 
 ?>

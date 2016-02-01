@@ -277,14 +277,17 @@ class ProductDetails extends CActiveRecord {
     }
 
     public function getDifferentialReportData($from_date, $to_date) {
-        
+
         $sql = "
             SELECT
-                pd.id,
+                pd.cart_id,
+                pd.id AS product_id,
                 pd.product_name,
                 cl.`name` AS color_name,
                 gr.`name` AS grade_name,
                 sz.`name` AS size_name,
+                pd.`vat`,
+                pd.`discount`,
                 (
                 SELECT SUM(ci.quantity) FROM `cims_cart_items` `ci`
                 INNER JOIN 
@@ -311,13 +314,25 @@ class ProductDetails extends CActiveRecord {
                 ) AS purchase_subtotal
             FROM
             (
-                SELECT ci.product_details_id, pd.id, pd.product_name, pss.sale_date, pd.store_id
+                SELECT ci.product_details_id, pd.id, pd.product_name, pss.sale_date, pd.store_id, pss.vat, pss.discount, pss.cart_id, pss.is_advance
                 FROM cims_cart_items ci
                 INNER JOIN
                 (
-                        SELECT pss.cart_id, pss.sale_date FROM cims_product_stock_sales pss
-                        WHERE
-                        DATE(pss.sale_date) >= :from_date AND DATE(pss.sale_date) <= :to_date
+                    SELECT pss.cart_id, pss.sale_date, pss.is_advance, pc.vat, pc.discount, pc.id
+                    FROM cims_product_stock_sales pss
+                    INNER JOIN
+                    (
+                        SELECT pc.id, pc.discount, pc.vat FROM cims_cart pc
+                        INNER JOIN
+                        (
+                                SELECT pss.cart_id
+                                FROM cims_product_stock_sales pss
+                                WHERE
+                                DATE(pss.sale_date) >= :from_date AND DATE(pss.sale_date) <= :to_date
+                        ) pss ON pss.cart_id = pc.id
+                    ) pc ON pss.cart_id = pc.id
+                    WHERE
+                    DATE(pss.sale_date) >= :from_date AND DATE(pss.sale_date) <= :to_date
                 ) AS pss ON ci.cart_id = pss.cart_id
                 INNER JOIN 
                 (
@@ -358,14 +373,14 @@ class ProductDetails extends CActiveRecord {
         WHERE
             DATE(pd.sale_date) >= :from_date AND DATE(pd.sale_date) <= :to_date
         AND pd.store_id = :sid
-        GROUP BY pd.id
+        AND pd.is_advance = 0
     ;";
 
         $store_id = 1;
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
         }
-        
+
         $command = Yii::app()->db->createCommand($sql);
         $command->bindValues(array(
             ':from_date' => $from_date,
@@ -373,7 +388,7 @@ class ProductDetails extends CActiveRecord {
             ':sid' => $store_id,
         ));
         $data = $command->queryAll();
-        
+
         return (!empty($data)) ? $data : false;
     }
 

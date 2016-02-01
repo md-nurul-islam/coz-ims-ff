@@ -114,3 +114,9 @@
     </div>
 
 <?php } ?>
+
+<style type="text/css">
+    .center h3 {
+        font-size: 23px;
+    }
+</style>

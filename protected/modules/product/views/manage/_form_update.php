@@ -212,7 +212,7 @@
                 </div>
             </div>
             
-            <?php if (!Yii::app()->user->isSuperAdmin) { ?>
+            <?php if (Yii::app()->user->isSuperAdmin || Yii::app()->user->isStoreAdmin) { ?>
                 <div class="form-group">
                     <?php echo CHtml::label('Available Stock', 'available_stock', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-10">

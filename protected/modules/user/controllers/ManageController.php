@@ -42,10 +42,11 @@ class ManageController extends Controller {
         $model->setScenario('changePassword');
 
         $this->performAjaxValidation($model);
-
+        
         if (isset($_POST['User'])) {
 
             $model->attributes = $_POST['User'];
+            
             if ($model->validate()) {
                 $model->salt = $model->getPasswordSalt();
                 $model->hashed_password = $model->getPassword($model->salt, $model->new_password);
