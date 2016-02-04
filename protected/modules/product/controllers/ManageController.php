@@ -33,12 +33,16 @@ class ManageController extends Controller {
                     'update',
                     'autocomplete',
                     'getdata',
-                    'getStatusComboData'
+                    'getStatusComboData',
+                    'barcode',
+                    'itembarcode',
+                    'downloadBarcode',
+                    'barcodeFileList'
                 ),
                 'users' => array('@'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('delete', 'barcode', 'itembarcode', 'downloadBarcode', 'barcodeFileList'),
+                'actions' => array('delete'),
                 'expression' => '(!Yii::app()->user->isGuest) && (Yii::app()->user->isSuperAdmin || Yii::app()->user->isStoreAdmin)',
             ),
             array('deny', // deny all users

@@ -23,6 +23,4 @@
 
 <div class="clearfix"></div>
 
-<?php
-Yii::app()->clientScript->registerCoreScript('jquery');
-?>
+<?php Yii::app()->clientScript->registerCoreScript('jquery'); ?>

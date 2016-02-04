@@ -5,6 +5,7 @@
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 require_once('dataCon.php');
+require_once('env.php');
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
     'name' => 'Pitf!',
@@ -72,23 +73,7 @@ return array(
             // use 'site/error' action to display errors
             'errorAction' => 'site/error',
         ),
-        'log' => array(
-            'class' => 'CLogRouter',
-            'routes' => array(
-                array(
-                    'class' => 'CWebLogRoute',
-                    'levels' => 'log, error, warning',
-//                    'categories' => 'system.db.CDbCommand',
-//                    'logFile' => 'db.log',
-                ),
-            // uncomment the following to show log messages on web pages
-            /*
-              array(
-              'class'=>'CWebLogRoute',
-              ),
-             */
-            ),
-        ),
+        'log' => $log,
         'ePdf' => array(
             'class' => 'ext.yii-pdf.EYiiPdf',
             'params' => array(

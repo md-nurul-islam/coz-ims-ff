@@ -25,14 +25,9 @@ class BarcodeController extends Controller {
      */
     public function accessRules() {
         return array(
-//            array('allow', // allow authenticated user to perform 'create' and 'update' actions
-//                'actions' => array('index', 'view', 'create', 'update', 'autocomplete'),
-//                'users' => array('@'),
-//            ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('generate'),
-//                'expression' => '(!Yii::app()->user->isGuest) && (Yii::app()->user->isSuperAdmin || Yii::app()->user->isStoreAdmin)',
-                'users' => array('*'),
+                'users' => array('@'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),

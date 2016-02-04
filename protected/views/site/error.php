@@ -1,15 +1,9 @@
-<?php
-/* @var $this SiteController */
-/* @var $error array */
+<?php $this->pageTitle = Yii::app()->name . ' - Error'; ?>
 
-$this->pageTitle=Yii::app()->name . ' - Error';
-$this->breadcrumbs=array(
-	'Error',
-);
-?>
+<h2 class="h2">Error <?php echo $code; ?></h2>
 
-<h2>Error <?php echo $code; ?></h2>
-
-<div class="error">
-<?php echo CHtml::encode($message); ?>
+<div class="alert alert-warning">
+    <?php echo CHtml::encode($message); ?>
 </div>
+
+<?php Yii::app()->clientScript->registerCoreScript('jquery'); ?>
