@@ -400,7 +400,7 @@ class ProductStockSales extends CActiveRecord {
         if ($id > 0) {
             $command->andWhere('t.id = :id', array(':id' => $id));
         }
-        
+
         if ($billnumber > 0) {
             $command->andWhere('t.billnumber = :bn', array(':bn' => $billnumber));
         }
@@ -487,7 +487,7 @@ class ProductStockSales extends CActiveRecord {
         $data = $this->formatSaleDataForReport($command->queryAll());
         return $data;
     }
-    
+
     public function salesReportDataByProduct($product_id, $limit = 10) {
 
         $store_id = 1;
@@ -553,7 +553,7 @@ class ProductStockSales extends CActiveRecord {
 
             $_data = array();
             foreach ($ar_data as $row) {
-                
+
                 if ($sale_id == $row['billnumber']) {
 
                     $_data['bill_total'] = (empty($row['grand_total']) || ($row['grand_total'] <= 0) ) ? 0.00 : $row['grand_total'];
@@ -577,10 +577,128 @@ class ProductStockSales extends CActiveRecord {
                     $_data['cart_items'][] = $cart;
                 }
                 $formatted_data[$sale_id] = $_data;
-            }   
+            }
         }
-        
+
         return $formatted_data;
+    }
+
+    public function getSalePurchaseDataForReport($from_date, $to_date) {
+
+        $store_id = 1;
+        if (!Yii::app()->user->isSuperAdmin) {
+            $store_id = Yii::app()->user->storeId;
+        }
+
+        $from_date = date('Y-m-d', strtotime($from_date));
+        $to_date = date('Y-m-d', strtotime($to_date));
+
+        $sale_query = Yii::app()->db->createCommand()
+                ->from($this->tableName() . ' t')
+                ->join(Cart::model()->tableName() . ' c', 'c.id = t.cart_id')
+                ->join(CartItems::model()->tableName() . ' ci', 'c.id = ci.cart_id')
+                ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = ci.product_details_id')
+                ->leftJoin(ProductColor::model()->tableName() . ' pc', 'pd.id = pc.product_details_id')
+                ->leftJoin(Color::model()->tableName() . ' cl', 'cl.id = pc.color_id')
+                ->leftJoin(ProductSize::model()->tableName() . ' ps', 'pd.id = ps.product_details_id')
+                ->leftJoin(Sizes::model()->tableName() . ' s', 's.id = ps.size_id')
+                ->leftJoin(ProductGrade::model()->tableName() . ' pg', 'pd.id = pg.product_details_id')
+                ->leftJoin(Grade::model()->tableName() . ' g', 'g.id = pg.grade_id')
+                ->order('t.id DESC')
+                ->group('ci.product_details_id')
+        ;
+
+        $sale_query->andWhere('t.store_id = :store_id', array(':store_id' => $store_id));
+        $sale_query->andWhere('DATE(t.sale_date) >= :from_date AND DATE(t.sale_date) <= :to_date', array(
+            ':from_date' => $from_date,
+            ':to_date' => $to_date,
+        ));
+
+        $sale_query->select(
+                't.is_advance,
+                SUM(c.discount) AS toal_discount,
+                SUM(c.vat) AS total_vat,
+                ci.product_details_id AS sold_product_id,
+                ci.price,
+                SUM(ci.quantity) AS total_sold_qty,
+                SUM(ci.discount) AS toal_item_discount,
+                SUM(ci.vat) AS toal_item_vat,
+                SUM(ci.sub_total) AS sold_total,
+                pd.product_name,
+                pd.purchase_price,
+                pd.selling_price,
+                cl.name AS color_name,
+                s.name AS size_name,
+                g.name AS grade_name
+                '
+        );
+
+        $sale_data = $sale_query->queryAll();
+
+        $purchase_query = Yii::app()->db->createCommand()
+                ->from(ProductStockEntries::model()->tableName() . ' pse')
+                ->join(PurchaseCartItems::model()->tableName() . ' pci', 'pse.purchase_cart_id = pci.cart_id')
+                ->andWhere('pse.store_id = :store_id', array(':store_id' => $store_id))
+                ->andWhere('pci.product_details_id > :pid', array(':pid' => 0))
+                ->andWhere('DATE(pse.purchase_date) >= :from_date AND DATE(pse.purchase_date) <= :to_date', array(
+                    ':from_date' => $from_date,
+                    ':to_date' => $to_date,
+                ))
+                ->group('pci.product_details_id')
+        ;
+
+        $purchase_query->select(
+                'pci.product_details_id AS purchased_product_id,
+                sum(pci.quantity) AS purchased_qty,
+                sum(pci.sub_total) AS purchased_total
+                '
+        );
+        $purchase_data = $purchase_query->queryAll();
+
+        $data = $this->formatSalePurchaseDataForReport($sale_data, $purchase_data);
+        return $data;
+    }
+
+    private function formatSalePurchaseDataForReport($sold_data, $purchase_data) {
+
+        $formatted_response = array();
+
+        $sold_product_ids = array_unique(array_map(function ($row) {
+                    return $row['sold_product_id'];
+                }, $sold_data));
+
+        $_data = array();
+
+        foreach ($sold_data as $sale) {
+
+            if (in_array($sale['sold_product_id'], $sold_product_ids)) {
+                $_data[$sale['sold_product_id']]['product_name'] = $sale['product_name'];
+                $_data[$sale['sold_product_id']]['color_name'] = $sale['color_name'];
+                $_data[$sale['sold_product_id']]['size_name'] = $sale['size_name'];
+                $_data[$sale['sold_product_id']]['grade_name'] = $sale['grade_name'];
+                $_data[$sale['sold_product_id']]['purchase_price'] = $sale['purchase_price'];
+                $_data[$sale['sold_product_id']]['selling_price'] = $sale['selling_price'];
+                $_data[$sale['sold_product_id']]['sold_qty'] = $sale['total_sold_qty'];
+                $_data[$sale['sold_product_id']]['sold_total'] = $sale['sold_total'];
+                $_data[$sale['sold_product_id']]['sold_toal_vat'] = $sale['total_vat'];
+                $_data[$sale['sold_product_id']]['sold_total_discount'] = $sale['toal_discount'];
+                $_data[$sale['sold_product_id']]['purchased_qty'] = 0;
+                $_data[$sale['sold_product_id']]['purchased_total'] = 0.00;
+//                $_data[$sale['sold_product_id']]['sold_item_vat'] = $sale['toal_item_vat'];
+//                $_data[$sale['sold_product_id']]['sold_item_discount'] = $sale['toal_item_discount'];
+            }
+
+            foreach ($purchase_data as $purchase) {
+                if (in_array($purchase['purchased_product_id'], $sold_product_ids)) {
+                    if ($purchase['purchased_product_id'] == $sale['sold_product_id']) {
+                        $_data[$sale['sold_product_id']]['purchased_qty'] = $purchase['purchased_qty'];
+                        $_data[$sale['sold_product_id']]['purchased_total'] = $purchase['purchased_total'];
+                    }
+                }
+            }
+        }
+
+        return $formatted_response = $_data;
     }
 
     /**

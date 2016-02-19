@@ -27,7 +27,8 @@ class SaleController extends Controller {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('index', 'advance_sale', 'purchase_sale'),
-                'users' => array('@'),
+                'expression' => '(!Yii::app()->user->isGuest) && (Yii::app()->user->isSuperAdmin || Yii::app()->user->isStoreAdmin)',
+//                'users' => array('@'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -89,7 +90,7 @@ class SaleController extends Controller {
             $to_date = Yii::app()->request->getPost('to_date');
             
             $model = new ProductStockSales;
-            $model = $model->getSaleDataForReport($from_date, $to_date);
+            $model = $model->getSalePurchaseDataForReport($from_date, $to_date);
             
             if(!$model){
                 $msg = 'No data found in the given date range.';
