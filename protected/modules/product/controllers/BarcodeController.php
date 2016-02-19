@@ -27,7 +27,7 @@ class BarcodeController extends Controller {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('generate'),
-                'users' => array('@'),
+                'users' => array('*'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -82,8 +82,11 @@ class BarcodeController extends Controller {
         } catch (Exception $exception) {
             $drawException = $exception;
         }
-
-        $drawing = new BCGDrawing('', $color_white);
+        
+        $image_name = $pid . '.png';
+        $dir_name = Yii::app()->getBasePath() . '/../bc_images/';
+        
+        $drawing = new BCGDrawing("{$dir_name}{$image_name}", $color_white);
         if ($drawException) {
             $drawing->drawException($drawException);
         } else {
@@ -98,18 +101,18 @@ class BarcodeController extends Controller {
         }
 
         $filetype = Yii::app()->request->getParam('filetype');
-        switch ($filetype) {
-            case 'PNG':
-                header('Content-Type: image/png');
-                break;
-            case 'JPEG':
-                header('Content-Type: image/jpeg');
-                break;
-            case 'GIF':
-                header('Content-Type: image/gif');
-                break;
-        }
-
+//        switch ($filetype) {
+//            case 'PNG':
+//                header('Content-Type: image/png');
+//                break;
+//            case 'JPEG':
+//                header('Content-Type: image/jpeg');
+//                break;
+//            case 'GIF':
+//                header('Content-Type: image/gif');
+//                break;
+//        }
+        
         $drawing->finish($filetypes[$filetype]);
     }
 

@@ -1,3 +1,4 @@
+<?php // echo Yii::app()->getBaseUrl(true); ?>
 <?php
 $webroot = Yii::getPathOfAlias('webroot');
 $pdfs_path = $webroot . DIRECTORY_SEPARATOR . 'barcode_pdfs' . DIRECTORY_SEPARATOR;
@@ -16,7 +17,8 @@ if (!empty($purchaseRecords)) {
         <?php for ($i = 0; $i < $pr['quantity']; $i++) { ?>
             <div class="code-wrapper">
                 <div class="prod_barcode">
-                    <img src="/product/barcode/generate?filetype=<?php echo $barcode['filetype']; ?>&dpi=<?php echo $barcode['dpi']; ?>&scale=<?php echo $barcode['scale']; ?>&rotation=<?php echo $barcode['rotation']; ?>&font_family=<?php echo $barcode['font_family']; ?>&font_size=<?php echo $barcode['font_size']; ?>&text=<?php echo $pr['code']; ?>&thickness=<?php echo $barcode['thickness']; ?>&code=<?php echo $barcode['codetype']; ?>&pid=<?php echo $pr['id']; ?>">
+                    <img style="display: none;" src="/product/barcode/generate?filetype=<?php echo $barcode['filetype']; ?>&dpi=<?php echo $barcode['dpi']; ?>&scale=<?php echo $barcode['scale']; ?>&rotation=<?php echo $barcode['rotation']; ?>&font_family=<?php echo $barcode['font_family']; ?>&font_size=<?php echo $barcode['font_size']; ?>&text=<?php echo $pr['code']; ?>&thickness=<?php echo $barcode['thickness']; ?>&code=<?php echo $barcode['codetype']; ?>&pid=<?php echo $pr['product_details_id']; ?>">
+                    <img src="/bc_images/<?php echo $pr['product_details_id']; ?>.png" />
                 </div>
                 <div class="prod_name"><?php echo $pr['product_name']; ?></div>
                 <div class="prod_ptice"><?php echo ' TK ' . $pr['selling_price']; ?></div>
@@ -83,17 +85,17 @@ if (!empty($purchaseRecords)) {
 $s_pdf_content = ob_get_contents();
 ob_end_clean();
 
-echo $s_pdf_content;
-
 if (!empty($purchaseRecords)) {
     $pdf = Yii::app()->ePdf->mpdf('', 'A4');
     $pdf->SetDisplayMode('fullpage');
     $pdf->WriteHTML($s_pdf_content);
-
+    
     if (isset($singleItem) && $singleItem) {
-        $pdf->Output($pdfs_path . md5($purchaseRecords[0]['id']) . '_barcodes.pdf', 'F');
+        $pdf->Output($pdfs_path . md5($purchaseRecords[0]['product_details_id']) . '_barcodes.pdf', 'F');
     } else {
         $pdf->Output($pdfs_path . $now . '_barcodes.pdf', 'F');
     }
 }
+echo $s_pdf_content;
+
 ?>

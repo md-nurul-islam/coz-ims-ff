@@ -81,11 +81,11 @@ class Ims_menu {
                 array('label' => 'Excheang Report', 'url' => '/reports/exchange'),
             ),
         ),
-        array(
-            'label' => 'Generate Barcode',
-            'url' => '/product/manage/barcode',
-            'icon' => '<i class="fa fa-barcode"></i>',
-        ),
+//        array(
+//            'label' => 'Generate Barcode',
+//            'url' => '/product/manage/barcode',
+//            'icon' => '<i class="fa fa-barcode"></i>',
+//        ),
     );
     
     public static $settings_left_menu = array(

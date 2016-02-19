@@ -275,6 +275,7 @@ class ManageController extends Controller {
      * Lists all models.
      */
     public function actionIndex() {
+        
         $this->pageTitle = Yii::app()->name . ' - Product List';
         $this->pageHeader = 'Product List';
 
@@ -307,12 +308,12 @@ class ManageController extends Controller {
     }
 
     public function actionItembarcode() {
-
+        
         if (!Yii::app()->request->isAjaxRequest) {
             echo 'Bad Request';
             Yii::app()->end();
         }
-
+        
         $now = date('Y-m-d H:i:s', Settings::getBdLocalTime());
         $store_id = 1;
         if (!Yii::app()->user->isSuperAdmin) {
@@ -353,7 +354,7 @@ class ManageController extends Controller {
             $ref_num->insert();
         }
 
-        $_data[0]['id'] = $product_details_id;
+        $_data[0]['product_details_id'] = $product_details_id;
 
         $_data[0]['code'] = $ref_num->reference_number;
         $_data[0]['purchase_price'] = $item['purchase_price'];
@@ -370,12 +371,12 @@ class ManageController extends Controller {
         $barcode['thickness'] = 35;
         $barcode['codetype'] = 'BCGean13';
 
-        $mPDF1 = Yii::app()->ePdf->mpdf();
+//        $mPDF1 = Yii::app()->ePdf->mpdf();
 
         echo $this->renderPartial('_barcode_partial', array(
             'purchaseRecords' => ($_data) ? $_data : array(),
             'singleItem' => TRUE,
-            'pdf' => $mPDF1,
+//            'pdf' => $mPDF1,
             'barcode' => $barcode,
                 ), TRUE);
     }

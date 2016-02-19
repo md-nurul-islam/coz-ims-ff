@@ -131,7 +131,7 @@ class PurchaseCartItems extends CActiveRecord {
                 ->limit(100)
         ;
 
-        $command->select('t.id, pd.product_name, t.reference_number_id, t.cost, t.price, t.quantity, pse.purchase_date');
+        $command->select('t.id, t.product_details_id, pd.product_name, t.reference_number_id, t.cost, t.price, t.quantity, pse.purchase_date');
 
         $command->where('reference_number_id = 0 OR reference_number_id = "" OR reference_number_id IS NULL');
         $data = $command->queryAll();
@@ -147,6 +147,7 @@ class PurchaseCartItems extends CActiveRecord {
         foreach ($ar_data as $row) {
 
             $_data['id'] = $row['id'];
+            $_data['product_details_id'] = $row['product_details_id'];
 
             $_data['code'] = (empty($row['reference_number'])) ? Settings::getUniqueId($_data['id']) : $row['reference_number'];
             $_data['purchase_price'] = $row['cost'];
