@@ -95,7 +95,7 @@
 
 <?php if ($model) { ?>
     <?php
-    $this->renderPartial('_data_table', array(
+    $this->renderPartial("{$partial}", array(
         'model' => $model,
         'msg' => $msg,
         'advance_sale_list' => FALSE,
