@@ -27,7 +27,8 @@ class DifferentialController extends Controller {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
                 'actions' => array('index',),
-                'users' => array('@'),
+                'expression' => '(!Yii::app()->user->isGuest) && (Yii::app()->user->isSuperAdmin || Yii::app()->user->isStoreAdmin)',
+//                'users' => array('@'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),
