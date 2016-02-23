@@ -8,7 +8,12 @@
                 <h3 class="text-aqua">Sales / Purchase Report Starting from <?php echo $from_date; ?> till <?php echo $to_date; ?></h3>
             </div>
 
-            <legend></legend>
+            <legend>
+                *** NOTE: <br />
+                1. Purchase records are calculated from the beginnings till today, but sales records are calculated between the given date range.
+                <br />2. HG: Highest, LW: Lowest, AV: Average, LT: Latest.
+                <br />3. Sold items of given date range are showed only.
+            </legend>
 
             <div class="report_table">
 
@@ -51,7 +56,12 @@
                                     <?php echo (!empty($product_data['size_name'])) ? "<span class=\"label label-success\">{$product_data['size_name']}</span>" : ""; ?>
                                     <?php echo (!empty($product_data['grade_name'])) ? "<span class=\"label label-info\">{$product_data['grade_name']}</span>" : ""; ?>
                                 </td>
-                                <td><?php echo $product_data['purchase_price']; ?></td>
+                                <td>
+                                    <p>HG: <?php echo number_format($product_data['highest_cost'], 2); ?></p>
+                                    <p>LW: <?php echo number_format($product_data['lowest_cost'], 2); ?></p>
+                                    <p>AV: <?php echo number_format( ($product_data['purchased_total'] / $product_data['purchased_qty']) , 2); ?></p>
+                                    <p>LT: <?php echo number_format($product_data['purchase_price'], 2); ?></p>
+                                </td>
                                 <td>
                                     <?php
                                     echo $product_data['purchased_qty'];
@@ -64,7 +74,12 @@
                                     $total_purchased_total += floatval($product_data['purchased_total']);
                                     ?>
                                 </td>
-                                <td><?php echo $product_data['selling_price']; ?></td>
+                                <td>
+                                    <p>HG: <?php echo number_format($product_data['highest_price'], 2); ?></p>
+                                    <p>LW: <?php echo number_format($product_data['lowest_price'], 2); ?></p>
+                                    <p>AV: <?php echo number_format( ($product_data['sold_total'] / $product_data['sold_qty']) , 2); ?></p>
+                                    <p>LT: <?php echo number_format($product_data['selling_price'], 2); ?></p>
+                                </td>
                                 <td>
                                     <?php
                                     echo $product_data['sold_qty'];

@@ -623,6 +623,8 @@ class ProductStockSales extends CActiveRecord {
                 SUM(ci.quantity) AS total_sold_qty,
                 SUM(ci.discount) AS toal_item_discount,
                 SUM(ci.vat) AS toal_item_vat,
+                MAX(ci.price) AS highest_price,
+                MIN(ci.price) AS lowest_price,
                 SUM(ci.sub_total) AS sold_total,
                 pd.product_name,
                 pd.purchase_price,
@@ -635,20 +637,23 @@ class ProductStockSales extends CActiveRecord {
 
         $sale_data = $sale_query->queryAll();
 
+        $sold_product_ids = array_unique(array_map(function ($row) {
+                    return $row['sold_product_id'];
+                }, $sale_data));
+
         $purchase_query = Yii::app()->db->createCommand()
                 ->from(ProductStockEntries::model()->tableName() . ' pse')
                 ->join(PurchaseCartItems::model()->tableName() . ' pci', 'pse.purchase_cart_id = pci.cart_id')
                 ->andWhere('pse.store_id = :store_id', array(':store_id' => $store_id))
                 ->andWhere('pci.product_details_id > :pid', array(':pid' => 0))
-                ->andWhere('DATE(pse.purchase_date) >= :from_date AND DATE(pse.purchase_date) <= :to_date', array(
-                    ':from_date' => $from_date,
-                    ':to_date' => $to_date,
-                ))
+                ->andWhere(array('in', 'pci.product_details_id', $sold_product_ids))
                 ->group('pci.product_details_id')
         ;
 
         $purchase_query->select(
                 'pci.product_details_id AS purchased_product_id,
+                 MAX(pci.cost) AS highest_cost,
+                 MIN(pci.cost) AS lowest_cost,
                 sum(pci.quantity) AS purchased_qty,
                 sum(pci.sub_total) AS purchased_total
                 '
@@ -684,8 +689,8 @@ class ProductStockSales extends CActiveRecord {
                 $_data[$sale['sold_product_id']]['sold_total_discount'] = $sale['toal_discount'];
                 $_data[$sale['sold_product_id']]['purchased_qty'] = 0;
                 $_data[$sale['sold_product_id']]['purchased_total'] = 0.00;
-//                $_data[$sale['sold_product_id']]['sold_item_vat'] = $sale['toal_item_vat'];
-//                $_data[$sale['sold_product_id']]['sold_item_discount'] = $sale['toal_item_discount'];
+                $_data[$sale['sold_product_id']]['highest_price'] = $sale['highest_price'];
+                $_data[$sale['sold_product_id']]['lowest_price'] = $sale['lowest_price'];
             }
 
             foreach ($purchase_data as $purchase) {
@@ -693,11 +698,13 @@ class ProductStockSales extends CActiveRecord {
                     if ($purchase['purchased_product_id'] == $sale['sold_product_id']) {
                         $_data[$sale['sold_product_id']]['purchased_qty'] = $purchase['purchased_qty'];
                         $_data[$sale['sold_product_id']]['purchased_total'] = $purchase['purchased_total'];
+                        $_data[$sale['sold_product_id']]['highest_cost'] = $purchase['highest_cost'];
+                        $_data[$sale['sold_product_id']]['lowest_cost'] = $purchase['lowest_cost'];
                     }
                 }
             }
         }
-
+        
         return $formatted_response = $_data;
     }
 
