@@ -75,6 +75,7 @@ class Ims_menu {
             'submenu' => array(
                 array('label' => 'Sale Report', 'url' => '/reports/sale'),
                 array('label' => 'Sale / Purchase Report', 'url' => '/reports/sale/purchase_sale'),
+                array('label' => 'Cumulative Report', 'url' => '/reports/sale/cumulative'),
                 array('label' => 'Stock Report', 'url' => '/reports/stock'),
                 array('label' => 'Differential Report', 'url' => '/reports/differential'),
                 array('label' => 'Advance Sale Report', 'url' => '/reports/sale/advance_sale'),

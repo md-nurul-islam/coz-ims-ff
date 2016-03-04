@@ -26,7 +26,7 @@ class SaleController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('purchase_sale'),
+                'actions' => array('cumulative', 'purchase_sale'),
                 'expression' => '(!Yii::app()->user->isGuest) && (Yii::app()->user->isSuperAdmin || Yii::app()->user->isStoreAdmin)',
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -75,13 +75,49 @@ class SaleController extends Controller {
         ));
     }
     
+    public function actionCumulative() {
+        
+        $model = false;
+        $msg = '';
+        
+        $this->pageTitle = Yii::app()->name . ' - Sale Report';
+        $this->pageHeader = 'Cumulative Report';
+        
+        $today = date('Y-m-d', Settings::getBdLocalTime());
+        $from_date = $today;
+        $to_date = $today;
+        
+        if( Yii::app()->request->isPostRequest && !empty($_POST) ){
+            
+            $from_date = Yii::app()->request->getPost('from_date');
+            $to_date = Yii::app()->request->getPost('to_date');
+            
+            $model = new ProductStockSales;
+            $model = $model->getSalePurchaseDataForReport($from_date, $to_date);
+            
+            if(!$model){
+                $msg = 'No data found in the given date range.';
+            }
+        }
+        
+        $this->render('index', array(
+            'model' => $model,
+            'msg' => $msg,
+            'advance_sale_list' => FALSE,
+            'today' => $today,
+            'from_date' => $from_date,
+            'to_date' => $to_date,
+            'partial' => '_cumulative',
+        ));
+    }
+    
     public function actionPurchase_sale() {
         
         $model = false;
         $msg = '';
         
         $this->pageTitle = Yii::app()->name . ' - Sale Report';
-        $this->pageHeader = 'Sale Report';
+        $this->pageHeader = 'Sale / Purchase Report';
         
         $today = date('Y-m-d', Settings::getBdLocalTime());
         $from_date = $today;
