@@ -371,12 +371,13 @@ class ManageController extends Controller {
         $barcode['thickness'] = 35;
         $barcode['codetype'] = 'BCGean13';
 
-//        $mPDF1 = Yii::app()->ePdf->mpdf();
+        require_once 'vendor/autoload.php';
+        $generator = new Picqer\Barcode\BarcodeGeneratorHTML();
 
         echo $this->renderPartial('_barcode_partial', array(
             'purchaseRecords' => ($_data) ? $_data : array(),
             'singleItem' => TRUE,
-//            'pdf' => $mPDF1,
+            'generator' => $generator,
             'barcode' => $barcode,
                 ), TRUE);
     }

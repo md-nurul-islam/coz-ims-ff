@@ -15,10 +15,11 @@ if (!empty($purchaseRecords)) {
     foreach ($purchaseRecords as $pr) {
         ?>
         <?php for ($i = 0; $i < $pr['quantity']; $i++) { ?>
-            <div class="code-wrapper">
+            <div class="code-wrapper print">
                 <div class="prod_barcode">
-                    <img style="display: none;" src="/product/barcode/generate?filetype=<?php echo $barcode['filetype']; ?>&dpi=<?php echo $barcode['dpi']; ?>&scale=<?php echo $barcode['scale']; ?>&rotation=<?php echo $barcode['rotation']; ?>&font_family=<?php echo $barcode['font_family']; ?>&font_size=<?php echo $barcode['font_size']; ?>&text=<?php echo $pr['code']; ?>&thickness=<?php echo $barcode['thickness']; ?>&code=<?php echo $barcode['codetype']; ?>&pid=<?php echo $pr['product_details_id']; ?>">
-                    <img src="/bc_images/<?php echo $pr['product_details_id']; ?>.png" />
+                    <!--<img style="display: none;" src="/product/barcode/generate?filetype=<?php echo $barcode['filetype']; ?>&dpi=<?php echo $barcode['dpi']; ?>&scale=<?php echo $barcode['scale']; ?>&rotation=<?php echo $barcode['rotation']; ?>&font_family=<?php echo $barcode['font_family']; ?>&font_size=<?php echo $barcode['font_size']; ?>&text=<?php echo $pr['code']; ?>&thickness=<?php echo $barcode['thickness']; ?>&code=<?php echo $barcode['codetype']; ?>&pid=<?php echo $pr['product_details_id']; ?>">-->
+                    <!--<img src="/bc_images/<?php // echo $pr['product_details_id']; ?>.png" />-->
+                    <?php echo $generator->getBarcode($pr['code'], $generator::TYPE_EAN_13, 1, 60) . " ";?>
                 </div>
                 <div class="prod_name"><?php echo $pr['product_name']; ?></div>
                 <div class="prod_ptice"><?php echo ' TK ' . $pr['selling_price']; ?></div>
@@ -35,7 +36,7 @@ if (!empty($purchaseRecords)) {
             $c++;
             if ($c % 63 == 0) {
                 ?>
-                <pagebreak />
+                <p style="page-break-after:always;"></p>
             <?php } ?>
             <?php
         }
@@ -46,6 +47,9 @@ if (!empty($purchaseRecords)) {
     <label class="control-label">No Product available to generate barcode.</label>
 <?php } ?>
 
+    <div class="print-btn">
+    <button type="button" id="btn-print">Print</button>
+</div>
 
 <style type="text/css" media="all">
     .note {
@@ -99,3 +103,17 @@ if (!empty($purchaseRecords)) {
 echo $s_pdf_content;
 
 ?>
+
+<script type="text/javascript">
+    $(document).on('click', '#btn-print', function() {
+            var divContents = $(".print").html();
+            var printWindow = window.open('', '', 'height=400, width=800');
+            console.log(divContents);
+            printWindow.document.write('<html><head><title>Print</title>');
+            printWindow.document.write('</head><body >');
+            printWindow.document.write(divContents);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        });
+</script>

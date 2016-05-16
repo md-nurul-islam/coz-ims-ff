@@ -40,5 +40,5 @@ $this->renderPartial('//modals/_item_barcode_view');
 
 $cs = Yii::app()->getClientScript();
 $cs->registerScriptFile('/js/custom/item_barcode.js', CClientScript::POS_END);
-$cs->registerScriptFile('http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js', CClientScript::POS_END);
+$cs->registerScriptFile('/js/plugins/CryptoJS/rollups/md5.js', CClientScript::POS_END);
 ?>

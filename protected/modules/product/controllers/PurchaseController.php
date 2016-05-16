@@ -32,7 +32,6 @@ class PurchaseController extends Controller {
                     'getlatestprice',
                     'getproductcolorgradesize',
                     'index',
-                    'print',
                     'view',
                     'create',
                     'update',
@@ -58,7 +57,15 @@ class PurchaseController extends Controller {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
-        $this->redirect(array('print', 'purchase_id' => $id));
+        
+        $this->pageTitle = Yii::app()->name . ' - Purchase Details';
+        $this->pageHeader = 'Purchase Details';
+        
+        $model = $this->loadModel($id);
+
+        $this->render('view', array(
+            'model' => $model,
+        ));
     }
 
     /**
@@ -385,7 +392,7 @@ class PurchaseController extends Controller {
             if (empty($_POST['total'])) {
                 $ar_cart['errors'][] = 'Total is required';
             }
-            
+
             $old_quantity = $quanity = $model->purchaseCart->purchaseCartItems[0]->quantity;
 
             $product_id = $_POST['product_details_id'];
@@ -405,7 +412,7 @@ class PurchaseController extends Controller {
                 $purchase_cart->grand_total = $_POST['total'];
 
                 $model->note = $note;
-                
+
                 $sub_total = intval($_POST['quantity']) * floatval($new_cost);
 
                 $purchase_cart_items = PurchaseCartItems::model()->findByAttributes(array('cart_id' => $purchase_cart->id));
@@ -413,20 +420,20 @@ class PurchaseController extends Controller {
                 $purchase_cart_items->price = $new_price;
                 $purchase_cart_items->quantity = $_POST['quantity'];
                 $purchase_cart_items->sub_total = floatval($sub_total);
-                
-                if( $_POST['quantity'] < $old_quantity ) {
+
+                if ($_POST['quantity'] < $old_quantity) {
                     $qty = $old_quantity - $_POST['quantity'];
                     $stock_info->quantity = ((int) $stock_info->quantity - $qty);
                 } else if ($_POST['quantity'] > $old_quantity) {
                     $qty = $_POST['quantity'] - $old_quantity;
                     $stock_info->quantity = ((int) $stock_info->quantity + $qty);
                 }
-                
+
                 $ProductDetails = ProductDetails::model()->findByAttributes(array('id' => $product_id));
-                
+
                 $ProductDetails->purchase_price = $new_cost;
                 $ProductDetails->selling_price = $new_price;
-                
+
                 $transaction = Yii::app()->db->beginTransaction();
                 try {
 
@@ -484,18 +491,6 @@ class PurchaseController extends Controller {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
     }
 
-    public function actionPrint() {
-
-        $id = Yii::app()->request->getParam('purchase_id');
-
-        $model = new ProductStockEntries;
-        $model = $model->getPurchase($id);
-
-        $this->render('print', array(
-            'model' => $model,
-        ));
-    }
-
     /**
      * Lists all models.
      */
@@ -550,7 +545,36 @@ class PurchaseController extends Controller {
      * @throws CHttpException
      */
     public function loadModel($id) {
-        $model = ProductStockEntries::model()->findByPk($id);
+
+        $store_id = 1;
+        if (!Yii::app()->user->isSuperAdmin) {
+            $store_id = Yii::app()->user->storeId;
+        }
+
+        $criteria = new CDbCriteria();
+        $criteria->compare('t.id', $id);
+        $criteria->compare('t.store_id', $store_id);
+
+        $model = ProductStockEntries::model()->with(array(
+                    'purchaseCart' => array(
+                        'with' => array(
+                            'purchaseCartItems' => array(
+                                'with' => array(
+                                    'productDetails' => array(
+                                        'with' => array(
+                                            'productColor',
+                                            'productGrade',
+                                            'productSize',
+                                            'supplier',
+                                            'productStockAvails'
+                                        )
+                                    )
+                                )
+                            )
+                        ),
+                    ),
+                ))->findByPk($id);
+
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
         return $model;

@@ -1,87 +1,72 @@
-<?php
-/* @var $this PurchaseController */
-/* @var $data ProductStockEntries */
-?>
+<div class="col-lg-12 view">
+    <div class="box box-info">
+        <div class="box-body">
 
-<div class="view">
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">
+                    <?php echo CHtml::hiddenField('product_details_id', $data->id); ?>
+                    <?php // echo CHtml::hiddenField('current_stock', $data->productStockAvails->quantity); ?>
+                    <h4><b><?php echo CHtml::encode($data->billnumber); ?></b></h4>
+                </div>
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('id')); ?>:</b>
-	<?php echo CHtml::link(CHtml::encode($data->id), array('view', 'id'=>$data->id)); ?>
-	<br />
+                <div class="panel-body">
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('purchase_id')); ?>:</b>
-	<?php echo CHtml::encode($data->purchase_id); ?>
-	<br />
+                    <ul class="list-group">
+                        
+                        <li class="list-group-item clearfix">
+                            <div class="label-wrapper border-right">
+                                <?php echo CHtml::label(CHtml::encode($data->getAttributeLabel('purchase_date')), ''); ?>
+                            </div>
+                            <div class="info-wrapper">
+                                <?php echo CHtml::encode($data->purchase_date); ?>
+                            </div>
+                        </li>
+                        
+                        <li class="list-group-item clearfix">
+                            <div class="label-wrapper border-right">
+                                <?php echo CHtml::label(CHtml::encode($data->getAttributeLabel('due_payment_date')), ''); ?>
+                            </div>
+                            <div class="info-wrapper">
+                                <?php
+                                $color = 'N/A';
+//                                if (!empty($data->productColor[0]->color)) {
+//                                    $color = $data->productColor[0]->color->name;
+//                                }
+                                echo CHtml::encode($color);
+                                ?>
+                            </div>
+                        </li>
+                        
+                        <li class="list-group-item clearfix">
+                            <div class="label-wrapper border-right">
+                                <?php echo CHtml::label(CHtml::encode($data->getAttributeLabel('payment_method')), ''); ?>
+                            </div>
+                            <div class="info-wrapper">
+                                <?php
+                                $size = 'N/A';
+//                                if (!empty($data->productSize[0]->size)) {
+//                                    $size = $data->productSize[0]->size->name;
+//                                }
+                                echo CHtml::encode($size);
+                                ?>
+                            </div>
+                        </li>
+                        
+                    </ul>
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('billnumber')); ?>:</b>
-	<?php echo CHtml::encode($data->billnumber); ?>
-	<br />
+                    <div class="clearfix"></div>
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('ref_num')); ?>:</b>
-	<?php echo CHtml::encode($data->ref_num); ?>
-	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('supplier_id')); ?>:</b>
-	<?php echo CHtml::encode($data->supplier_id); ?>
-	<br />
+                </div>
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('category_id')); ?>:</b>
-	<?php echo CHtml::encode($data->category_id); ?>
-	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('product_details_id')); ?>:</b>
-	<?php echo CHtml::encode($data->product_details_id); ?>
-	<br />
+            </div>
 
-	<?php /*
-	<b><?php echo CHtml::encode($data->getAttributeLabel('quantity')); ?>:</b>
-	<?php echo CHtml::encode($data->quantity); ?>
-	<br />
+        </div>
+    </div>
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('purchase_price')); ?>:</b>
-	<?php echo CHtml::encode($data->purchase_price); ?>
-	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('selling_price')); ?>:</b>
-	<?php echo CHtml::encode($data->selling_price); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('purchase_date')); ?>:</b>
-	<?php echo CHtml::encode($data->purchase_date); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('payment_type')); ?>:</b>
-	<?php echo CHtml::encode($data->payment_type); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('item_subtotal')); ?>:</b>
-	<?php echo CHtml::encode($data->item_subtotal); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('note')); ?>:</b>
-	<?php echo CHtml::encode($data->note); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('grand_total_payable')); ?>:</b>
-	<?php echo CHtml::encode($data->grand_total_payable); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('grand_total_paid')); ?>:</b>
-	<?php echo CHtml::encode($data->grand_total_paid); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('grand_total_balance')); ?>:</b>
-	<?php echo CHtml::encode($data->grand_total_balance); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('due_payment_date')); ?>:</b>
-	<?php echo CHtml::encode($data->due_payment_date); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('serial_num')); ?>:</b>
-	<?php echo CHtml::encode($data->serial_num); ?>
-	<br />
-
-	*/ ?>
 
 </div>
+                    <div class="clearfix"></div>

@@ -85,7 +85,7 @@ class ProductStockEntries extends CActiveRecord {
         return array(
             'id' => 'ID',
             'billnumber' => 'Billnumber',
-            'purchase_date' => 'Date',
+            'purchase_date' => 'Purchase Date',
             'due_payment_date' => 'Due Date',
             'payment_method' => 'Payment Method',
             'note' => 'Note',
@@ -210,8 +210,8 @@ class ProductStockEntries extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->with = array('productDetails');
-        $criteria->compare('purchase_id', $id);
+        $criteria->with = array('purchaseCart');
+        $criteria->compare('t.id', $id);
 
         if (!Yii::app()->user->isSuperAdmin) {
             $criteria->compare('productDetails.store_id', $store_id);
@@ -220,7 +220,7 @@ class ProductStockEntries extends CActiveRecord {
         }
 
         $criteria->order = 't.id DESC';
-
+        
         $data = $this->findAll($criteria);
         $data = $this->formatPurchaseRecords($data);
         return $data;
@@ -229,7 +229,7 @@ class ProductStockEntries extends CActiveRecord {
     public function formatPurchaseRecords($obj_purchase) {
 
         $date = date('d-m-Y', strtotime($obj_purchase[0]->purchase_date));
-        $bill_no = $obj_purchase[0]->purchase_id;
+        $bill_no = $obj_purchase[0]->billnumber;
         $g_total_payable = $obj_purchase[0]->grand_total_payable;
         $g_total_paid = $obj_purchase[0]->grand_total_paid;
         $g_total_balance = $obj_purchase[0]->grand_total_balance;

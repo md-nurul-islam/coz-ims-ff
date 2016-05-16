@@ -68,8 +68,14 @@ class SiteController extends Controller {
     }
 
     public function actionTest() {
-        $this->layout = false;
-        $this->render('test');
+        require_once 'vendor/autoload.php';
+
+        $generator = new Picqer\Barcode\BarcodeGeneratorHTML();
+        $code = '081231723897';
+        echo $generator->getBarcode($code, $generator::TYPE_EAN_13);
+        echo '<br />';
+        echo $generator->getBarcode($code, $generator::TYPE_EAN_13, 2, 80);
+        exit;
     }
 
     public function actionGetdata() {
@@ -195,10 +201,10 @@ class SiteController extends Controller {
 
             if (floatval($row->grand_total) != $cart_grand_total) {
                 $row->grand_total = $cart_grand_total;
-                
+
                 $row->discount = ($row->discount <= 0) ? $cart_grand_discount : $row->discount;
-                $row->vat = ($row->vat <= 0) ? $cart_grand_vat : $row->vat ;
-                
+                $row->vat = ($row->vat <= 0) ? $cart_grand_vat : $row->vat;
+
                 $row->update();
                 $i++;
             }
