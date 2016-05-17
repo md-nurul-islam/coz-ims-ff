@@ -383,7 +383,6 @@ class ManageController extends Controller {
     }
 
     public function actionDownloadBarcode() {
-
         $webroot = Yii::getPathOfAlias('webroot');
         $pdfs_path = $webroot . DIRECTORY_SEPARATOR . 'barcode_pdfs' . DIRECTORY_SEPARATOR;
         $name = Yii::app()->request->getParam('barcode');
