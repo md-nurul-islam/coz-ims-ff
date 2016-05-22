@@ -50,7 +50,7 @@ $(document).ready(function () {
 
             if ($('.barcode-content-for-modal').length > 0) {
 
-                var pdf_download_url = '/product/manage/downloadBarcode?barcode=';
+                var pdf_download_url = '/barcode_pdfs/';
                 var hash = CryptoJS.MD5($('#product_details_id').val());
 
                 $('.barcode-content-for-modal').find('a').attr('href', pdf_download_url + hash + '_barcodes.pdf');

@@ -61,7 +61,7 @@ class ManageController extends Controller {
 
         $purchase = ProductStockEntries::model()->purchaseReportDataByProduct($id);
         $sales = ProductStockSales::model()->salesReportDataByProduct($id);
-        
+
         $this->render('view', array(
             'model' => $this->loadModel($id),
             'purchase' => $purchase,
@@ -275,7 +275,7 @@ class ManageController extends Controller {
      * Lists all models.
      */
     public function actionIndex() {
-        
+
         $this->pageTitle = Yii::app()->name . ' - Product List';
         $this->pageHeader = 'Product List';
 
@@ -298,22 +298,24 @@ class ManageController extends Controller {
         $barcode['thickness'] = 35;
         $barcode['codetype'] = 'BCGean13';
 
-        $mPDF1 = Yii::app()->ePdf->mpdf();
+        require_once 'vendor/autoload.php';
+        $generator = new Picqer\Barcode\BarcodeGeneratorHTML();
 
         $this->render('barcode', array(
             'purchaseRecords' => ($purchaseRecords) ? $purchaseRecords : array(),
-            'pdf' => $mPDF1,
+//            'pdf' => $mPDF1,
             'barcode' => $barcode,
+            'generator' => $generator,
         ));
     }
 
     public function actionItembarcode() {
-        
+
         if (!Yii::app()->request->isAjaxRequest) {
             echo 'Bad Request';
             Yii::app()->end();
         }
-        
+
         $now = date('Y-m-d H:i:s', Settings::getBdLocalTime());
         $store_id = 1;
         if (!Yii::app()->user->isSuperAdmin) {
@@ -354,23 +356,19 @@ class ManageController extends Controller {
             $ref_num->insert();
         }
 
-        $_data[0]['product_details_id'] = $product_details_id;
+        for ($i = 0; $i < $num_barcode; $i++) {
 
-        $_data[0]['code'] = $ref_num->reference_number;
-        $_data[0]['purchase_price'] = $item['purchase_price'];
-        $_data[0]['selling_price'] = $item['selling_price'];
-        $_data[0]['product_name'] = $item['product_name'];
-        $_data[0]['quantity'] = $num_barcode;
+            $_data[$i]['product_details_id'] = $product_details_id;
 
-        $barcode['filetype'] = 'PNG';
-        $barcode['dpi'] = 300;
-        $barcode['scale'] = 1;
-        $barcode['rotation'] = 0;
-        $barcode['font_family'] = 'Arial.ttf';
-        $barcode['font_size'] = 7;
-        $barcode['thickness'] = 35;
-        $barcode['codetype'] = 'BCGean13';
-
+            $_data[$i]['code'] = $ref_num->reference_number;
+            $_data[$i]['purchase_price'] = $item['purchase_price'];
+            $_data[$i]['selling_price'] = $item['selling_price'];
+            $_data[$i]['product_name'] = $item['product_name'];
+            $_data[$i]['quantity'] = $num_barcode;
+        }
+        
+        $_data = array_chunk($_data, Settings::$_num_barcode_column_per_page);
+        
         require_once 'vendor/autoload.php';
         $generator = new Picqer\Barcode\BarcodeGeneratorHTML();
 
@@ -378,7 +376,6 @@ class ManageController extends Controller {
             'purchaseRecords' => ($_data) ? $_data : array(),
             'singleItem' => TRUE,
             'generator' => $generator,
-            'barcode' => $barcode,
                 ), TRUE);
     }
 
@@ -387,7 +384,7 @@ class ManageController extends Controller {
         $pdfs_path = $webroot . DIRECTORY_SEPARATOR . 'barcode_pdfs' . DIRECTORY_SEPARATOR;
         $name = Yii::app()->request->getParam('barcode');
 
-        if (file_exists($pdfs_path . $name)) {
+        if (file_exists($webroot . $name)) {
             Yii::app()->getRequest()->sendFile($name, file_get_contents($pdfs_path . $name));
         } else {
             throw new CException(404, 'File not found.');
@@ -397,17 +394,27 @@ class ManageController extends Controller {
     public function actionBarcodeFileList() {
 
         $webroot = Yii::getPathOfAlias('webroot');
-        $pdfs_path = $webroot . DIRECTORY_SEPARATOR . 'barcode_pdfs';
+        $single_or_bulk = Yii::app()->request->getPost('data');
 
+        if ('bulk' === $single_or_bulk) {
+            $dir = 'bulk_barcode';
+        } else {
+            $dir = 'barcode_pdfs';
+        }
+        $pdfs_path = $webroot . DIRECTORY_SEPARATOR . $dir;
         $files = CFileHelper::findFiles($pdfs_path);
 
         $response = array();
         if (!empty($files)) {
             foreach ($files as $file) {
                 $ar_file_name = explode('/', $file);
-                $response[] = end($ar_file_name);
+                $file_name = end($ar_file_name);
+                $file_info['name'] = $file_name;
+                $file_info['url'] = "/{$dir}/{$file_name}";
+                $response[] = $file_info;
             }
         }
+
         echo json_encode($response);
         Yii::app()->end();
     }

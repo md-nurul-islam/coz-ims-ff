@@ -29,7 +29,6 @@
             <div class="barcode-container"></div>
         </li>
         <li class="list-group-item clearfix">
-            <a id="btn-print" href="#" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-print"></span> Print</a>
             <a style="margin: 10px;" class="btn btn-primary pull-right close-modal-item-barcode-view" href="">Export as PDF</a>
         </li>
     </ul>
