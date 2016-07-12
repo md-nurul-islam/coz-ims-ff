@@ -14,8 +14,8 @@ class Ims_menu {
             'url' => '#',
             'icon' => '<i class="fa fa-upload"></i>',
             'submenu' => array(
-                array('label' => 'Supplier List', 'url' => '/supplier/manage'),
-                array('label' => 'Add Supplier', 'url' => '/supplier/manage/create'),
+                array('label' => 'Supplier List', 'url' => '/supplier/manage', 'adminOnly' => false),
+                array('label' => 'Add Supplier', 'url' => '/supplier/manage/create', 'adminOnly' => false),
             ),
         ),
         array(
@@ -23,8 +23,8 @@ class Ims_menu {
             'url' => '#',
             'icon' => '<i class="glyphicon glyphicon-user"></i>',
             'submenu' => array(
-                array('label' => 'Customer List', 'url' => '/customer/manage'),
-                array('label' => 'Add Customer', 'url' => '/customer/manage/create'),
+                array('label' => 'Customer List', 'url' => '/customer/manage', 'adminOnly' => false),
+                array('label' => 'Add Customer', 'url' => '/customer/manage/create', 'adminOnly' => false),
             ),
         ),
         array(
@@ -32,10 +32,10 @@ class Ims_menu {
             'url' => '#',
             'icon' => '<i class="fa fa-th-list"></i>',
             'submenu' => array(
-                array('label' => 'Category List', 'url' => '/product/category'),
-                array('label' => 'Add Category', 'url' => '/product/category/create'),
-                array('label' => 'Product List', 'url' => '/product/manage'),
-                array('label' => 'Add Product', 'url' => '/product/manage/create'),
+                array('label' => 'Category List', 'url' => '/product/category', 'adminOnly' => false),
+                array('label' => 'Add Category', 'url' => '/product/category/create', 'adminOnly' => false),
+                array('label' => 'Product List', 'url' => '/product/manage', 'adminOnly' => false),
+                array('label' => 'Add Product', 'url' => '/product/manage/create', 'adminOnly' => false),
             ),
         ),
         array(
@@ -43,8 +43,8 @@ class Ims_menu {
             'url' => '#',
             'icon' => '<i class="glyphicon glyphicon-save"></i>',
             'submenu' => array(
-                array('label' => 'Purchase List', 'url' => '/product/purchase'),
-                array('label' => 'Purchase Product', 'url' => '/product/purchase/createsingle'),
+                array('label' => 'Purchase List', 'url' => '/product/purchase', 'adminOnly' => false),
+                array('label' => 'Purchase Product', 'url' => '/product/purchase/createsingle', 'adminOnly' => false),
 //    	array('label'=>'Purchase Product', 'url'=>array('create')),
             ),
         ),
@@ -53,10 +53,10 @@ class Ims_menu {
             'url' => '#',
             'icon' => '<i class="fa fa-shopping-cart"></i>',
             'submenu' => array(
-                array('label' => 'Sales List', 'url' => '/product/sale'),
-                array('label' => 'Sale Product', 'url' => '/product/sale/create'),
-                array('label' => 'Advance Sale List', 'url' => '/product/sale/advance_sale_list'),
-                array('label' => 'Advance Sale', 'url' => '/product/sale/advance_sale'),
+                array('label' => 'Sales List', 'url' => '/product/sale', 'adminOnly' => false),
+                array('label' => 'Sale Product', 'url' => '/product/sale/create', 'adminOnly' => false),
+                array('label' => 'Advance Sale List', 'url' => '/product/sale/advance_sale_list', 'adminOnly' => false),
+                array('label' => 'Advance Sale', 'url' => '/product/sale/advance_sale', 'adminOnly' => false),
             ),
         ),
         array(
@@ -64,8 +64,8 @@ class Ims_menu {
             'url' => '#',
             'icon' => '<i class="fa fa-exchange"></i>',
             'submenu' => array(
-                array('label' => 'Exchange List', 'url' => '/product/exchange'),
-                array('label' => 'Exchange Product', 'url' => '/product/exchange/create'),
+                array('label' => 'Exchange List', 'url' => '/product/exchange', 'adminOnly' => false),
+                array('label' => 'Exchange Product', 'url' => '/product/exchange/create', 'adminOnly' => false),
             ),
         ),
         array(
@@ -73,14 +73,14 @@ class Ims_menu {
             'url' => '#',
             'icon' => '<i class="fa fa-bar-chart-o"></i>',
             'submenu' => array(
-                array('label' => 'Sale Report', 'url' => '/reports/sale'),
-                array('label' => 'Sale / Purchase Report', 'url' => '/reports/sale/purchase_sale'),
-                array('label' => 'Cumulative Report', 'url' => '/reports/sale/cumulative'),
-                array('label' => 'Stock Report', 'url' => '/reports/stock'),
-                array('label' => 'Differential Report', 'url' => '/reports/differential'),
-                array('label' => 'Advance Sale Report', 'url' => '/reports/sale/advance_sale'),
-                array('label' => 'Purchase Report', 'url' => '/reports/purchase'),
-                array('label' => 'Excheang Report', 'url' => '/reports/exchange'),
+                array('label' => 'Sale Report', 'url' => '/reports/sale', 'adminOnly' => false),
+                array('label' => 'Sale / Purchase Report', 'url' => '/reports/sale/purchase_sale', 'adminOnly' => true),
+                array('label' => 'Cumulative Report', 'url' => '/reports/sale/cumulative', 'adminOnly' => true),
+                array('label' => 'Stock Report', 'url' => '/reports/stock', 'adminOnly' => false),
+                array('label' => 'Differential Report', 'url' => '/reports/differential', 'adminOnly' => true),
+                array('label' => 'Advance Sale Report', 'url' => '/reports/sale/advance_sale', 'adminOnly' => false),
+                array('label' => 'Purchase Report', 'url' => '/reports/purchase', 'adminOnly' => false),
+                array('label' => 'Excheang Report', 'url' => '/reports/exchange', 'adminOnly' => false),
             ),
         ),
         array(
@@ -97,8 +97,8 @@ class Ims_menu {
             'url' => '#',
             'icon' => '<i class="fa fa-upload"></i>',
             'submenu' => array(
-                array('label' => 'Color List', 'url' => '/configuration/colors'),
-                array('label' => 'Add Color', 'url' => '/configuration/colors/create'),
+                array('label' => 'Color List', 'url' => '/configuration/colors', 'adminOnly' => false),
+                array('label' => 'Add Color', 'url' => '/configuration/colors/create', 'adminOnly' => false),
             ),
         ),
         array(
@@ -106,8 +106,8 @@ class Ims_menu {
             'url' => '#',
             'icon' => '<i class="fa fa-upload"></i>',
             'submenu' => array(
-                array('label' => 'Size List', 'url' => '/configuration/size'),
-                array('label' => 'Add Size', 'url' => '/configuration/size/create'),
+                array('label' => 'Size List', 'url' => '/configuration/size', 'adminOnly' => false),
+                array('label' => 'Add Size', 'url' => '/configuration/size/create', 'adminOnly' => false),
             ),
         ),
         array(
@@ -115,8 +115,8 @@ class Ims_menu {
             'url' => '#',
             'icon' => '<i class="fa fa-upload"></i>',
             'submenu' => array(
-                array('label' => 'Quality List', 'url' => '/configuration/qualities'),
-                array('label' => 'Add Quality', 'url' => '/configuration/qualities/create'),
+                array('label' => 'Quality List', 'url' => '/configuration/qualities', 'adminOnly' => false),
+                array('label' => 'Add Quality', 'url' => '/configuration/qualities/create', 'adminOnly' => false),
             ),
         ),
     );
@@ -128,8 +128,8 @@ class Ims_menu {
             'url' => '#',
             'icon' => '<i class="fa fa-upload"></i>',
             'submenu' => array(
-                array('label' => 'Groups', 'url' => '/user/group/'),
-                array('label' => 'Add Group', 'url' => '/user/group/create'),
+                array('label' => 'Groups', 'url' => '/user/group/', 'adminOnly' => true),
+                array('label' => 'Add Group', 'url' => '/user/group/create', 'adminOnly' => true),
             ),
         ),
         array(
@@ -137,8 +137,8 @@ class Ims_menu {
             'url' => '#',
             'icon' => '<i class="fa fa-upload"></i>',
             'submenu' => array(
-                array('label' => 'Size List', 'url' => '/configuration/size'),
-                array('label' => 'Add Size', 'url' => '/configuration/size/create'),
+                array('label' => 'Size List', 'url' => '/configuration/size', 'adminOnly' => true),
+                array('label' => 'Add Size', 'url' => '/configuration/size/create', 'adminOnly' => true),
             ),
         ),
         array(
@@ -146,8 +146,8 @@ class Ims_menu {
             'url' => '#',
             'icon' => '<i class="fa fa-upload"></i>',
             'submenu' => array(
-                array('label' => 'Quality List', 'url' => '/configuration/qualities'),
-                array('label' => 'Add Quality', 'url' => '/configuration/qualities/create'),
+                array('label' => 'Quality List', 'url' => '/configuration/qualities', 'adminOnly' => true),
+                array('label' => 'Add Quality', 'url' => '/configuration/qualities/create', 'adminOnly' => true),
             ),
         ),
     );

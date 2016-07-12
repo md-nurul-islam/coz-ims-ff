@@ -129,7 +129,7 @@ class Configurations extends CActiveRecord {
         return $command->queryRow();
     }
 
-    public function getStoreConfigs() {
+    public function getStoreConfigs($b_all_config = false) {
 
         $store_id = 1;
         if (!Yii::app()->user->isSuperAdmin) {
@@ -144,15 +144,32 @@ class Configurations extends CActiveRecord {
 
         $fomratted_data = [];
         if (!empty($config_data)) {
-            foreach ($config_data as $config) {
-                $key = array_search($config['key'], Settings::$_bill_header_and_footer_config_keys);
 
-                $fomratted_data[$key]['id'] = $config['id'];
-                $fomratted_data[$key]['value'] = $config['value'];
+            if (!$b_all_config) {
+                foreach ($config_data as $config) {
+                    $key = array_search($config['key'], Settings::$_bill_header_and_footer_config_keys);
+
+                    $fomratted_data[$key]['id'] = $config['id'];
+                    $fomratted_data[$key]['value'] = $config['value'];
+                }
+            } else {
+                foreach ($config_data as $config) {
+                    $fomratted_data[$config['key']]['id'] = $config['id'];
+                    $fomratted_data[$config['key']]['value'] = $config['value'];
+                }
             }
         }
 
         return $fomratted_data;
+    }
+
+    public function getFakeSaleReportLimit() {
+        $configs = $this->getStoreConfigs(true);
+        
+        if(!array_key_exists('fakeSaleReportLimit', $configs)) {
+            return false;
+        }
+        return $configs['fakeSaleReportLimit']['value'];
     }
 
 }

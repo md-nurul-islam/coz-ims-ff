@@ -119,7 +119,7 @@
                             <th><?php echo $total_purchased_qty; ?></th>
                             <th><?php echo number_format($total_purchased_total, 2); ?></th>
                             <th><?php echo '&nbsp;'; ?></th>
-                            <th><?php echo number_format($total_sold_qty, 2); ?></th>
+                            <th><?php echo $total_sold_qty; ?></th>
                             <th><?php echo number_format($total_sold_total, 2); ?></th>
                             <th><?php echo number_format($total_sold_vat, 2); ?></th>
                             <th><?php echo number_format($total_sold_discount, 2); ?></th>

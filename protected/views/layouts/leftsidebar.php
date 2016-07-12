@@ -54,7 +54,22 @@
                         <ul class="treeview-menu">
                             <?php foreach ($menu['submenu'] as $sub_menu) {
                                 ?>
-                                <li><a href="<?php echo $sub_menu['url']; ?>"><i class="fa fa-circle-o"></i> <?php echo $sub_menu['label']; ?></a></li>
+                                <?php
+                                if ((!Yii::app()->user->isGuest) && (!$sub_menu['adminOnly'])
+                                ) {
+                                    ?>
+                                    <li><a href="<?php echo $sub_menu['url']; ?>"><i class="fa fa-circle-o"></i> <?php echo $sub_menu['label']; ?></a></li>
+                                <?php } ?>
+
+                                <?php
+                                if ((!Yii::app()->user->isGuest) &&
+                                        (Yii::app()->user->isSuperAdmin || Yii::app()->user->isStoreAdmin) &&
+                                        ($sub_menu['adminOnly'])
+                                ) {
+                                    ?>
+                                    <li><a href="<?php echo $sub_menu['url']; ?>"><i class="fa fa-circle-o"></i> <?php echo $sub_menu['label']; ?></a></li>
+                                <?php } ?>
+
                             <?php } ?>
                         </ul>
                     <?php } ?>

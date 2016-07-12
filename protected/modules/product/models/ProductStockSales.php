@@ -543,12 +543,16 @@ class ProductStockSales extends CActiveRecord {
 
     private function formatSaleDataForReport($ar_data) {
 
-        $formatted_data = array();
+        $fake_sale_limit = intval(Configurations::model()->getFakeSaleReportLimit());
 
+
+
+        $formatted_data = array();
         $sale_ids = array_unique(array_map(function ($row) {
                     return $row['billnumber'];
                 }, $ar_data));
 
+        $i = 0;
         foreach ($sale_ids as $sale_id) {
 
             $_data = array();
@@ -578,8 +582,11 @@ class ProductStockSales extends CActiveRecord {
                 }
                 $formatted_data[$sale_id] = $_data;
             }
+            $i++;
+            if (!Yii::app()->user->isSuperAdmin && !Yii::app()->user->isStoreAdmin && $fake_sale_limit === $i) {
+                break;
+            }
         }
-
         return $formatted_data;
     }
 
@@ -704,7 +711,7 @@ class ProductStockSales extends CActiveRecord {
                 }
             }
         }
-        
+
         return $formatted_response = $_data;
     }
 
