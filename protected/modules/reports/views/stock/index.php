@@ -6,7 +6,7 @@
 
             <?php
             if ($model) {
-                $this->renderPartial('_data_table', array(
+                $this->renderPartial("_{$pView}", array(
                     'model' => $model,
                     'msg' => $msg,
                 ));

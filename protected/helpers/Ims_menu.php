@@ -77,6 +77,7 @@ class Ims_menu {
                 array('label' => 'Sale / Purchase Report', 'url' => '/reports/sale/purchase_sale', 'adminOnly' => true),
                 array('label' => 'Cumulative Report', 'url' => '/reports/sale/cumulative', 'adminOnly' => true),
                 array('label' => 'Stock Report', 'url' => '/reports/stock', 'adminOnly' => false),
+                array('label' => 'Amount As Stock', 'url' => '/reports/stock/amount', 'adminOnly' => false),
                 array('label' => 'Differential Report', 'url' => '/reports/differential', 'adminOnly' => true),
                 array('label' => 'Advance Sale Report', 'url' => '/reports/sale/advance_sale', 'adminOnly' => false),
                 array('label' => 'Purchase Report', 'url' => '/reports/purchase', 'adminOnly' => false),

@@ -26,8 +26,12 @@ class StockController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index',),
+                'actions' => array('index'),
                 'users' => array('@'),
+            ),
+            array('allow', // allow authenticated user to perform 'create' and 'update' actions
+                'actions' => array('amount'),
+                'expression' => '(!Yii::app()->user->isGuest) && (Yii::app()->user->isSuperAdmin || Yii::app()->user->isStoreAdmin)',
             ),
             array('deny', // deny all users
                 'users' => array('*'),
@@ -51,6 +55,27 @@ class StockController extends Controller {
         $this->render('index', array(
             'model' => $model,
             'msg' => $msg,
+            'pView' => 'data_table'
+        ));
+    }
+
+    public function actionAmount() {
+
+        $msg = '';
+
+        $this->pageTitle = Yii::app()->name . ' - Stock Report';
+        $this->pageHeader = 'Stock Report';
+        
+        $model = ProductStockAvail::model()->getTotalAmountInStock();
+        
+        if (!$model) {
+            $msg = 'No data found.';
+        }
+
+        $this->render('index', array(
+            'model' => $model,
+            'msg' => $msg,
+            'pView' => 'amount'
         ));
     }
 

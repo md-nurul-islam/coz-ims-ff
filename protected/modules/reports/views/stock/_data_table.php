@@ -1,5 +1,5 @@
 
-<div class="center col-lg-7">
+<div class="text-center col-sm-12">
     <h3 class="text-aqua">Stock Report Till Now</h3>
 </div>
 

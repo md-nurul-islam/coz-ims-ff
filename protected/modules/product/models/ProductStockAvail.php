@@ -167,9 +167,45 @@ class ProductStockAvail extends CActiveRecord {
         $command->join("({$sub_command_join->getText()}) pd", 'psa.product_details_id = pd.id');
         $command->where('psa.store_id = :sid', array(':sid' => $store_id));
         $data = $command->queryAll();
-        
-        
+
+
         return (!empty($data)) ? $data : false;
+    }
+
+    public function getTotalAmountInStock() {
+        $store_id = 1;
+        if (!Yii::app()->user->isSuperAdmin) {
+            $store_id = Yii::app()->user->storeId;
+        }
+
+        $sub_command_cost = Yii::app()->db->createCommand()
+                ->select('cost')
+                ->from(PurchaseCartItems::model()->tableName() . ' pci')
+                ->where('pci.product_details_id = psa.product_details_id')
+                ->limit(1)
+        ;
+
+        $command = Yii::app()->db->createCommand();
+        $command->select(
+                "
+                ( SUM(psa.quantity) * ({$sub_command_cost->getText()}) ) AS product_amount,
+                SUM(psa.quantity) AS available_stock
+                "
+        );
+        $command->from("{$this->tableName()} AS psa");
+        $command->group('psa.product_details_id');
+        $command->having('available_stock > :as', [':as' => 0]);
+        $data = $command->queryAll();
+
+        $total_amount = 0;
+        $total_quantity = 0;
+        if (!empty($data)) {
+            foreach ($data as $row) {
+                $total_amount += floatval($row['product_amount']);
+                $total_quantity += intval($row['available_stock']);
+            }
+        }
+        return ['total_amount' => $total_amount, 'total_quantity' => $total_quantity];
     }
 
     /**
