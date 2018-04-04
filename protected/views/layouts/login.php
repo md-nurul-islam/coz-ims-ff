@@ -30,7 +30,7 @@
         <div class="login-box">
 
             <div class="login-logo">
-                <a href="/site/login"><b>Pit</b>f!</a>
+                <a href="/site/login"><b>ess</b>ey</a>
             </div><!-- /.login-logo -->
 
             <?php echo $content; ?>

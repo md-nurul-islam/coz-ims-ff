@@ -3,9 +3,9 @@
     <!-- Logo -->
     <a href="/css/index2.html" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class="logo-mini"><b>Pit</b>f!</span>
+        <span class="logo-mini"><b>ess</b>ey</span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><b>Pit</b>f!</span>
+        <span class="logo-lg"><b><b>ess</b>ey</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top" role="navigation">
