@@ -213,5 +213,10 @@ class SiteController extends Controller {
         var_dump($i);
         exit;
     }
+    
+    public function actionClearCartTmp() {
+        Yii::app()->db->createCommand()->truncateTable(TmpCartItems::model()->tableName());
+        Yii::app()->db->createCommand()->truncateTable(TmpCart::model()->tableName());
+    }
 
 }

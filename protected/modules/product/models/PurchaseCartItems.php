@@ -137,52 +137,45 @@ class PurchaseCartItems extends CActiveRecord {
         $data = $command->queryAll();
 
         $itemList = $this->formatPurchaseBarcodeData($data);
-
-//        echo '<pre>';
-//        var_dump($itemList);
-//        exit;
-
         return $itemList;
     }
 
     private function formatPurchaseBarcodeData($ar_data) {
 
         $formatted_data = array();
-        $num_column_break = Settings::$_num_barcode_column_per_page;
 
         foreach ($ar_data as $row) {
 
-            for ($i = 0; $i < $row['quantity']; $i++) {
-                $_data['id'] = $row['id'];
-                $_data['product_details_id'] = $row['product_details_id'];
+            $_data['id'] = $row['id'];
+            $_data['product_details_id'] = $row['product_details_id'];
 
-                $_data['code'] = (empty($row['reference_number'])) ? Settings::getUniqueId($_data['id']) : $row['reference_number'];
-                $_data['purchase_price'] = $row['cost'];
-                $_data['selling_price'] = $row['price'];
-                $_data['product_name'] = $row['product_name'];
-                $_data['quantity'] = $row['quantity'];
-                $_data['purchase_date'] = str_replace('-', '', $row['purchase_date']);
+            $_data['code'] = (empty($row['reference_number'])) ? Settings::getUniqueId($_data['id']) : $row['reference_number'];
+            $_data['purchase_price'] = $row['cost'];
+            $_data['selling_price'] = $row['price'];
+            $_data['product_name'] = $row['product_name'];
+            $_data['quantity'] = $row['quantity'];
+            $_data['purchase_date'] = str_replace('-', '', $row['purchase_date']);
 
-                $formatted_data[] = $_data;
-            }
-
-//            $this->setReferenceNumber($_data);
+            $formatted_data[] = $_data;
+            
+            $this->setReferenceNumber($_data);
         }
 
-        return array_chunk($formatted_data, $num_column_break);
+        return $formatted_data;
     }
 
     private function setReferenceNumber($data) {
 
+        $ref_num = $data['code'];
         $now = date('Y-m-d H:i:s', Settings::getBdLocalTime());
-
+        
         $store_id = 1;
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
         }
 
         $ref_numbers = new ReferenceNumbers;
-        $ref_numbers->reference_number = $data['code'];
+        $ref_numbers->reference_number = $ref_num;
         $ref_numbers->purchase_cart_item_id = $data['id'];
         $ref_numbers->store_id = $store_id;
         $ref_numbers->created_date = $now;

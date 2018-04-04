@@ -14,11 +14,12 @@
                     $rev_purchase_price = str_replace('.00', '', $pr['purchase_price']);
                     $dotless_rev_purchase_price = strrev($rev_purchase_price);
                     ?>
-                    <td style="width: 180px;">
-                        <?php echo $generator->getBarcode($pr['code'], $generator::TYPE_EAN_13, 1.5, 40); ?>
-                        <p style="font-size: 10px; margin: 0;"><?php echo $pr['product_name']; ?></p>
-                        <p style="font-size: 10px; margin: 0;"><?php echo "TK {$pr['selling_price']}"; ?></p>
-                        <p style="font-size: 10px; margin: 0;"><?php echo "{$dotless_rev_purchase_price}K{$pr['code']}-{$pr['quantity']}/{$pr['quantity']}"; ?></p>
+                    <td style="width: 150px; padding-bottom: 15px;">
+                        <?php echo $generator->getBarcode($pr['code'], $generator::TYPE_EAN_13, 1.25, 30); ?>
+                        <p style="margin: 0px; font-size: 13px; letter-spacing: 0.8px;"><?php echo $pr['code'] . rand(0, 9); ?></p>
+                        <p style="margin: 0px; font-size: 11px; letter-spacing: 0.5px;"><?php echo $pr['product_name']; ?></p>
+                        <p style="margin: 0px; font-size: 11px; letter-spacing: 0.5px;"><?php echo "TK {$pr['selling_price']}"; ?></p>
+                        <p style="margin: 0px; font-size: 10px;"><?php echo "{$dotless_rev_purchase_price}K{$pr['code']}-{$pr['quantity']}/{$pr['quantity']}"; ?></p>
                     </td>
                     <?php
                 }

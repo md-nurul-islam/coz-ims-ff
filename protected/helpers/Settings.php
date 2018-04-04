@@ -60,7 +60,7 @@ class Settings {
         'header' => 'posBillHeader',
         'footer' => 'posBillFooter',
     );
-    public static $_num_barcode_column_per_page = 4;
+    public static $_num_barcode_column_per_page = 5;
 
     public static function crypto_rand_secure($min, $max) {
         $range = $max - $min;

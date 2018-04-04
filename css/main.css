@@ -157,3 +157,10 @@
     text-align: center;
     vertical-align: middle !important;
 }
+.note {
+    color: #c55c18;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+}

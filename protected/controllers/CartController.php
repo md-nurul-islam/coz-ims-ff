@@ -209,11 +209,7 @@ class CartController extends Controller {
             $sales->store_id = $store_id;
             $sales->card_type = $card_type;
 
-            if ($sales->insert()) {
-
-                Yii::app()->db->createCommand()
-                        ->delete(TmpCart::model()->tableName(), 'id = :id', array(':id' => $cart_id));
-            }
+            $sales->insert();
         }
 
         $i = 1;
@@ -259,9 +255,6 @@ class CartController extends Controller {
 
         $cart->grand_total_balance = $cart->grand_total_paid - (($cart->grand_total + $cart->vat) - $cart->discount);
         $cart->update();
-
-        Yii::app()->db->createCommand()
-                ->delete(TmpCartItems::model()->tableName(), 'cart_id = :cid', array(':cid' => $cart_id));
 
         $sold_data = new ProductStockSales;
         $response['data'] = $sold_data->getSaleData($sales->id);
