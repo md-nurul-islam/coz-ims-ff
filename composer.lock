@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "picqer/php-barcode-generator",
-            "version": "v0.2",
+            "version": "v0.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/picqer/php-barcode-generator.git",
-                "reference": "13a90d1a07131760f9dd1e9aacb56bdb51fbb964"
+                "reference": "f754cbd592f3131af144dfcc6a3090fd0f6d1793"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/picqer/php-barcode-generator/zipball/13a90d1a07131760f9dd1e9aacb56bdb51fbb964",
-                "reference": "13a90d1a07131760f9dd1e9aacb56bdb51fbb964",
+                "url": "https://api.github.com/repos/picqer/php-barcode-generator/zipball/f754cbd592f3131af144dfcc6a3090fd0f6d1793",
+                "reference": "f754cbd592f3131af144dfcc6a3090fd0f6d1793",
                 "shasum": ""
             },
             "require": {
@@ -74,7 +74,7 @@
                 "svg",
                 "upc"
             ],
-            "time": "2016-05-14 14:57:08"
+            "time": "2017-09-28 19:23:19"
         }
     ],
     "packages-dev": [],
