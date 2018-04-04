@@ -8,7 +8,7 @@ require_once('dataCon.php');
 require_once('env.php');
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
-    'name' => 'Pitf!',
+    'name' => 'Essey',
     'defaultController' => 'user/auth',
     // preloading 'log' component
     'preload' => array('log'),
