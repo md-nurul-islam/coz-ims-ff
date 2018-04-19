@@ -56,7 +56,7 @@
 
     </head>
 
-    <body class="skin-blue sidebar-mini">
+        <body class="skin-black-light sidebar-mini">
 
         <div class="wrapper">
             <!-- HEADER MENU START -->

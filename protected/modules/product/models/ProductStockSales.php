@@ -789,7 +789,7 @@ class ProductStockSales extends CActiveRecord {
                 ->offset($offset)
                 ->limit($this->pageSize)
                 ->order($order)
-                ->group('t.cart_id')
+                ->group('t.cart_id, t.id')
         ;
 
         $sub_command = Yii::app()->db->createCommand()

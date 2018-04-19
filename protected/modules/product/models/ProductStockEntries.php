@@ -579,7 +579,7 @@ class ProductStockEntries extends CActiveRecord {
                 ->offset($offset)
                 ->limit($this->pageSize)
                 ->order($order)
-                ->group('pci.cart_id')
+                ->group('pci.cart_id, t.id, pci.quantity, cl.name, g.name, s.name')
         ;
 
         $sub_command = Yii::app()->db->createCommand()
@@ -588,12 +588,12 @@ class ProductStockEntries extends CActiveRecord {
                 ->join(PurchaseCart::model()->tableName() . ' pc', 'pc.id = t.purchase_cart_id')
                 ->join(PurchaseCartItems::model()->tableName() . ' pci', 'pc.id = pci.cart_id')
                 ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = pci.product_details_id')
-                ->join(ProductColor::model()->tableName() . ' pcl', 'pd.id = pcl.product_details_id')
-                ->join(Color::model()->tableName() . ' cl', 'cl.id = pcl.color_id')
-                ->join(ProductSize::model()->tableName() . ' ps', 'pd.id = ps.product_details_id')
-                ->join(Sizes::model()->tableName() . ' s', 's.id = ps.size_id')
-                ->join(ProductGrade::model()->tableName() . ' pg', 'pd.id = pg.product_details_id')
-                ->join(Grade::model()->tableName() . ' g', 'g.id = pg.grade_id')
+                ->leftJoin(ProductColor::model()->tableName() . ' pcl', 'pd.id = pcl.product_details_id')
+                ->leftJoin(Color::model()->tableName() . ' cl', 'cl.id = pcl.color_id')
+                ->leftJoin(ProductSize::model()->tableName() . ' ps', 'pd.id = ps.product_details_id')
+                ->leftJoin(Sizes::model()->tableName() . ' s', 's.id = ps.size_id')
+                ->leftJoin(ProductGrade::model()->tableName() . ' pg', 'pd.id = pg.product_details_id')
+                ->leftJoin(Grade::model()->tableName() . ' g', 'g.id = pg.grade_id')
                 ->where('pci.cart_id IS NOT NULL')
         ;
 

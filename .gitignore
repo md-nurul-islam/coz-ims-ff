@@ -3,3 +3,4 @@ protected/config/dataCon.php
 assets/
 barcode_pdfs/
 bc_images/
+nbproject/

@@ -331,7 +331,7 @@ class ExchangeProducts extends CActiveRecord {
                 ->join(Cart::model()->tableName() . ' cs', 'cs.id = pss.cart_id')
                 ->join(CartItems::model()->tableName() . ' csi', 'cs.id = csi.cart_id')
                 ->order($order)
-                ->group('ci.id')
+                ->group('ci.id, t.id, pd.product_name')
         ;
 
         $command->andWhere('DATE(t.exchange_date) >= :start', array(':start' => $from_date));

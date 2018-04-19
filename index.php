@@ -1,7 +1,7 @@
 <?php
 
 $yii = dirname(__FILE__) . '/../../framworks/yii1/yii.php';
-if (strpos($_SERVER['SERVER_ADDR'], '192.168.') !== FALSE) {
+if ( (strpos($_SERVER['SERVER_ADDR'], '192.168.') !== FALSE) || (strpos($_SERVER['SERVER_ADDR'], '127.0.') !== FALSE) ) {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
