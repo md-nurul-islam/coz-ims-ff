@@ -3,7 +3,7 @@
     <div class="box box-info">
 
         <div class="box-header">
-            <a id="barcode_file_list" class="btn btn-info pull-right" href="javascript:void(0);">Export PDF</a>
+            <a id="barcode_file_list" class="btn btn-success btn-flat pull-right" href="javascript:void(0);">Export PDF</a>
         </div>
 
         <div class="box-body panel panel-body">

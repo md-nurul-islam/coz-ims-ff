@@ -45,7 +45,7 @@
 
             <div class="modal-footer">
                 <div class="col-md-11">
-                    <button type="button" class="btn btn-info" data-dismiss="modal">Update</button>
+                    <button type="button" class="btn btn-success btn-flat" data-dismiss="modal">Update</button>
                 </div>
             </div>
         </div>

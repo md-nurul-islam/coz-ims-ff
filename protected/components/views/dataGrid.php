@@ -22,13 +22,13 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CCl
 <div class="col-lg-12">
 
     <div id="filters" style="padding:5px; height:auto">
-<!--        <div style="margin-bottom:5px">
-            <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
-            <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true"></a>
-        </div>-->
+        <!--        <div style="margin-bottom:5px">
+                    <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
+                    <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
+                    <a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true"></a>
+                    <a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
+                    <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true"></a>
+                </div>-->
 
         <?php
         if (!empty($this->filters)) {
@@ -37,7 +37,9 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CCl
             <div>
                 <?php foreach ($this->filters as $key => $val) { ?>
                     <?php if (isset($val['label']) && !empty($val['label'])) { ?>
-                        <?php echo $val['label']; ?>
+                        <label for="<?php echo $val['id']; ?>">
+                            <?php echo $val['label']; ?>
+                        </label>
                         <input field="<?php echo $key; ?>" <?php
                         echo (implode(' ', array_map(function($key) use ($val) {
                                     return $key . '=' . '"' . $val[$key] . '"';
@@ -45,7 +47,7 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CCl
                         ?> />
                            <?php } ?>
                        <?php } ?>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="doSearch();">Search</a>
+                <a href="#" class="btn btn-success" iconCls="icon-search" onclick="doSearch();">Search</a>
             </div>
         <?php } ?>
     </div>
@@ -71,7 +73,9 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CCl
                                     return $key . '=' . '"' . $val[$key] . '"';
                                 }, array_keys($val))));
                         ?>>
-                            <?php echo $val['label']; ?>
+                            <label>
+                                <?php echo $val['label']; ?>
+                            </label>
                         </th>
                     <?php } ?>
                 <?php } ?>
@@ -85,22 +89,21 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CCl
 <script type="text/javascript">
 
     $(function () {
-        var dg = $('#dg').datagrid();
-        dg.datagrid('getPager').pagination({
-            layout: ['first', 'prev', 'links', 'next', 'last', 'refresh'],
-        });
+    var dg = $('#dg').datagrid();
+    dg.datagrid('getPager').pagination({
+    layout: ['first', 'prev', 'links', 'next', 'last', 'refresh'],
     });
-    
+    });
     function doSearch() {
-        $('#dg').datagrid('reload', {
-            <?php foreach ($this->filters as $key => $filter) { ?>
-                <?php if ($filter['class'] != 'easyui-combobox') { ?>
-                    <?php echo $key . ': $("#' . $key . '").val(),'; ?>
-                <?php } else { ?>
-                    <?php echo $key . ': $("#' . $key . '").combobox("getValue"),'; ?>
-                <?php } ?>
-            <?php } ?>
-        });
+    $('#dg').datagrid('reload', {
+<?php foreach ($this->filters as $key => $filter) { ?>
+    <?php if ($filter['class'] != 'easyui-combobox') { ?>
+        <?php echo $key . ': $("#' . $key . '").val(),'; ?>
+    <?php } else { ?>
+        <?php echo $key . ': $("#' . $key . '").combobox("getValue"),'; ?>
+    <?php } ?>
+<?php } ?>
+    });
     }
 
 </script>

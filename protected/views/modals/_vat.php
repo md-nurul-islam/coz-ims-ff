@@ -128,7 +128,7 @@
 
             <div class="modal-footer">
                 <div class="col-md-11">
-                    <button type="button" class="btn btn-info vat_discount" data-dismiss="modal">Apply</button>
+                    <button type="button" class="btn btn-success btn-flat vat_discount" data-dismiss="modal">Apply</button>
                 </div>
             </div>
         </div>

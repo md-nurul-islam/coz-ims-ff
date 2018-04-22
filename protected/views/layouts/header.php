@@ -3,14 +3,14 @@
     <!-- Logo -->
     <a href="/css/index2.html" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class="logo-mini"><b>Ess</b>ey</span>
+        <span class="logo-mini text-green"><b>ess</b>ey</span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><b>Ess</b>ey</span>
+        <span class="logo-lg text-green"><b>ess</b>ey</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top" role="navigation">
         <!-- Sidebar toggle button-->
-        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <a href="#" class="sidebar-toggle text-green" data-toggle="offcanvas" role="button">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -266,11 +266,11 @@
                         <li class="user-footer">
                             <?php if (!Yii::app()->user->isGuest) { ?>
                                 <div class="pull-left">
-                                    <a href="/user/manage/changePassword" class="btn btn-default btn-flat">Change Password</a>
+                                    <a href="/user/manage/changePassword" class="btn btn-success btn-flat">Change Password</a>
                                 </div>
 
                                 <div class="pull-right">
-                                    <a href="/user/auth/logout" class="btn btn-default btn-flat">Sign out</a>
+                                    <a href="/user/auth/logout" class="btn btn-success btn-flat">Sign out</a>
                                 </div>
                             <?php } ?>
                         </li>

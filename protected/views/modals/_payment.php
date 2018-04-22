@@ -114,7 +114,7 @@
 
             <div class="modal-footer">
                 <div class="col-md-12">
-                    <button id="paymetn-btn-paid" type="button" class="btn btn-info col-md-4 pull-right">Paid</button>
+                    <button id="paymetn-btn-paid" type="button" class="btn btn-success btn-flat col-md-4 pull-right">Paid</button>
                 </div>
             </div>
         </div>

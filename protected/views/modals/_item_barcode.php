@@ -30,7 +30,7 @@
 
             <div class="modal-footer">
                 <div class="col-md-11">
-                    <button id="btn_get_barcode" type="button" class="btn btn-info" data-dismiss="modal">Generate</button>
+                    <button id="btn_get_barcode" type="button" class="btn btn-success btn-flat" data-dismiss="modal">Generate</button>
                 </div>
             </div>
             

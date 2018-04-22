@@ -430,7 +430,7 @@
             <?php
             echo CHtml::submitButton($model->isNewRecord ? 'Purchase' : 'Update', array(
                 'id' => 'btn-submit',
-                'class' => 'btn btn-info pull-right'
+                'class' => 'btn btn-success btn-flat pull-right'
             ));
             ?>
         </div>

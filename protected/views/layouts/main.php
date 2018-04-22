@@ -35,7 +35,6 @@
         <!-- AdminLTE Skins. Choose a skin from the css/skins
              folder instead of downloading all of them to reduce the load. -->
         <link rel="stylesheet" href="/css/dist/css/skins/_all-skins.min.css" />
-        <link rel="stylesheet" href="/css/main.css" />
 
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>
 
@@ -47,8 +46,7 @@
                     storage.setItem(x, x);
                     storage.removeItem(x);
                     return true;
-                }
-                catch (e) {
+                } catch (e) {
                     return false;
                 }
             }
@@ -56,7 +54,7 @@
 
     </head>
 
-        <body class="skin-black-light sidebar-mini">
+    <body class="skin-black-light sidebar-mini">
 
         <div class="wrapper">
             <!-- HEADER MENU START -->
@@ -110,6 +108,8 @@
             <!-- FOOTER END -->
 
         </div>
+
+        <link rel="stylesheet" href="/css/main.css" />
 
         <!-- LOAD SCRIPTS -->
         <script src="/css/bootstrap/js/bootstrap.min.js"></script>

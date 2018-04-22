@@ -129,7 +129,7 @@
                 </div>
 
                 <div class="panel-footer pull-right" style="width: 100%">
-                    <?php echo CHtml::button('Get Barcode', array('id' => 'gen-barcode', 'class' => 'btn btn-info', 'style' => 'float: right;')); ?>
+                    <?php echo CHtml::button('Get Barcode', array('id' => 'gen-barcode', 'class' => 'btn btn-success btn-flat', 'style' => 'float: right;')); ?>
                 </div>
 
             </div>

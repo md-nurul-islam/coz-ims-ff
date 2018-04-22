@@ -107,7 +107,7 @@
         </div><!-- /.box-body -->
 
         <div class="box-footer">
-            <?php echo CHtml::submitButton(($model->isNewRecord) ? 'Add' : 'Update', array('id' => 'btn-submit', 'class' => 'btn btn-info pull-right')); ?>
+            <?php echo CHtml::submitButton(($model->isNewRecord) ? 'Add' : 'Update', array('id' => 'btn-submit', 'class' => 'btn btn-success btn-flat pull-right')); ?>
         </div><!-- /.box-footer -->
 
         <?php $this->endWidget(); ?>

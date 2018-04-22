@@ -132,7 +132,7 @@ class SupplierDetails extends CActiveRecord {
             'supplier_name' => array('label' => 'Name', 'sortable' => 'true', 'width' => 80),
             'supplier_address' => array('label' => 'Address', 'sortable' => 'true', 'width' => 180),
             'supplier_contact1' => array('label' => 'Contact 1', 'sortable' => 'true', 'width' => 80),
-            'supplier_contact2' => array('label' => 'Contact 1', 'sortable' => 'true', 'width' => 80),
+            'supplier_contact2' => array('label' => 'Contact 2', 'sortable' => 'true', 'width' => 80),
             'balance' => array('label' => 'Balance', 'sortable' => 'true', 'width' => 80),
             'status' => array('label' => 'Status', 'sortable' => 'true', 'width' => 80),
         );
@@ -140,7 +140,7 @@ class SupplierDetails extends CActiveRecord {
 
     public function dataGridFilters() {
         return array(
-            'supplier_name' => array('id' => 'supplier_name', 'class' => 'easyui-textbox', 'label' => 'Name: ', 'style' => 'width:80px;'),
+            'supplier_name' => array('id' => 'supplier_name', 'class' => 'easyui-textbox form-control', 'label' => 'Name: ', 'style' => 'width:80px;'),
             'supplier_address' => array('id' => 'supplier_address', 'class' => 'easyui-textbox', 'label' => 'Address: ', 'style' => 'width:80px;'),
             'supplier_contact1' => array('id' => 'supplier_contact1', 'class' => 'easyui-textbox', 'label' => 'Contact 1: ', 'style' => 'width:80px;'),
             'supplier_contact2' => array('id' => 'supplier_contact2', 'class' => 'easyui-textbox', 'label' => 'Contact 2: ', 'style' => 'width:80px;'),

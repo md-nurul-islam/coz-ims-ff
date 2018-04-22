@@ -244,7 +244,7 @@
             </div>
 
             <div class="box-footer">
-                <?php echo CHtml::submitButton('Update', array('id' => 'btn-submit', 'class' => 'btn btn-info pull-right')); ?>
+                <?php echo CHtml::submitButton('Update', array('id' => 'btn-submit', 'class' => 'btn btn-success btn-flat pull-right')); ?>
             </div>
 
         </div>

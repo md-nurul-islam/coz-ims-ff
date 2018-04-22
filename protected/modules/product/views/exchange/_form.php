@@ -177,7 +177,7 @@
 
             <div class="modal-footer">
                 <div class="col-md-11">
-                    <button id="btn_exchanging_qty" type="button" class="btn btn-info" data-dismiss="modal">Apply</button>
+                    <button id="btn_exchanging_qty" type="button" class="btn btn-success btn-flat" data-dismiss="modal">Apply</button>
                 </div>
             </div>
             

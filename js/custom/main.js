@@ -16,7 +16,7 @@ $(function () {
 
             if (target_url == cur_url) {
                 $(this).closest('.treeview').addClass('active');
-                $(this).addClass('text-aqua');
+                $(this).addClass('text-green');
             }
 
         });

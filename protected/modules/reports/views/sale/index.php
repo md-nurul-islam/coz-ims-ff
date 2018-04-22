@@ -81,7 +81,7 @@
 
                 <div class="form-group">
                     <div class="col-sm-11">
-                        <?php echo CHtml::submitButton('Generate', array('id' => 'btn-submit', 'class' => 'btn btn-info pull-right')); ?>
+                        <?php echo CHtml::submitButton('Generate', array('id' => 'btn-submit', 'class' => 'btn btn-success btn-flat pull-right')); ?>
                     </div>
                 </div>
 
