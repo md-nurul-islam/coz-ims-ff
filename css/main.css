@@ -197,3 +197,15 @@ pagination-info, .pagination span, .datagrid-header .datagrid-cell span, .datagr
 .datagrid-cell span label {
     margin-bottom: 0 !important;
 }
+.datagrid-row-selected {
+    background: #37a000;
+}
+.datagrid-row-selected:hover {
+    color: #fff;
+}
+.datagrid-header-inner {
+    max-width: 100%;
+}
+.datagrid-btable {
+    width: 100%;
+}

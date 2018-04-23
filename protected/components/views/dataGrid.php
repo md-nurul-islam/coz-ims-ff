@@ -89,22 +89,27 @@ $cs->registerScriptFile($baseUrl . '/js/datagrid/filter/datagrid-filter.js', CCl
 <script type="text/javascript">
 
     $(function () {
-    var dg = $('#dg').datagrid();
-    dg.datagrid('getPager').pagination({
-    layout: ['first', 'prev', 'links', 'next', 'last', 'refresh'],
+        var dg = $('#dg').datagrid();
+        dg.datagrid('getPager').pagination({
+            layout: ['first', 'prev', 'links', 'next', 'last', 'refresh'],
+        });
     });
-    });
+    
     function doSearch() {
-    $('#dg').datagrid('reload', {
-<?php foreach ($this->filters as $key => $filter) { ?>
-    <?php if ($filter['class'] != 'easyui-combobox') { ?>
-        <?php echo $key . ': $("#' . $key . '").val(),'; ?>
-    <?php } else { ?>
-        <?php echo $key . ': $("#' . $key . '").combobox("getValue"),'; ?>
-    <?php } ?>
-<?php } ?>
-    });
+        $('#dg').datagrid('reload', {
+            <?php foreach ($this->filters as $key => $filter) { ?>
+                <?php if ($filter['class'] != 'easyui-combobox') { ?>
+                    <?php echo $key . ': $("#' . $key . '").val(),'; ?>
+                <?php } else { ?>
+                    <?php echo $key . ': $("#' . $key . '").combobox("getValue"),'; ?>
+                <?php } ?>
+            <?php } ?>
+        });
     }
+    
+    $(window).load(function () {
+        $('.datagrid-header-inner .datagrid-htable').css('width', '100%');
+    });
 
 </script>
 
