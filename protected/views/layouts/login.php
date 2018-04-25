@@ -16,6 +16,9 @@
         <link rel="stylesheet" href="/css/dist/css/AdminLTE.min.css">
         <!-- iCheck -->
         <link rel="stylesheet" href="/js/plugins/iCheck/square/blue.css">
+        
+        
+        <link rel="stylesheet" href="/css/login.css" />
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -28,10 +31,6 @@
     <body class="hold-transition login-page">
 
         <div class="login-box">
-
-            <div class="login-logo">
-                <a href="/site/login"><b>Ess</b>ey</a>
-            </div><!-- /.login-logo -->
 
             <?php echo $content; ?>
 
