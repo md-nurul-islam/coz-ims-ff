@@ -23,7 +23,7 @@
         <!-- daterange picker -->
         <link rel="stylesheet" href="/js/plugins/daterangepicker/daterangepicker-bs3.css" />
         <!-- iCheck for checkboxes and radio inputs -->
-        <link rel="stylesheet" href="/js/plugins/iCheck/all.css" />
+        <link rel="stylesheet" href="/js/plugins/iCheck/green.css" />
         <!-- Bootstrap Color Picker -->
         <link rel="stylesheet" href="/js/plugins/colorpicker/bootstrap-colorpicker.min.css" />
         <!-- Bootstrap time Picker -->

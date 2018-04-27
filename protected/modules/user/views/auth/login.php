@@ -1,93 +1,37 @@
-<div class="wrapper login-box-body">
-    <div class="container">
+<div class="login-logo">
+    <a href="/site/login"><b>Ess</b>ey</a>
+</div><!-- /.login-logo -->
 
-        <div class="login-logo">
-            <a href="/site/login"><b>Ess</b>ey</a>
-        </div><!-- /.login-logo -->
-
-        <?php
-        $form = $this->beginWidget('CActiveForm', array(
-            'id' => 'login-form',
-            'enableClientValidation' => false,
-            'clientOptions' => array(
-                'validateOnSubmit' => true,
-            ),
-            'htmlOptions' => array(
-                'class' => 'form',
-            ),
+<?php
+$form = $this->beginWidget('CActiveForm', array(
+    'id' => 'login-form',
+    'enableClientValidation' => false,
+    'clientOptions' => array(
+        'validateOnSubmit' => true,
+    ),
+    'htmlOptions' => array(
+        'class' => 'form',
+    ),
         ));
-        ?>
+?>
 
-        <?php if (Yii::app()->user->hasFlash('error')) { ?>
-            <div class="alert alert-danger">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <?php echo Yii::app()->user->getFlash('error'); ?>
-            </div>
-        <?php } ?>
-
-        <?php echo $form->textField($model, 'username', array('placeholder' => 'Username')); ?>
-        <?php echo $form->error($model, 'username'); ?>
-
-        <?php echo $form->passwordField($model, 'hashed_password', array('placeholder' => 'Password')); ?>
-        <?php echo $form->error($model, 'hashed_password'); ?>
-
-        <?php echo $form->checkBox($model, 'rememberMe'); ?>
-        <?php echo CHtml::submitButton('Sign In'); ?>
-        <!--<button type="submit" id="login-button">Login</button>-->
-
-        <?php $this->endWidget(); ?>
+<?php if (Yii::app()->user->hasFlash('error')) { ?>
+    <div class="alert alert-danger">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <?php echo Yii::app()->user->getFlash('error'); ?>
     </div>
+<?php } ?>
 
-    <ul class="bg-bubbles">
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-    </ul>
-</div>
+<?php echo $form->textField($model, 'username', array('placeholder' => 'Username')); ?>
+<?php echo $form->error($model, 'username'); ?>
 
+<?php echo $form->passwordField($model, 'hashed_password', array('placeholder' => 'Password')); ?>
+<?php echo $form->error($model, 'hashed_password'); ?>
 
-<!--<div class="login-box-body">
-    <p class="login-box-msg">Sign in</p>
+<?php echo $form->checkBox($model, 'rememberMe'); ?> <label>Remember Me</label>
+<?php echo CHtml::submitButton('Sign In' , array('class' => 'text-green')); ?>
 
-
-
-
-
-    <div class="form-group has-feedback">
-        
-        <span class="glyphicon glyphicon-user form-control-feedback"></span>
-
-    </div>
-
-    <div class="form-group has-feedback">
-        
-        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-
-    </div>
-
-    <div class="row">
-        <div class="col-xs-8">
-            <div class="checkbox icheck">
-                <label>
-
-                    Remember Me
-                </label>
-            </div>
-        </div> /.col 
-
-        <div class="col-xs-4">
-            
-        </div> /.col 
-    </div>-->
-
-
+<?php $this->endWidget(); ?>
 
 <!--
     <div class="social-auth-links text-center">

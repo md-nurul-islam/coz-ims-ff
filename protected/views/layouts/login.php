@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        
+
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <!-- Bootstrap 3.3.5 -->
@@ -15,9 +15,9 @@
         <!-- Theme style -->
         <link rel="stylesheet" href="/css/dist/css/AdminLTE.min.css">
         <!-- iCheck -->
-        <link rel="stylesheet" href="/js/plugins/iCheck/square/blue.css">
-        
-        
+        <link rel="stylesheet" href="/js/plugins/iCheck/square/orange.css">
+
+
         <link rel="stylesheet" href="/css/login.css" />
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -28,13 +28,26 @@
         <![endif]-->
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>
     </head>
-    <body class="hold-transition login-page">
+    <body class="wrapper hold-transition login-page">
 
-        <div class="login-box">
+        <div class="login-box container">
 
             <?php echo $content; ?>
 
         </div><!-- /.login-box -->
+
+        <ul class="bg-bubbles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
 
         <div class="clearfix"></div>
 
@@ -51,13 +64,13 @@
         <script>
             $(function () {
                 $('input').iCheck({
-                    checkboxClass: 'icheckbox_square-blue',
-                    radioClass: 'iradio_square-blue',
+                    checkboxClass: 'icheckbox_square-orange',
+                    radioClass: 'iradio_square-orange',
                     increaseArea: '20%' // optional
                 });
             });
         </script>
-        
+
         <style type="text/css">
             .main-footer {
                 bottom: 0;
