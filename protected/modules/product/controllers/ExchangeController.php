@@ -68,6 +68,7 @@ class ExchangeController extends Controller {
         }
 
         $sale_model = new ProductStockSales;
+        $this->pageHeader = 'Exchange Product';
 
         $this->render('create', array(
             'model' => $model,

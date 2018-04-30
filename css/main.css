@@ -209,3 +209,11 @@ pagination-info, .pagination span, .datagrid-header .datagrid-cell span, .datagr
 .datagrid-btable {
     width: 100%;
 }
+.round-0 {
+    border-radius: 0 !important;
+    -webkit-appearance: none;
+    -ms-appearance: none;
+    -moz-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+}

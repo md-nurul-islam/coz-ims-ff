@@ -205,7 +205,6 @@ function calculate_balance() {
 $(document).ready(function () {
 //    var retrievedObject = localStorage.getItem('cart-'+42);
 //console.log( JSON.parse(retrievedObject));
-    $('body').addClass('sidebar-collapse');
     $(document).on('keypress', function (e) {
 
         if (e.keyCode == 13) {

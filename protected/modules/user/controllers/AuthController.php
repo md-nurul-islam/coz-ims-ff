@@ -51,7 +51,7 @@ class AuthController extends Controller {
                 
                 $url = Yii::app()->user->returnUrl;
                 if($url == '/') {
-                    $url = '/product/sale';
+                    $url = '/product/sale/create';
                 }
                 
                 $this->redirect($url);

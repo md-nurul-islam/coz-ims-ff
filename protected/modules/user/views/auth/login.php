@@ -22,14 +22,14 @@ $form = $this->beginWidget('CActiveForm', array(
     </div>
 <?php } ?>
 
-<?php echo $form->textField($model, 'username', array('placeholder' => 'Username')); ?>
+<?php echo $form->textField($model, 'username', array('placeholder' => 'Username', 'class' => 'round-0')); ?>
 <?php echo $form->error($model, 'username'); ?>
 
-<?php echo $form->passwordField($model, 'hashed_password', array('placeholder' => 'Password')); ?>
+<?php echo $form->passwordField($model, 'hashed_password', array('placeholder' => 'Password', 'class' => 'round-0')); ?>
 <?php echo $form->error($model, 'hashed_password'); ?>
 
 <?php echo $form->checkBox($model, 'rememberMe'); ?> <label>Remember Me</label>
-<?php echo CHtml::submitButton('Sign In' , array('class' => 'text-green')); ?>
+<?php echo CHtml::submitButton('Sign In' , array('class' => 'text-green text-bold round-0')); ?>
 
 <?php $this->endWidget(); ?>
 

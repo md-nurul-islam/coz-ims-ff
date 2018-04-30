@@ -100,6 +100,9 @@ class SaleController extends Controller {
     }
 
     public function actionAdvance_sale_list() {
+        
+        $this->pageHeader = 'Advance Sale List';
+        
         $model = new ProductStockSales();
         $pageSize = 0;
 
