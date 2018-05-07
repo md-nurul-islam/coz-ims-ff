@@ -26,7 +26,7 @@ class ManageController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update', 'index', 'view'),
+                'actions' => array('create', 'update', 'index', 'view', 'getdata', 'getStatusComboData'),
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -57,7 +57,7 @@ class ManageController extends Controller {
      */
     public function actionCreate() {
         $model = new CustomerDetails;
-        
+
         $this->pageHeader = 'Add Customer';
         $this->pageTitle = Yii::app()->name . ' - Add Customer';
 
@@ -66,11 +66,11 @@ class ManageController extends Controller {
 
         if (isset($_POST['CustomerDetails'])) {
             $model->attributes = $_POST['CustomerDetails'];
-            
+
             if (!Yii::app()->user->isSuperAdmin) {
                 $model->store_id = Yii::app()->user->storeId;
             }
-            
+
             if ($model->save()) {
                 $this->redirect(array('index'));
             }
@@ -97,7 +97,7 @@ class ManageController extends Controller {
 
         if (isset($_POST['CustomerDetails'])) {
             $model->attributes = $_POST['CustomerDetails'];
-            
+
             if (!Yii::app()->user->isSuperAdmin) {
                 $model->store_id = Yii::app()->user->storeId;
             }
@@ -142,6 +142,45 @@ class ManageController extends Controller {
         $this->render('index', array(
             'model' => $model,
         ));
+    }
+
+    /*
+     * Grid functions
+     */
+
+    public function actionGetdata() {
+
+        foreach (DataGridHelper::$_ar_non_filterable_vars as $nfv_key => $nfv_var_name) {
+            ${$nfv_var_name} = Yii::app()->request->getParam($nfv_key);
+        }
+
+        $rows = array();
+        $offest = 0;
+
+        if (${DataGridHelper::$_ar_non_filterable_vars['page']} > 1) {
+            $offest = (${DataGridHelper::$_ar_non_filterable_vars['page']} - 1) * ${DataGridHelper::$_ar_non_filterable_vars['rows']};
+        }
+
+        $CustomerDetails = new CustomerDetails();
+        $CustomerDetails->pageSize = 20;
+        $query_params = array(
+            'offset' => $offest,
+            'order' => ${DataGridHelper::$_ar_non_filterable_vars['sort']} . ' ' . ${DataGridHelper::$_ar_non_filterable_vars['order']},
+            'where' => $_POST,
+        );
+
+        $result['rows'] = $CustomerDetails->dataGridRows($query_params);
+        $result["total"] = 0;
+
+        if (($result['rows'])) {
+            $result["total"] = $result['rows'][0]['total_rows'];
+        }
+        echo CJSON::encode($result);
+        Yii::app()->end();
+    }
+    
+    public function actionGetStatusComboData() {
+        echo CJSON::encode(CustomerDetails::model()->statusComboData());
     }
 
     /**

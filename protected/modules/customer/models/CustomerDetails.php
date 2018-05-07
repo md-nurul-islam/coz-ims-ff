@@ -17,6 +17,8 @@
  */
 class CustomerDetails extends CActiveRecord {
 
+    public $pageSize = 20;
+
     /**
      * @return string the associated database table name
      */
@@ -104,6 +106,94 @@ class CustomerDetails extends CActiveRecord {
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));
+    }
+
+    public function dataGridHeaders() {
+        return array(
+            'customer_name' => array('label' => 'Name', 'sortable' => 'true', 'width' => 80),
+            'customer_address' => array('label' => 'Address', 'sortable' => 'true', 'width' => 180),
+            'customer_contact1' => array('label' => 'Contact 1', 'sortable' => 'true', 'width' => 80),
+            'customer_contact2' => array('label' => 'Contact 2', 'sortable' => 'true', 'width' => 80),
+            'balance' => array('label' => 'Balance', 'sortable' => 'true', 'width' => 80),
+            'status' => array('label' => 'Status', 'sortable' => 'true', 'width' => 80),
+        );
+    }
+
+    public function dataGridFilters() {
+        return array(
+            'customer_name' => array('id' => 'customer_name', 'class' => 'easyui-textbox form-control', 'label' => 'Name: ', 'style' => 'width:80px;'),
+            'customer_address' => array('id' => 'customer_address', 'class' => 'easyui-textbox', 'label' => 'Address: ', 'style' => 'width:80px;'),
+            'customer_contact1' => array('id' => 'customer_contact1', 'class' => 'easyui-textbox', 'label' => 'Contact 1: ', 'style' => 'width:80px;'),
+            'customer_contact2' => array('id' => 'customer_contact2', 'class' => 'easyui-textbox', 'label' => 'Contact 2: ', 'style' => 'width:80px;'),
+            'balance' => array('id' => 'balance', 'class' => 'easyui-textbox', 'label' => 'Balance: ', 'style' => 'width:80px;'),
+            'status' => array('id' => 'status', 'class' => 'easyui-combobox', 'label' => 'Status',
+                'data-options' => "valueField: 'id', textField: 'text', url: '/supplier/manage/getStatusComboData' ",
+                'panelHeight' => 70,
+                'style' => 'width:80px; cursor: pointer;'),
+        );
+    }
+
+    public function statusComboData() {
+
+        return array(
+            array(
+                'id' => '',
+                'text' => 'Select',
+            ),
+            array(
+                'id' => '1',
+                'text' => 'Active',
+            ),
+            array(
+                'id' => '0',
+                'text' => 'Inactive',
+            ),
+        );
+    }
+
+    public function dataGridRows($params = array()) {
+
+        $offset = 0;
+        if (isset($params['offset']) && $params['offset'] > 0) {
+            $offset = $params['offset'];
+        }
+
+        $order = 'id DESC';
+        if (isset($params['order']) && !empty($params['order'])) {
+            $order = $params['order'];
+        }
+
+        $command = Yii::app()->db->createCommand()
+                ->from($this->tableName() . ' t')
+                ->offset($offset)
+                ->limit($this->pageSize)
+                ->order($order)
+        ;
+
+        $sub_command = Yii::app()->db->createCommand()
+                ->select('count(t.id)')
+                ->from($this->tableName() . ' t')
+        ;
+
+        $filter_keys = array_keys($this->dataGridFilters());
+        if (isset($params['where']) && !empty($params['where'])) {
+            $new_command_objs = DataGridHelper::processFilterableVars($command, $params['where'], $filter_keys, 't', $sub_command);
+            $command = $new_command_objs[0];
+            $sub_command = $new_command_objs[1];
+        }
+
+        $command->select(
+                't.id,
+            t.customer_name,
+            t.customer_address,
+            t.customer_contact1,
+            t.customer_contact2,
+            CASE t.status WHEN "1" THEN "Active" ELSE "Inactive" END AS `status`,
+            (' . $sub_command->getText() . ') AS total_rows,
+            t.balance'
+        );
+
+        return $command->queryAll();
     }
 
     /**

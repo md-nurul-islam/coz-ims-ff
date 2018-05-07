@@ -1,16 +1,19 @@
-<?php
-$this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'customer-details-grid',
-    'dataProvider' => $model->search(),
-    'filter' => $model,
-    'columns' => array(
-        'customer_name',
-        'customer_address',
-        'customer_contact1',
-        'customer_contact2',
-        array(
-            'class' => 'CButtonColumn',
-        ),
-    ),
-));
-?>
+<div class="col-lg-12">
+
+    <div class="box box-info">
+
+        <div class="box-body">
+
+            <?php
+            $this->widget('DataGrid', array(
+                'model' => 'CustomerDetails',
+                'module' => 'customer',
+                'controller' => 'manage',
+                'action' => 'getdata'
+            ));
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class="clearfix"></div>

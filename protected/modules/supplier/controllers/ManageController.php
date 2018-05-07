@@ -229,7 +229,6 @@ class ManageController extends Controller {
         );
 
         $result['rows'] = $SupplierDetails->dataGridRows($query_params);
-//        var_dump($result['rows']);exit;
         $result["total"] = 0;
 
         if (($result['rows'])) {
@@ -240,7 +239,7 @@ class ManageController extends Controller {
     }
 
     public function actionGetStatusComboData() {
-        echo CJSON::encode(CategoryDetails::model()->statusComboData());
+        echo CJSON::encode(SupplierDetails::model()->statusComboData());
     }
 
 
