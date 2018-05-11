@@ -24,7 +24,6 @@
                     <?php echo CHtml::label('From Date', 'from_date', array('class' => 'col-sm-2 control-label')); ?>
                     <div class="col-sm-9">
                         <?php
-                        
                         if ($advance_sale_list) {
                             $today = date('Y-m-d', strtotime($today . '+1 day'));
                         }
@@ -103,19 +102,19 @@
         'from_date' => $from_date,
         'to_date' => $to_date,));
     ?>
-<?php } else if (!empty ($msg)) { ?>
-    
-<div class="col-lg-12">
-    
-    <div class="box box-info">
+<?php } else if (!empty($msg)) { ?>
 
-        <div class="box-body">
-            
-            <div class="center col-lg-6">
-                <h3 class="text-aqua"><?php echo $msg; ?></h3>
+    <div class="col-lg-12">
+
+        <div class="box box-info">
+
+            <div class="box-body">
+
+                <div class="center col-lg-6">
+                    <h3 class="text-danger text-center"><?php echo $msg; ?></h3>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 <?php } ?>

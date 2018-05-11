@@ -13,9 +13,9 @@ function add_to_cart(prod_id, prod_name, cur_stock, price, vat, discount, refere
         if (cur_stock <= 5) {
             prod_bg_color_class = 'label label-danger';
         } else if (cur_stock <= 10) {
-            prod_bg_color_class = 'label label-warning';
+            prod_bg_color_class = 'label label-warning bg-orange';
         } else {
-            prod_bg_color_class = 'label label-success';
+            prod_bg_color_class = 'label label-success bg-green';
         }
 
         cart_row_html = '<tr id="' + cart_row + '">' +

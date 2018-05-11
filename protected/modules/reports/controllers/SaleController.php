@@ -150,7 +150,6 @@ class SaleController extends Controller {
     public function actionAdvance_sale() {
         
         $model = false;
-        $msg = '';
         
         $this->pageTitle = Yii::app()->name . ' - Advance Sale Report';
         $this->pageHeader = 'Advance Sale Report';
@@ -158,6 +157,7 @@ class SaleController extends Controller {
         $today = date('Y-m-d', Settings::getBdLocalTime());
         $from_date = $today;
         $to_date = $today;
+        $msg = "Advance Sales Report Starting from {$from_date} till {$to_date}";
         
         if( Yii::app()->request->isPostRequest && !empty($_POST) ){
             
@@ -166,8 +166,8 @@ class SaleController extends Controller {
             $to_date = Yii::app()->request->getPost('to_date');
             
             $model = new ProductStockSales;
-            $model->advance_sale_list = TRUE;
-            $model = $model->saleReportData($from_date, $to_date);
+            $model->advance_sale = TRUE;
+            $model = $model->getSaleDataForReport($from_date, $to_date);
             
             if(!$model){
                 $msg = 'No Record Found in the given date rang.';
@@ -182,6 +182,7 @@ class SaleController extends Controller {
             'today' => $today,
             'from_date' => $from_date,
             'to_date' => $to_date,
+            'partial' => '_data_table',
         ));
     }
 

@@ -107,7 +107,7 @@
             <div class="box-body">
 
                 <div class="center col-lg-6">
-                    <h3 class="text-aqua"><?php echo $msg; ?></h3>
+                    <h3 class="text-danger text-center"><?php echo $msg; ?></h3>
                 </div>
             </div>
         </div>

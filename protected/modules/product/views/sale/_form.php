@@ -199,20 +199,20 @@
 
                             <div class="col-md-8">
                                 <div class="col-md-6">
-                                    <button type="button" class="btn btn-primary form-control">Save</button>
+                                    <button type="button" class="btn btn-primary form-control bg-green border-0">Save</button>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <button type="button" class="btn btn-warning form-control cart-print">Print</button>
+                                    <button type="button" class="btn btn-warning form-control cart-print bg-orange border-0">Print</button>
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="button" class="btn btn-danger form-control">Cancel</button>
+                                    <button type="button" class="btn btn-danger form-control border-0">Cancel</button>
                                 </div>
                             </div>
 
                             <div class="col-md-4 pull-right">
-                                <button type="button" class="btn btn-success form-control btn-payment">Payment</button>
+                                <button type="button" class="btn btn-success form-control btn-payment bg-green border-0">Payment</button>
                             </div>
 
 
@@ -299,12 +299,12 @@ if ($model->advance_sale) {
         text-decoration: underline;
     }
     tfoot#cart-total tr:first-child {
-        background-color: #00c0ef;
+        background-color: #37a000;
         color: #ffffff;
     }
     tfoot#cart-total tr:last-child {
-        background-color: #A4DCCF;
-        color: #666666;
+        background-color: orange;
+        color: #ffffff;
     }
     #paymentModal .modal-header, #paymentModal .modal-footer {
         background-color: #3c8dbc;

@@ -5,7 +5,7 @@
         <div class="box-body">
 
             <div class="center col-lg-7">
-                <h3 class="text-aqua">Sales Report Starting from <?php echo $from_date; ?> till <?php echo $to_date; ?></h3>
+                <h3 class="text-orange"><?php echo $msg; ?></h3>
             </div>
 
             <legend></legend>

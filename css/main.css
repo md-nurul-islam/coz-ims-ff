@@ -1,4 +1,9 @@
 /* Loader */
+#site_logo {
+    margin-top: -44px;
+    height: 140px;
+    margin-left: -110px;
+}
 .cssload-container{
     display: none;
     left: 50%;
@@ -216,4 +221,19 @@ pagination-info, .pagination span, .datagrid-header .datagrid-cell span, .datagr
     -moz-appearance: none;
     -o-appearance: none;
     appearance: none;
+}
+.bg-green {
+    background-color: #37a000 !important;
+}
+.bg-orange {
+    background-color: orange !important;
+}
+.border-0 {
+    border: none !important;
+}
+.text-danger {
+    color: red !important;
+}
+.text-center {
+    text-align: center !important;
 }

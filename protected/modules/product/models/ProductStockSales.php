@@ -75,6 +75,11 @@ class ProductStockSales extends CActiveRecord {
         return array(
             'transaction' => array(self::BELONGS_TO, 'Transactions', 'transaction_id'),
             'customer' => array(self::BELONGS_TO, 'CustomerDetails', 'customer_id'),
+            'productDetails' => array(
+                self::BELONGS_TO, 'ProductDetails', 'product_id',
+                'select' => 'productDetails.product_name',
+                'joinType' => 'LEFT JOIN',
+            ),
         );
     }
 
@@ -222,7 +227,7 @@ class ProductStockSales extends CActiveRecord {
         $criteria->compare('product_name', $this->product_name, true);
         $criteria->compare('t.grand_total_payable', $this->grand_total_payable, true);
 
-        if ($this->advance_sale_list) {
+        if ($this->advance_sale) {
             $criteria->compare('is_advance', 1);
         } else {
             $criteria->compare('is_advance !', 1);
@@ -269,7 +274,7 @@ class ProductStockSales extends CActiveRecord {
         $criteria->compare('DATE(t.sale_date) >', $from_date);
         $criteria->compare('DATE(t.sale_date) <', $to_date);
 
-        if ($this->advance_sale_list) {
+        if ($this->advance_sale) {
             $criteria->compare('is_advance', 1);
         }
 
@@ -431,7 +436,7 @@ class ProductStockSales extends CActiveRecord {
     }
 
     public function getSaleDataForReport($from_date, $to_date) {
-
+        
         $store_id = 1;
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
@@ -459,6 +464,10 @@ class ProductStockSales extends CActiveRecord {
             ':from_date' => $from_date,
             ':to_date' => $to_date,
         ));
+
+        if ($this->advance_sale) {
+            $command->andWhere('t.is_advance = :is_advance', array(':is_advance' => 1));
+        }
 
         $command->select(
                 't.id,
@@ -542,10 +551,8 @@ class ProductStockSales extends CActiveRecord {
     }
 
     private function formatSaleDataForReport($ar_data) {
-
+        
         $fake_sale_limit = intval(Configurations::model()->getFakeSaleReportLimit());
-
-
 
         $formatted_data = array();
         $sale_ids = array_unique(array_map(function ($row) {

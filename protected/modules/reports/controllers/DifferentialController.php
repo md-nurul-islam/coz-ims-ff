@@ -56,7 +56,7 @@ class DifferentialController extends Controller {
         }
 
         if (!$model) {
-            $msg = 'No data found.';
+            $msg = 'No data found in the given date range.';
         }
 
         $this->render('index', array(

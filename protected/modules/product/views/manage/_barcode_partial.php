@@ -31,7 +31,8 @@
         ?>
         <tr>
             <td>
-                <label class="control-label">No Product available to generate barcode.</label>
+                <label><h3 class="text-danger text-center">No Product available to generate barcode.</h3></label>
+                <!--<label class="control-label text-danger text-center"></label>-->
             </td>
         </tr>
     <?php } ?>

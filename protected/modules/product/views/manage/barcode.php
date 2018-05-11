@@ -8,7 +8,7 @@
 
         <div class="box-body panel panel-body">
 
-            <div class="note">
+            <div class="note text-orange">
                 *** 100 barcode will be generated at each execution. Once barcode is generated then it will be removed from the list.
             </div>
 
