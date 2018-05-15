@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="clearfix"></div>
-        
+
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
             <li class="header">MAIN</li>
@@ -26,18 +26,39 @@
             foreach ($main_menus as $menu) {
                 ?>
                 <li class="treeview">
-                    <a href="<?php echo $menu['url']; ?>">
 
-                        <?php if (isset($menu['icon']) && !empty($menu['icon'])) { ?>
-                            <?php echo $menu['icon']; ?>
-                        <?php } else { ?>
-                            <i class="fa fa-pie-chart"></i>
-                        <?php } ?>
-                        <span><?php echo $menu['label']; ?></span>
-                        <?php if (isset($menu['submenu']) && !empty($menu['submenu'])) { ?>
-                            <i class="fa fa-angle-left pull-right"></i>
-                        <?php } ?>
-                    </a>
+                    <?php
+                    if ((!Yii::app()->user->isGuest) && (Yii::app()->user->isSuperAdmin || Yii::app()->user->isStoreAdmin) && ( isset($menu['adminOnly']) && $menu['adminOnly'])) {
+                        ?>
+                        <a href="<?php echo $menu['url']; ?>">
+                            <?php if (isset($menu['icon']) && !empty($menu['icon'])) { ?>
+                                <?php echo $menu['icon']; ?>
+                            <?php } else { ?>
+                                <i class="fa fa-pie-chart"></i>
+                            <?php } ?>
+                            <span><?php echo $menu['label']; ?></span>
+                            <?php if (isset($menu['submenu']) && !empty($menu['submenu'])) { ?>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            <?php } ?>
+                        </a>
+                    <?php } ?>
+
+                    <?php
+                    if (!Yii::app()->user->isGuest && (!isset($menu['adminOnly']) || !$menu['adminOnly'])) {
+                        ?>
+                        <a href="<?php echo $menu['url']; ?>">
+                            <?php if (isset($menu['icon']) && !empty($menu['icon'])) { ?>
+                                <?php echo $menu['icon']; ?>
+                            <?php } else { ?>
+                                <i class="fa fa-pie-chart"></i>
+                            <?php } ?>
+                            <span><?php echo $menu['label']; ?></span>
+                            <?php if (isset($menu['submenu']) && !empty($menu['submenu'])) { ?>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            <?php } ?>
+                        </a>
+                    <?php } ?>
+
                     <?php if (isset($menu['submenu']) && !empty($menu['submenu'])) { ?>
                         <ul class="treeview-menu">
                             <?php foreach ($menu['submenu'] as $sub_menu) {

@@ -8,6 +8,7 @@ class Ims_menu {
             'label' => 'Store',
             'url' => '/store/manage/update',
             'icon' => '<i class="fa fa-institution"></i>',
+            'adminOnly' => true
         ),
         array(
             'label' => 'Supplier',
