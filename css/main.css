@@ -1,4 +1,9 @@
 /* Loader */
+#site_logo {
+    margin-top: -44px;
+    height: 140px;
+    margin-left: -110px;
+}
 .cssload-container{
     display: none;
     left: 50%;
@@ -163,6 +168,74 @@
     font-weight: bold;
     margin-bottom: 30px;
     text-align: center;
+}
+
+.box.box-info {
+    border-top-color: #37a000;
+}
+.text-green {
+    color: #37a000 !important;
+}
+.skin-black-light .main-header li.user-header {
+    background-color: #fff;
+}
+.skin-black-light .main-header li.user-header p {
+    color: #37a000 !important;
+}
+.btn-success {
+    background-color: #37a000;
+}
+.skin-black-light .main-header>.navbar .nav>li>a:hover, .skin-black-light .main-header>.navbar .nav>li>a:active, .skin-black-light .main-header>.navbar .nav>li>a:focus, .skin-black-light .main-header>.navbar .nav .open>a, .skin-black-light .main-header>.navbar .nav .open>a:hover, .skin-black-light .main-header>.navbar .nav .open>a:focus, .skin-black-light .main-header>.navbar .nav>.active>a {
+    color: #37a000;
+}
+.form-control:focus {
+    border-color: #37a000;
+}
+.datagrid-cell, .datagrid-cell-group, .datagrid-header-rownumber, .datagrid-cell-rownumber,
+pagination-info, .pagination span, .datagrid-header .datagrid-cell span, .datagrid-header,
+.datagrid-toolbar, .datagrid-pager, .datagrid-footer-inner, .pagination-info {
+    font-size: 14px;
+}
+.datagrid-row-over, .datagrid-header-over div span label {
+    color: #37a000;
+}
+.datagrid-cell span label {
+    margin-bottom: 0 !important;
+}
+.datagrid-row-selected {
+    background: #37a000;
+}
+.datagrid-row-selected:hover {
+    color: #fff;
+}
+.datagrid-header-inner {
+    max-width: 100%;
+}
+.datagrid-btable {
+    width: 100%;
+}
+.round-0 {
+    border-radius: 0 !important;
+    -webkit-appearance: none;
+    -ms-appearance: none;
+    -moz-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+}
+.bg-green {
+    background-color: #37a000 !important;
+}
+.bg-orange {
+    background-color: orange !important;
+}
+.border-0 {
+    border: none !important;
+}
+.text-danger {
+    color: red !important;
+}
+.text-center {
+    text-align: center !important;
 }
 .cursor-pointer {
     cursor: pointer !important;
