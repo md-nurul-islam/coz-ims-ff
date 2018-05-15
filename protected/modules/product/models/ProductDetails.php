@@ -233,6 +233,8 @@ class ProductDetails extends CActiveRecord {
             sz.name as size_name'
         );
 
+//        $_data = $this->setGridThumbnails($command->queryAll());
+
         $data = DataGridHelper::propagateActionLinks($command->queryAll(), array(
                     'view',
                     'update',
@@ -241,6 +243,25 @@ class ProductDetails extends CActiveRecord {
         ));
 
         return $data;
+    }
+
+    private function setGridThumbnails($data = []) {
+        if (empty($data)) {
+            return [];
+        }
+
+        if (!Yii::app()->user->isSuperAdmin) {
+            $store_id = Yii::app()->user->storeId;
+        } else {
+            $store_id = 1;
+        }
+
+        $_data = [];
+        foreach ($data as $row) {
+//            $row['product_name'] .= ' <img class="img-thumbnail" src="' . Yii::app()->getBaseUrl(true) . '/images/products/' . $store_id . '/' . $row['product_image'] . '">';
+            $_data[] = $row;
+        }
+        return $_data;
     }
 
     public function getDetails($id) {

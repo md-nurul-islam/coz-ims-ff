@@ -1,5 +1,7 @@
 <!-- HEADER MENU START -->
 <header class="main-header">
+    
+    <input type="hidden" id="base_url" value="<?php echo Yii::app()->getBaseUrl(true); ?>" />
     <!-- Logo -->
     <a href="javascript:void(0);" class="logo">
         

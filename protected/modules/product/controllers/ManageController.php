@@ -103,16 +103,15 @@ class ManageController extends Controller {
             $model->create_date = $now;
             $model->update_date = $now;
 
-
             $product_grade = 0;
             $product_size = 0;
             $product_color = 0;
 
-            if ($model->save()) {
+            $uploadedFile = CUploadedFile::getInstance($model, 'product_image');
+            $fileName = strtolower("pd-" . date('YmdHis', strtotime($now)) . "-{$uploadedFile}");  // random number + file name
+            $model->product_image = $fileName;
 
-                $uploadedFile = CUploadedFile::getInstance($model, 'product_image');
-                $fileName = strtolower("pd-" . date('Ymd', strtotime($now)) . "-{$uploadedFile}");  // random number + file name
-                $model->product_image = $fileName;
+            if ($model->save()) {
 
                 $uploadedFile->saveAs(Yii::app()->basePath . '/../images/products/' . $store_id . '/' . $fileName);  // image will uplode to rootDirectory/banner/
 

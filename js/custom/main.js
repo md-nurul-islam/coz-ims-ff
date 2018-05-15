@@ -1,7 +1,8 @@
 $(function () {
 
-    $(document).ready(function () {
+    var base_url = $('#base_url').val();
 
+    $(document).ready(function () {
         var cur_url = readCookie('current_url');
 
         if (cur_url == null) {
@@ -64,9 +65,9 @@ $(function () {
                 startDate: moment().subtract(29, 'days'),
                 endDate: moment()
             },
-    function (start, end) {
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-    }
+            function (start, end) {
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            }
     );
 
     //iCheck for checkbox and radio inputs
@@ -105,6 +106,18 @@ $(function () {
         if (url != '#' && url != 'javascript:void(0);') {
             createCookie('current_url', url);
         }
+    });
+
+    $(document).on('click', '.image-open-in-modal', function () {
+
+        var src = base_url + $(this).attr('src'), img = '<img src="' + src + '" class="img-responsive full-width" />';
+        console.log(src);
+
+        $('#modal-for-image .modal-body').html(img);
+
+//        return false;
+
+        $('#modal-for-image').modal('show');
     });
 
     function createCookie(name, value, days) {

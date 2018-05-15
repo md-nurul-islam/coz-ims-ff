@@ -97,6 +97,16 @@
                         </li>
                         <li class="list-group-item clearfix">
                             <div class="label-wrapper border-right">
+                                <?php echo CHtml::label(CHtml::encode($data->getAttributeLabel('product_image')), ''); ?>
+                            </div>
+                            <div class="info-wrapper">
+                                <?php if (!empty(trim($data->product_image))) { ?>
+                                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/products/' . Yii::app()->user->storeId . '/' . $data->product_image, $data->product_image, array("width" => 200, 'class' => 'image-open-in-modal img-thumbnail cursor-pointer')); ?>
+                                <?php } ?>
+                            </div>
+                        </li>
+                        <li class="list-group-item clearfix">
+                            <div class="label-wrapper border-right">
                                 <?php echo CHtml::label(CHtml::encode($data->getAttributeLabel('status')), ''); ?>
                             </div>
                             <div class="info-wrapper" style="padding-bottom: 5px; padding-top: 6px;">
