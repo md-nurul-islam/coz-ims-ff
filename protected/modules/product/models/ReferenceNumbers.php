@@ -115,7 +115,7 @@ class ReferenceNumbers extends CActiveRecord {
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
         }
-        
+
         $pre_query = Yii::app()->db->createCommand()
                 ->select('t.id, t.purchase_cart_item_id, t.product_details_id')
                 ->from($this->tableName() . ' t')
@@ -128,7 +128,7 @@ class ReferenceNumbers extends CActiveRecord {
         if (empty($pre_query)) {
             return FALSE;
         }
-        
+
         if (!empty($pre_query['purchase_cart_item_id']) && $pre_query['purchase_cart_item_id'] > 0) {
 
             $command = Yii::app()->db->createCommand()
@@ -136,7 +136,7 @@ class ReferenceNumbers extends CActiveRecord {
                     ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = t.product_details_id')
                     ->join(ProductStockAvail::model()->tableName() . ' psa', 'psa.product_details_id = pd.id')
             ;
-            
+
             $command->andWhere('t.reference_number_id = :ref_num_id', array(':ref_num_id' => $pre_query['id']));
 
             if (!empty($prod_id)) {
@@ -162,7 +162,7 @@ class ReferenceNumbers extends CActiveRecord {
         $command->andWhere('pd.status = :status', array(':status' => '1'));
 
         $command->order('pd.id DESC');
-        
+
         if (!$all) {
             $command->limit(1);
             $data = $command->queryRow();
@@ -170,7 +170,39 @@ class ReferenceNumbers extends CActiveRecord {
             $data = $command->queryAll();
         }
 
+        return (!empty($data)) ? $data : false;
+    }
+
+    public function getProductStockInfoByName($prod_id = '', $ref_num = '', $checksum = '', $all = false) {
+
+        $store_id = 1;
+
+        if (!Yii::app()->user->isSuperAdmin) {
+            $store_id = Yii::app()->user->storeId;
+        }
+
+
+        $command = Yii::app()->db->createCommand()
+                ->from(ProductDetails::model()->tableName() . ' pd')
+                ->join(ProductStockAvail::model()->tableName() . ' psa', 'psa.product_details_id = pd.id')
+        ;
+        $command->andWhere('pd.product_name LIKE :pid', array(':pid' => $ref_num . '%'));
+
+        $command->group('pd.id');
+
+        $command->andWhere('pd.store_id = :sid', array(':sid' => $store_id));
+        $command->andWhere('pd.status = :status', array(':status' => '1'));
+
+        $command->order('pd.id DESC');
+
+        if (!$all) {
+            $command->limit(1);
+            $data = $command->queryRow();
+        } else {
+            $data = $command->queryAll();
+        }
+        
         return (!empty($data)) ? $data : FALSE;
     }
-    
+
 }

@@ -66,12 +66,12 @@ class SaleController extends Controller {
 
         $this->pageTitle = Yii::app()->name . ' - Sale';
         $this->pageHeader = 'Sale Product';
-        
+
         $store_id = 1;
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
         }
-        
+
         $ar_cart = array();
         $this->render('create', array(
             'model' => $model,
@@ -92,7 +92,7 @@ class SaleController extends Controller {
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
         }
-        
+
         $this->render('create', array(
             'model' => $model,
             'edit' => $edit,
@@ -100,9 +100,9 @@ class SaleController extends Controller {
     }
 
     public function actionAdvance_sale_list() {
-        
+
         $this->pageHeader = 'Advance Sale List';
-        
+
         $model = new ProductStockSales();
         $pageSize = 0;
 
@@ -305,10 +305,10 @@ class SaleController extends Controller {
      * Manages all models.
      */
     public function actionIndex() {
-        
+
         $this->pageTitle = Yii::app()->name . ' - Sale List';
         $this->pageHeader = 'Sale List';
-        
+
         $this->render('index');
     }
 
@@ -348,23 +348,31 @@ class SaleController extends Controller {
 
         $response = array();
         $ref_num = Yii::app()->request->getParam('ref_num');
-        
-        $checksum = substr($ref_num, -1);
-        $ref_number = substr($ref_num, 0, 12);
-        
+
+        $checksum = '';
+        $ref_number = $ref_num;
+        if (is_numeric($ref_num) && strlen($ref_num) == 13) {
+            $checksum = substr($ref_num, -1);
+            $ref_number = substr($ref_num, 0, 12);
+        }
+
         $prod_id = Yii::app()->request->getParam('prod_id');
         $prod_id = (!empty($prod_id)) ? $prod_id : '';
 
         $cur_stock = 0;
 
-        $model = new ReferenceNumbers();
-        $model = $model->getProductStockInfo($prod_id, $ref_number, $checksum, true);
-        
+        $model_obj = new ReferenceNumbers();
+        $model = $model_obj->getProductStockInfo($prod_id, $ref_number, $checksum, true);
+
+        if (!$model) {
+            $model = $model_obj->getProductStockInfoByName($prod_id, $ref_number, $checksum, true);
+        }
+
         if (!empty($model)) {
             $romatted_data = $this->formatProdInfo($model, $ref_number);
             $response['response'] = $romatted_data;
         }
-        
+
         echo CJSON::encode($response);
         Yii::app()->end();
     }
@@ -385,7 +393,7 @@ class SaleController extends Controller {
 
             $_data['product_id'] = $row['product_details_id'];
             $_data['product_name'] = $row['product_name'];
-            $_data['price'] = (empty($row['selling_price']) || ($row['selling_price'] <= 0) ) ? $row['price'] : $row['selling_price'];
+            $_data['price'] = ( (empty($row['selling_price']) || (floatval($row['selling_price'] <= 0))) && isset($row['price']) ) ? $row['price'] : $row['selling_price'];
             $_data['cur_stock'] = $row['quantity'];
             $_data['vat'] = (empty($row['vat']) || ($row['vat'] <= 0) ) ? Settings::$_vat : $row['vat'];
             $_data['discount'] = (empty($row['discount']) || ($row['discount'] <= 0) ) ? Settings::$_discount : $row['discount'];

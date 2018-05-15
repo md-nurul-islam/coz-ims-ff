@@ -145,7 +145,7 @@
                                 'size' => 25,
                                 'maxlength' => 150,
                                 'class' => 'form-control',
-                                'placeholder' => 'Type Reference Number',
+                                'placeholder' => 'Type Full Reference Number or Part of Product Name',
                             ));
                             ?>
                         </div>
