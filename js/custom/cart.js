@@ -348,6 +348,7 @@ $(document).ready(function () {
             data: {ref_num: ref_num},
             success: function (data) {
                 var prod_list = '';
+                $('#div_product_list').html('');
                 if ((data.response != undefined)) {
                     if ((data.response.length) > 1) {
                         $.each(data.response, function (k, v) {
@@ -361,7 +362,6 @@ $(document).ready(function () {
                                     '</label>' +
                                     '</div>';
                         });
-                        $('#div_product_list').html('');
                         $('#div_product_list').html(prod_list);
                         $('#div_product_list').show();
                     } else {
