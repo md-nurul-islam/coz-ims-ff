@@ -137,8 +137,8 @@
         </table>
 
     <?php } else { ?>
-        <div class="alert alert-success">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <div class="alert alert-warning">
+            <!--<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>-->
             No Record Found.
         </div>
     <?php } ?>

@@ -79,7 +79,7 @@ class ManageController extends Controller {
         $this->pageHeader = 'Add Product';
         $edit = false;
 
-        $model = new ProductDetails;
+        $model = new ProductDetails();
         $category_name = '';
         $supplier_name = '';
         // Uncomment the following line if AJAX validation is needed
@@ -103,11 +103,18 @@ class ManageController extends Controller {
             $model->create_date = $now;
             $model->update_date = $now;
 
+
             $product_grade = 0;
             $product_size = 0;
             $product_color = 0;
 
             if ($model->save()) {
+
+                $uploadedFile = CUploadedFile::getInstance($model, 'product_image');
+                $fileName = strtolower("pd-" . date('Ymd', strtotime($now)) . "-{$uploadedFile}");  // random number + file name
+                $model->product_image = $fileName;
+
+                $uploadedFile->saveAs(Yii::app()->basePath . '/../images/products/' . $store_id . '/' . $fileName);  // image will uplode to rootDirectory/banner/
 
                 if (isset($_POST['ProductGrade']['grade_id']) && !empty($_POST['ProductGrade']['grade_id'])) {
                     $product_grade = $_POST['ProductGrade']['grade_id'];
@@ -366,9 +373,9 @@ class ManageController extends Controller {
             $_data[$i]['product_name'] = $item['product_name'];
             $_data[$i]['quantity'] = $num_barcode;
         }
-        
+
         $_data = array_chunk($_data, Settings::$_num_barcode_column_per_page);
-        
+
         require_once 'vendor/autoload.php';
         $generator = new Picqer\Barcode\BarcodeGeneratorHTML();
 

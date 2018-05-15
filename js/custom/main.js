@@ -16,7 +16,7 @@ $(function () {
 
             if (target_url == cur_url) {
                 $(this).closest('.treeview').addClass('active');
-                $(this).addClass('text-green');
+                $(this).addClass('text-aqua');
             }
 
         });
@@ -83,6 +83,11 @@ $(function () {
     $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
         checkboxClass: 'icheckbox_square-blue',
         radioClass: 'iradio_square-blue'
+    });
+    //Flat red green scheme for iCheck
+    $('input[type="checkbox"].flat-green, input[type="radio"].flat-green').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green'
     });
 
     //Colorpicker

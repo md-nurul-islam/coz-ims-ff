@@ -12,6 +12,7 @@
             'enableAjaxValidation' => false,
             'htmlOptions' => array(
                 'class' => 'form-horizontal',
+                'enctype' => 'multipart/form-data',
             ),
         ));
         ?>
@@ -98,6 +99,26 @@
             </div>
 
             <div class="form-group">
+                <?php echo $form->labelEx($model, 'product_image', array('class' => 'col-sm-2 control-label')); ?>
+                <div class="col-sm-10">
+                    <?php
+                    echo $form->fileField($model, 'product_image', array(
+                        'class' => 'form-control',
+                        'placeholder' => 'Product Image',
+                    ));
+                    ?>
+                    <?php echo $form->error($model, 'product_image', array('class' => 'alert alert-danger')); ?>
+
+                    <?php if (!$model->isNewRecord) { ?>
+                        <div class="row">
+                            <?php echo CHtml::image(Yii::app()->request->baseUrl . '/banner/' . $model->product_image, $model->product_image, array("width" => 200)); ?>
+                        </div>
+                    <?php } ?>
+
+                </div>
+            </div>
+
+            <div class="form-group">
 
                 <?php echo CHtml::label('Available Qualities', '', array('class' => 'col-sm-2 control-label')); ?>
 
@@ -117,7 +138,7 @@
                                 echo CHtml::radioButton('ProductGrade[grade_id]', $checked, array(
                                     'value' => $grade->id,
                                     'id' => strtolower($grade->name),
-                                    'class' => 'flat-red'
+                                    'class' => 'flat-green'
                                 ));
                                 ?>
                                 <?php echo CHtml::label($grade->name, strtolower($grade->name), array('class' => 'control-label')); ?>
@@ -148,7 +169,7 @@
                                 echo CHtml::radioButton('ProductSize[size_id]', $checked, array(
                                     'value' => $size->id,
                                     'id' => strtolower($size->name),
-                                    'class' => 'flat-red'
+                                    'class' => 'flat-green'
                                 ));
                                 ?>
                                 <?php echo CHtml::label($size->name, strtolower($size->name), array('class' => 'control-label')); ?>
@@ -179,7 +200,7 @@
                                 echo CHtml::radioButton('ProductColor[color_id]', $checked, array(
                                     'value' => $color->id,
                                     'id' => strtolower($color->name),
-                                    'class' => 'flat-red'
+                                    'class' => 'flat-green'
                                 ));
                                 ?>
                                 <?php echo CHtml::label($color->name, strtolower($color->name), array('class' => 'control-label')); ?>

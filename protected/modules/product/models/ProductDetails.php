@@ -49,6 +49,7 @@ class ProductDetails extends CActiveRecord {
             array('product_name', 'length', 'max' => 255),
             array('purchase_price, selling_price', 'length', 'max' => 12),
             array('update_date', 'safe'),
+            array('product_image', 'file', 'types' => 'jpg, gif, png', 'allowEmpty' => true, 'maxSize' => 1024 * 250, 'tooLarge' => 'File size is larger than 250KB'), // this will allow empty field when page is update (remember here i create scenario update)
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, category_id, supplier_id, product_name, purchase_price, selling_price, create_date, update_date, uom', 'safe', 'on' => 'search'),
@@ -98,6 +99,7 @@ class ProductDetails extends CActiveRecord {
             'supplier_id' => 'Supplier Name',
             'product_name' => 'Product Name',
             'purchase_price' => 'Last Purchase Price',
+            'product_image' => 'Product Image',
             'selling_price' => 'Current Selling Price',
             'create_date' => 'Created Date',
             'update_date' => 'Last Update Date',
@@ -174,8 +176,8 @@ class ProductDetails extends CActiveRecord {
         }
 
         $order = 'id DESC';
-        if (isset($params['order']) && !empty($params['order'])) {
-            $order = $params['order'];
+        if (isset($params['order']) && !empty(trim($params['order']))) {
+            $order = trim($params['order']);
         }
 
         $command = Yii::app()->db->createCommand()
@@ -219,6 +221,7 @@ class ProductDetails extends CActiveRecord {
                 't.id,
             t.product_name,
             t.purchase_price,
+            t.product_image,
             t.selling_price,
             CASE t.status WHEN "1" THEN "Active" ELSE "Inactive" END AS `status`,
             c.category_name,

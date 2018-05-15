@@ -169,7 +169,6 @@ class QualitiesController extends Controller {
         );
 
         $result['rows'] = $Grade->dataGridRows($query_params);
-//        var_dump($result['rows']);exit;
         $result["total"] = 0;
 
         if (($result['rows'])) {

@@ -100,8 +100,8 @@ class Grade extends CActiveRecord {
     public function dataGridHeaders() {
         return array(
             'name' => array('label' => 'Name', 'sortable' => 'true', 'width' => 80),
+            'code' => array('label' => 'Code', 'sortable' => 'true', 'width' => 80),
             'status' => array('label' => 'Status', 'sortable' => 'true', 'width' => 80),
-            'code' => array('label' => 'Status', 'sortable' => 'true', 'width' => 80),
             'action' => array('label' => 'Action', 'sortable' => 'false', 'width' => 50),
         );
     }
@@ -143,8 +143,8 @@ class Grade extends CActiveRecord {
         }
 
         $order = 'id DESC';
-        if (isset($params['order']) && !empty($params['order'])) {
-            $order = $params['order'];
+        if (isset($params['order']) && !empty(trim($params['order']))) {
+            $order = trim($params['order']);
         }
 
         $command = Yii::app()->db->createCommand()

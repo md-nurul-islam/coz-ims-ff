@@ -197,7 +197,7 @@ class ExchangeProducts extends CActiveRecord {
      */
     public function dataGridHeaders() {
         return array(
-            'id' => array('label' => 'ID', 'sortable' => 'true', 'width' => 50),
+            'id' => array('label' => 'ID', 'sortable' => 'true', 'width' => 50, 'hidden' => true),
             'billnumber' => array('label' => 'Sale Bill Number', 'sortable' => 'true', 'width' => 50),
             'exchange_billnumber' => array('label' => 'Ex. Bill Number', 'sortable' => 'true', 'width' => 50),
             'grand_total_bill' => array('label' => 'Bill Amount', 'sortable' => 'true', 'width' => 50),
@@ -239,8 +239,8 @@ class ExchangeProducts extends CActiveRecord {
         }
 
         $order = 'id DESC';
-        if (isset($params['order']) && !empty($params['order'])) {
-            $order = $params['order'];
+        if (isset($params['order']) && !empty(trim($params['order']))) {
+            $order = trim($params['order']);
         }
 
         $command = Yii::app()->db->createCommand()

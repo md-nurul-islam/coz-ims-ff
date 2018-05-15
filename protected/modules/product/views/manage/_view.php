@@ -144,7 +144,7 @@
             <div class="panel panel-default">
                 <!-- Default panel contents -->
                 <div class="panel-heading">
-                    <h4 class="text-bold text-aqua">Latest 10 Purchase and Sale</h4>
+                    <h4 class="text-bold text-green">Latest 10 Purchase and Sale</h4>
                 </div>
 
                 <div class="panel-body">

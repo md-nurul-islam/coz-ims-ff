@@ -732,7 +732,7 @@ class ProductStockSales extends CActiveRecord {
      */
     public function dataGridHeaders() {
         return array(
-            'id' => array('label' => 'ID', 'sortable' => 'true', 'width' => 50),
+            'id' => array('label' => 'ID', 'sortable' => 'true', 'width' => 50, 'hidden' => true),
             'billnumber' => array('label' => 'Bill Number', 'sortable' => 'true', 'width' => 50),
             'product_name' => array('label' => 'Product Name', 'sortable' => 'true', 'width' => 180),
             'grand_total' => array('label' => 'Total', 'sortable' => 'true', 'width' => 50),
@@ -778,8 +778,8 @@ class ProductStockSales extends CActiveRecord {
         }
 
         $order = 'id DESC';
-        if (isset($params['order']) && !empty($params['order'])) {
-            $order = $params['order'];
+        if (isset($params['order']) && !empty(trim($params['order']))) {
+            $order = trim($params['order']);
         }
 
         $command = Yii::app()->db->createCommand()

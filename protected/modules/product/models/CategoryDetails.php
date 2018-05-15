@@ -161,8 +161,8 @@ class CategoryDetails extends CActiveRecord {
         }
 
         $order = 'id DESC';
-        if (isset($params['order']) && !empty($params['order'])) {
-            $order = $params['order'];
+        if (isset($params['order']) && !empty(trim($params['order']))) {
+            $order = trim($params['order']);
         }
 
         $command = Yii::app()->db->createCommand()
