@@ -203,7 +203,7 @@ pagination-info, .pagination span, .datagrid-header .datagrid-cell span, .datagr
     margin-bottom: 0 !important;
 }
 .datagrid-row-selected {
-    background: #37a000;
+    background: #37a000 !important;
 }
 .datagrid-row-selected:hover {
     color: #fff;
