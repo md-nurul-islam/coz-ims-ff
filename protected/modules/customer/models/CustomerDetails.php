@@ -34,8 +34,7 @@ class CustomerDetails extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('customer_name', 'required'),
-            array('customer_name', 'unique'),
-            array('balance', 'numerical', 'integerOnly' => true),
+            array('balance', 'numerical'),
             array('customer_name', 'length', 'max' => 200),
             array('customer_address', 'length', 'max' => 500),
             array('customer_contact1, customer_contact2', 'length', 'max' => 100),
@@ -53,6 +52,7 @@ class CustomerDetails extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'productStockSales' => array(self::HAS_MANY, 'ProductStockSales', 'customer_id'),
+            'card' => array(self::HAS_MANY, 'CustomerCard', 'customer_id'),
             'transactions' => array(self::HAS_MANY, 'Transactions', 'customer_id'),
         );
     }
@@ -204,6 +204,28 @@ class CustomerDetails extends CActiveRecord {
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
+    }
+
+    public function create($data) {
+        
+        $store_id = 1;
+        if (!Yii::app()->user->isSuperAdmin) {
+            $store_id = Yii::app()->user->storeId;
+        }
+
+        $this->customer_name = $data['customer_name'];
+        $this->customer_contact1 = $data['contact_number'];
+        $this->store_id = $store_id;
+        if (!$this->insert()) {
+            return false;
+        }
+
+        if (isset($data['card_number']) && isset($data['card_type'])) {
+            $customer_card = new CustomerCard();
+            $data['customer_id'] = $this->id;
+            return $customer_card->create($data);
+        }
+        return true;
     }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-define('ASSET_VERSION', '1.2');
+define('ASSET_VERSION', '1.3');
 
 // uncomment the following to define a path alias
 // Yii::setPathOfAlias('local','path/to/local-folder');

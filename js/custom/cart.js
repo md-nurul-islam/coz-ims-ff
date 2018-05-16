@@ -1,6 +1,6 @@
 var cart_row = 1;
 function add_to_cart(prod_id, prod_name, cur_stock, price, vat, discount, reference_number) {
-    
+
     var prod_bg_color_class = 'label label-default';
     var cart_row_html = '';
     var row_exists_id = check_exists(prod_name, prod_id);
@@ -62,7 +62,7 @@ function calculate_sub_total(cart_row_id) {
     var price = parseFloat(cart_body.find('tr#' + cart_row_id + ' td:eq(2) .sell_price').val());
     var sub_total = parseFloat(qty * price);
     var reference_number = parseInt(cart_body.find('tr#' + cart_row_id + ' td:eq(2) .cart_reference_number').val());
-    
+
     cart_body.find('tr#' + cart_row_id + ' td:eq(2) .cart_qty_lbl').text(qty);
     cart_body.find('tr#' + cart_row_id + ' td:eq(3)').text(sub_total.toFixed(2));
 
@@ -478,10 +478,23 @@ $(document).ready(function () {
         var card_number = $('#card_number').val();
         var card_cvc = $('#card_cvc').val();
         var card_type = $('#card_option').val();
+        var customer_name = $('#customer_name').val();
+        var contact_number = $('#contact_number').val();
         var bill_number = $('#ProductStockSales_billnumber').val();
         var sale_date = $('#ProductStockSales_sale_date').val();
         var due_payment_date = $('#ProductStockSales_due_payment_date').val();
         var post_data = {};
+
+        if (payment_amount == '' || payment_amount <= 0) {
+            alert('Amount Field should not left empty.');
+            return false;
+        }
+
+        /** 0 - cash, 1 - debit card, credit card **/
+        if (payment_method > 0 && (customer_name == '' || contact_number == '')) {
+            alert('For card payment Customer name, Contact Number and Card Number is mandetory. You can leave the CVC field blank if you want.');
+            return false;
+        }
 
         post_data['type'] = 'sale';
         post_data['note'] = note;
@@ -493,6 +506,8 @@ $(document).ready(function () {
         post_data['bill_number'] = bill_number;
         post_data['sale_date'] = sale_date;
         post_data['due_payment_date'] = due_payment_date;
+        post_data['customer_name'] = customer_name;
+        post_data['contact_number'] = contact_number;
 
         $.ajax({
             url: '/cart/payment',

@@ -174,6 +174,13 @@ class CartController extends Controller {
 
     private function proccessSale($cart_id, $post_data) {
 
+        $customer_id = null;
+        if ($post_data['customer_name']) {
+            $customer = new CustomerDetails();
+            $customer->create($post_data);
+            $customer_id = $customer->id;
+        }
+        
         $response = [];
         $tmp_cart = new TmpCart;
         $tmp_cart_data = $tmp_cart->getCart($cart_id);
@@ -202,6 +209,7 @@ class CartController extends Controller {
 
             $sales = new ProductStockSales;
             $sales->cart_id = $cart->id;
+            $sales->customer_id = $customer_id;
             $sales->billnumber = $bill_number . $cart->id;
             $sales->sale_date = $sale_date;
             $sales->due_payment_date = $due_payment_date;
@@ -270,13 +278,20 @@ class CartController extends Controller {
 
         return $respons;
     }
-    
+
     private function proccessAdvanceSale($cart_id, $post_data) {
+
+        $customer_id = null;
+        if ($post_data['customer_name']) {
+            $customer = new CustomerDetails();
+            $customer->create($post_data);
+            $customer_id = $customer->id;
+        }
         
         $response = [];
         $tmp_cart = new TmpCart;
         $tmp_cart_data = $tmp_cart->getCart($cart_id);
-        
+
         $cart_grand_total = (floatval($tmp_cart_data[0]['grand_total']) + floatval($tmp_cart_data[0]['total_discount'])) - floatval($tmp_cart_data[0]['total_vat']);
 
         $cart = new Cart;
@@ -301,6 +316,7 @@ class CartController extends Controller {
 
             $sales = new ProductStockSales;
             $sales->cart_id = $cart->id;
+            $sales->customer_id = $customer_id;
             $sales->billnumber = $bill_number . $cart->id;
             $sales->sale_date = $sale_date;
             $sales->due_payment_date = $due_payment_date;
@@ -357,10 +373,10 @@ class CartController extends Controller {
         }
 
         $cart->grand_total_balance = $cart->grand_total_paid - (($cart->grand_total + $cart->vat) - $cart->discount) - $post_data['payment_advance'];
-        
+
         var_dump($cart->attributes);
         exit;
-        
+
         $cart->update();
 
 //        Yii::app()->db->createCommand()
@@ -537,7 +553,7 @@ class CartController extends Controller {
 
         /** Transaction Ends * */
         $response['data'] = ExchangeProducts::model()->getExchange($sales_id, 0, $exchange->id);
-        
+
         if (!empty($response['data'])) {
             $respons['success'] = TRUE;
             $respons['message'] = 'Successfully paid.';

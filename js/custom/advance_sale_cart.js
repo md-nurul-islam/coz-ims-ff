@@ -505,6 +505,8 @@ $(document).ready(function () {
         var card_number = $('#card_number').val();
         var card_cvc = $('#card_cvc').val();
         var card_type = $('#card_option').val();
+        var customer_name = $('#customer_name').val();
+        var contact_number = $('#contact_number').val();
         var bill_number = $('#ProductStockSales_billnumber').val();
         var sale_date = $('#ProductStockSales_sale_date').val();
         var due_payment_date = $('#ProductStockSales_due_payment_date').val();
@@ -527,6 +529,8 @@ $(document).ready(function () {
         post_data['bill_number'] = bill_number;
         post_data['sale_date'] = sale_date;
         post_data['due_payment_date'] = due_payment_date;
+        post_data['customer_name'] = customer_name;
+        post_data['contact_number'] = contact_number;
 
         $.ajax({
             url: '/cart/payment',

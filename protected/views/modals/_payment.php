@@ -43,7 +43,7 @@
 
                         </table>
                     </div>
-                    
+
                     <div class="clearfix"></div>
 
                     <div class="form-group">
@@ -56,7 +56,7 @@
                             ?>
                         </div>
                     </div>
-                    
+
                     <div class="clearfix"></div>
 
                     <div class="form-group">
@@ -78,9 +78,30 @@
                             ?>
                         </div>
                     </div>
-                    
+
+                    <div class="form-group client_information clearfix">
+
+                        <div class="col-lg-6">
+                            <?php
+                            echo CHtml::textField('customer_name', '', array(
+                                'class' => 'form-control',
+                                'placeholder' => 'Customer Name'
+                            ));
+                            ?>
+                        </div>
+                        <div class="col-lg-6">
+                            <?php
+                            echo CHtml::textField('contact_number', '', array(
+                                'class' => 'form-control',
+                                'placeholder' => 'Contact Number'
+                            ));
+                            ?>
+                        </div>
+
+                    </div>
+
                     <div class="form-group card_information">
-                        
+
                         <div class="col-lg-3">
                             <?php
                             echo CHtml::dropDownList('card_option', '', Settings::$_available_card_options, array(
@@ -104,9 +125,8 @@
                             ));
                             ?>
                         </div>
-                        
-                    </div>
 
+                    </div>
 
                 </form>
 
