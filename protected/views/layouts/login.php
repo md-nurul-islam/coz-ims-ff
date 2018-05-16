@@ -7,18 +7,18 @@
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <!-- Bootstrap 3.3.5 -->
-        <link rel="stylesheet" href="/css/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/bootstrap/css/bootstrap.min.css?v=<?php echo ASSET_VERSION; ?>">
         <!-- Font Awesome -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css?v=<?php echo ASSET_VERSION; ?>">
         <!-- Ionicons -->
-        <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+        <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css?v=<?php echo ASSET_VERSION; ?>">
         <!-- Theme style -->
-        <link rel="stylesheet" href="/css/dist/css/AdminLTE.min.css">
+        <link rel="stylesheet" href="/css/dist/css/AdminLTE.min.css?v=<?php echo ASSET_VERSION; ?>">
         <!-- iCheck -->
-        <link rel="stylesheet" href="/js/plugins/iCheck/square/orange.css">
+        <link rel="stylesheet" href="/js/plugins/iCheck/square/orange.css?v=<?php echo ASSET_VERSION; ?>">
 
 
-        <link rel="stylesheet" href="/css/login.css" />
+        <link rel="stylesheet" href="/css/login.css?v=<?php echo ASSET_VERSION; ?>" />
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -56,11 +56,11 @@
         <!-- FOOTER END -->
 
         <!-- jQuery 2.1.4 -->
-        <script src="/js/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+        <script src="/js/plugins/jQuery/jQuery-2.1.4.min.js?v=<?php echo ASSET_VERSION; ?>"></script>
         <!-- Bootstrap 3.3.5 -->
-        <script src="/css/bootstrap/js/bootstrap.min.js"></script>
+        <script src="/css/bootstrap/js/bootstrap.min.js?v=<?php echo ASSET_VERSION; ?>"></script>
         <!-- iCheck -->
-        <script src="/js/plugins/iCheck/icheck.min.js"></script>
+        <script src="/js/plugins/iCheck/icheck.min.js?v=<?php echo ASSET_VERSION; ?>"></script>
         <script>
             $(function () {
                 $('input').iCheck({
