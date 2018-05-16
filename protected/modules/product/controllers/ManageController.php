@@ -205,17 +205,17 @@ class ManageController extends Controller {
             $prod_model->vat = 0.00;
             $prod_model->discount = 0.00;
 
-            if (!isset($_POST['color_id']) && !empty($_POST['color_id'])) {
+            if (isset($_POST['color_id']) && !empty($_POST['color_id'])) {
                 $color_model = ProductColor::model()->findByAttributes(array('product_details_id' => $id));
                 $color_model->color_id = $_POST['color_id'];
             }
 
-            if (!isset($_POST['size_id']) && !empty($_POST['size_id'])) {
+            if (isset($_POST['size_id']) && !empty($_POST['size_id'])) {
                 $size_model = ProductSize::model()->findByAttributes(array('product_details_id' => $id));
                 $size_model->size_id = $_POST['size_id'];
             }
 
-            if (!isset($_POST['grade_id']) && !empty($_POST['grade_id'])) {
+            if (isset($_POST['grade_id']) && !empty($_POST['grade_id'])) {
                 $grade_model = ProductGrade::model()->findByAttributes(array('product_details_id' => $id));
                 $grade_model->grade_id = $_POST['grade_id'];
             }
@@ -230,15 +230,14 @@ class ManageController extends Controller {
                 $prod_model->update();
                 $stock_model->update();
 
-                if (!isset($_POST['color_id']) && !empty($_POST['color_id'])) {
+                if (isset($_POST['color_id']) && !empty($_POST['color_id'])) {
                     $color_model->update();
                 }
-
-                if (!isset($_POST['size_id']) && !empty($_POST['size_id'])) {
+                if (isset($_POST['size_id']) && !empty($_POST['size_id'])) {
                     $size_model->update();
                 }
 
-                if (!isset($_POST['grade_id']) && !empty($_POST['grade_id'])) {
+                if (isset($_POST['grade_id']) && !empty($_POST['grade_id'])) {
                     $grade_model->update();
                 }
 
