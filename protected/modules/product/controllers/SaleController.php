@@ -358,7 +358,7 @@ class SaleController extends Controller {
 
         $prod_id = Yii::app()->request->getParam('prod_id');
         $prod_id = (!empty($prod_id)) ? $prod_id : '';
-        
+
         $cur_stock = 0;
 
         $model_obj = new ReferenceNumbers();
@@ -367,7 +367,7 @@ class SaleController extends Controller {
         if (!$model) {
             $model = $model_obj->getProductStockInfoByName($prod_id, $ref_number, $checksum, true);
         }
-        
+
         if (!empty($model)) {
             $romatted_data = $this->formatProdInfo($model, $ref_number);
             $response['response'] = $romatted_data;
@@ -389,28 +389,31 @@ class SaleController extends Controller {
     private function formatProdInfo($prods, $ref_num) {
 
         $response = array();
-        
+
         foreach ($prods as $row) {
-            
-            $_data['product_id'] = $row['product_details_id'];
-            $_data['product_name'] = $row['product_name'];
-            
-            if( isset($row['color_name']) && !empty($row['color_name']) ) {
-                $_data['product_name'] .= '-' . $row['color_name'];
+
+            if ($row['quantity'] > 0) {
+
+                $_data['product_id'] = $row['product_details_id'];
+                $_data['product_name'] = $row['product_name'];
+
+                if (isset($row['color_name']) && !empty($row['color_name'])) {
+                    $_data['product_name'] .= '-' . $row['color_name'];
+                }
+                if (isset($row['size_name']) && !empty($row['size_name'])) {
+                    $_data['product_name'] .= '-' . $row['size_name'];
+                }
+                if (isset($row['grade_name']) && !empty($row['grade_name'])) {
+                    $_data['product_name'] .= '-' . $row['grade_name'];
+                }
+
+                $_data['price'] = ( (empty($row['selling_price']) || (floatval($row['selling_price'] <= 0))) && isset($row['price']) ) ? $row['price'] : $row['selling_price'];
+                $_data['cur_stock'] = $row['quantity'];
+                $_data['vat'] = (empty($row['vat']) || ($row['vat'] <= 0) ) ? Settings::$_vat : $row['vat'];
+                $_data['discount'] = (empty($row['discount']) || ($row['discount'] <= 0) ) ? Settings::$_discount : $row['discount'];
+                $_data['reference_number'] = $ref_num;
+                $response[] = $_data;
             }
-            if( isset($row['size_name']) && !empty($row['size_name']) ) {
-                $_data['product_name'] .= '-' . $row['size_name'];
-            }
-            if( isset($row['grade_name']) && !empty($row['grade_name']) ) {
-                $_data['product_name'] .= '-' . $row['grade_name'];
-            }
-            
-            $_data['price'] = ( (empty($row['selling_price']) || (floatval($row['selling_price'] <= 0))) && isset($row['price']) ) ? $row['price'] : $row['selling_price'];
-            $_data['cur_stock'] = $row['quantity'];
-            $_data['vat'] = (empty($row['vat']) || ($row['vat'] <= 0) ) ? Settings::$_vat : $row['vat'];
-            $_data['discount'] = (empty($row['discount']) || ($row['discount'] <= 0) ) ? Settings::$_discount : $row['discount'];
-            $_data['reference_number'] = $ref_num;
-            $response[] = $_data;
         }
 
         return $response;
