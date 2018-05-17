@@ -391,13 +391,13 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on('click', '.prod-list-radio', function (e) {
+    $(document).on('click', '.radio-inline', function (e) {
         e.preventDefault();
         var ref_num = '';
         if (Number.isInteger(ref_num)) {
             ref_num = $('#ref_num').val();
         }
-        var prod_id = $(this).val();
+        var prod_id = $(this).find('.prod-list-radio').val();
         
         $.ajax({
             url: '/product/sale/product_stock_info',
