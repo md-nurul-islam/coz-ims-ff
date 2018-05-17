@@ -135,6 +135,12 @@ class ReferenceNumbers extends CActiveRecord {
                     ->from(PurchaseCartItems::model()->tableName() . ' t')
                     ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = t.product_details_id')
                     ->join(ProductStockAvail::model()->tableName() . ' psa', 'psa.product_details_id = pd.id')
+                    ->leftJoin(ProductColor::model()->tableName() . ' pc', 'pc.product_details_id = pd.id')
+                    ->leftJoin(Color::model()->tableName() . ' c', 'pc.color_id = c.id')
+                    ->leftJoin(ProductSize::model()->tableName() . ' ps', 'ps.product_details_id = pd.id')
+                    ->leftJoin(Sizes::model()->tableName() . ' s', 'ps.size_id = s.id')
+                    ->leftJoin(ProductGrade::model()->tableName() . ' pg', 'pg.product_details_id = pd.id')
+                    ->leftJoin(Grade::model()->tableName() . ' g', 'pg.grade_id = g.id')
             ;
 
             $command->andWhere('t.reference_number_id = :ref_num_id', array(':ref_num_id' => $pre_query['id']));
@@ -181,17 +187,29 @@ class ReferenceNumbers extends CActiveRecord {
             $store_id = Yii::app()->user->storeId;
         }
 
-
         $command = Yii::app()->db->createCommand()
+                ->select('*, c.name AS color_name, s.name AS size_name, g.name AS grade_name')
                 ->from(ProductDetails::model()->tableName() . ' pd')
                 ->join(ProductStockAvail::model()->tableName() . ' psa', 'psa.product_details_id = pd.id')
+                ->leftJoin(ProductColor::model()->tableName() . ' pc', 'pc.product_details_id = pd.id')
+                ->leftJoin(Color::model()->tableName() . ' c', 'pc.color_id = c.id')
+                ->leftJoin(ProductSize::model()->tableName() . ' ps', 'ps.product_details_id = pd.id')
+                ->leftJoin(Sizes::model()->tableName() . ' s', 'ps.size_id = s.id')
+                ->leftJoin(ProductGrade::model()->tableName() . ' pg', 'pg.product_details_id = pd.id')
+                ->leftJoin(Grade::model()->tableName() . ' g', 'pg.grade_id = g.id')
         ;
-        $command->andWhere('pd.product_name LIKE :pid', array(':pid' => $ref_num . '%'));
+        $command->andWhere('pd.product_name LIKE :p_name', array(':p_name' => $ref_num . '%'));
 
         $command->group('pd.id');
 
         $command->andWhere('pd.store_id = :sid', array(':sid' => $store_id));
         $command->andWhere('pd.status = :status', array(':status' => '1'));
+
+        if (!empty($prod_id)) {
+            $command->andWhere('pd.id = :pid', array(':pid' => $prod_id));
+        } else {
+            $command->group('pd.id');
+        }
 
         $command->order('pd.id DESC');
 
