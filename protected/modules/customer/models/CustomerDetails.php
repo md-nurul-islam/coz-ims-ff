@@ -65,7 +65,7 @@ class CustomerDetails extends CActiveRecord {
             'id' => 'ID',
             'customer_name' => 'Customer Name',
             'customer_address' => 'Address',
-            'customer_contact1' => 'Contact1',
+            'customer_contact1' => 'Mobile Number',
             'customer_contact2' => 'Contact2',
             'balance' => 'Balance',
             'status' => 'Status',
@@ -116,6 +116,7 @@ class CustomerDetails extends CActiveRecord {
             'customer_contact2' => array('label' => 'Contact 2', 'sortable' => 'true', 'width' => 80),
             'balance' => array('label' => 'Balance', 'sortable' => 'true', 'width' => 80),
             'status' => array('label' => 'Status', 'sortable' => 'true', 'width' => 80),
+            'action' => array('label' => 'Action', 'sortable' => 'false', 'width' => 50),
         );
     }
 
@@ -193,7 +194,11 @@ class CustomerDetails extends CActiveRecord {
             t.balance'
         );
 
-        return $command->queryAll();
+        $_data = $command->queryAll();
+        $data = DataGridHelper::propagateActionLinks($_data, array(
+                    'view',
+        ));
+        return $data;
     }
 
     /**
@@ -207,7 +212,7 @@ class CustomerDetails extends CActiveRecord {
     }
 
     public function create($data) {
-        
+
         $store_id = 1;
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
