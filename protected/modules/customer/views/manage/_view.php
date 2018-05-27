@@ -1,8 +1,3 @@
-<?php
-/* @var $this ManageController */
-/* @var $data CustomerDetails */
-?>
-
 <div class="col-lg-12 view">
     <div class="box box-info">
         <div class="box-body">
@@ -86,6 +81,6 @@
 
         </div>
 
-
     </div>
+    
 </div>
