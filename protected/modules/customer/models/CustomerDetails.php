@@ -112,8 +112,8 @@ class CustomerDetails extends CActiveRecord {
         return array(
             'customer_name' => array('label' => 'Name', 'sortable' => 'true', 'width' => 80),
             'customer_address' => array('label' => 'Address', 'sortable' => 'true', 'width' => 180),
-            'customer_contact1' => array('label' => 'Contact 1', 'sortable' => 'true', 'width' => 80),
-            'customer_contact2' => array('label' => 'Contact 2', 'sortable' => 'true', 'width' => 80),
+            'customer_contact1' => array('label' => 'Mobile Number', 'sortable' => 'true', 'width' => 80),
+            'customer_contact2' => array('label' => 'Contact', 'sortable' => 'true', 'width' => 80),
             'balance' => array('label' => 'Balance', 'sortable' => 'true', 'width' => 80),
             'status' => array('label' => 'Status', 'sortable' => 'true', 'width' => 80),
             'action' => array('label' => 'Action', 'sortable' => 'false', 'width' => 50),
@@ -231,6 +231,30 @@ class CustomerDetails extends CActiveRecord {
             return $customer_card->create($data);
         }
         return true;
+    }
+
+    public function hasCustomerByMobileNumber($mobile_number) {
+
+        $command = Yii::app()->db->createCommand()
+                ->from($this->tableName() . ' t')
+                ->where('t.customer_contact1 = :mobile_number', array(':mobile_number' => $mobile_number))
+                ->andWhere('t.status = :status', array(':status' => 1))
+                ->order('t.id ASC')
+        ;
+        $_data = $command->queryRow();
+        return (!$_data) ? false : $_data;
+    }
+    
+    public function getCustomerSales($id) {
+
+        $command = Yii::app()->db->createCommand()
+                ->from($this->tableName() . ' t')
+                ->where('t.customer_contact1 = :mobile_number', array(':mobile_number' => $mobile_number))
+                ->andWhere('t.status = :status', array(':status' => 1))
+                ->order('t.id ASC')
+        ;
+        $_data = $command->queryRow();
+        return (!$_data) ? false : $_data;
     }
 
 }

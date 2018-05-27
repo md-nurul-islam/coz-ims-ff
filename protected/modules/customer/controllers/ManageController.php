@@ -45,9 +45,11 @@ class ManageController extends Controller {
      */
     public function actionView($id) {
         $this->pageTitle = Yii::app()->name . ' - Customer Details';
+        
         $this->pageHeader = 'Customer Details';
         $this->render('view', array(
             'model' => $this->loadModel($id),
+            'sales' => ProductStockSales::model()->salesReportDataByCustomerId($id),
         ));
     }
 

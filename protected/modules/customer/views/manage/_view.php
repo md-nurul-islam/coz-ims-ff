@@ -80,7 +80,7 @@
             </div>
 
             <div class="panel-body">
-
+                <?php $this->renderPartial('_sale_data_table', array('sales' => $sales,)); ?>
             </div>
 
 

@@ -167,7 +167,7 @@ class CartController extends Controller {
         $cart_type = ucfirst($post_data['type']);
 
         $data = call_user_func_array(array($this, 'proccess' . $cart_type), array($cart_id, $post_data));
-//        var_dump($data);exit;
+        
         echo CJSON::encode($data);
         Yii::app()->end();
     }
@@ -175,12 +175,22 @@ class CartController extends Controller {
     private function proccessSale($cart_id, $post_data) {
 
         $customer_id = null;
-        if ($post_data['customer_name']) {
-            $customer = new CustomerDetails();
-            $customer->create($post_data);
-            $customer_id = $customer->id;
+
+        $customer = new CustomerDetails();
+        $found_customer = false;
+        if (isset($post_data['contact_number']) && !empty($post_data['contact_number'])) {
+            $mobile_number = $post_data['contact_number'];
+            $customer_data = $customer->hasCustomerByMobileNumber($mobile_number);
+            if ($customer_data !== false) {
+                $customer_id = $customer_data['id'];
+                $found_customer = true;
+            }
         }
-        
+
+        if (!$found_customer) {
+            $customer->create($post_data);
+        }
+
         $response = [];
         $tmp_cart = new TmpCart;
         $tmp_cart_data = $tmp_cart->getCart($cart_id);
@@ -287,7 +297,7 @@ class CartController extends Controller {
             $customer->create($post_data);
             $customer_id = $customer->id;
         }
-        
+
         $response = [];
         $tmp_cart = new TmpCart;
         $tmp_cart_data = $tmp_cart->getCart($cart_id);

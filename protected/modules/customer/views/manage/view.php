@@ -1,7 +1,10 @@
 <?php
+
 $this->renderPartial('_view', array(
     'data' => $model,
-//    'purchase' => $purchase,
-//    'sales' => $sales,
+    'sales' => $sales,
 ));
+
+Yii::app()->clientScript->registerCoreScript('jquery');
+$cs = Yii::app()->getClientScript();
 ?>
