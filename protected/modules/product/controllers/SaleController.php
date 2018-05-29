@@ -445,12 +445,13 @@ class SaleController extends Controller {
             'where' => $_POST,
         );
 
-        $result['rows'] = $ProductStockSales->dataGridRows($query_params);
-//        var_dump($result['rows']);exit;
+        $data = $ProductStockSales->dataGridRows($query_params);
+
+        $result['rows'] = $data[0];
         $result["total"] = 0;
 
         if (($result['rows'])) {
-            $result["total"] = $result['rows'][0]['total_rows'];
+            $result["total"] = $data[1];
         }
         echo CJSON::encode($result);
         Yii::app()->end();

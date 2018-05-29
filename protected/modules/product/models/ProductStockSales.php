@@ -787,6 +787,7 @@ class ProductStockSales extends CActiveRecord {
         return array(
             'id' => array('label' => 'ID', 'sortable' => 'true', 'width' => 50, 'hidden' => true),
             'billnumber' => array('label' => 'Bill Number', 'sortable' => 'true', 'width' => 50),
+            'customer_info' => array('label' => 'Customer Info', 'sortable' => 'false', 'width' => 50),
             'product_name' => array('label' => 'Product Name', 'sortable' => 'true', 'width' => 180),
             'grand_total' => array('label' => 'Total', 'sortable' => 'true', 'width' => 50),
             'color_name' => array('label' => 'Color', 'sortable' => 'true', 'width' => 50),
@@ -846,32 +847,17 @@ class ProductStockSales extends CActiveRecord {
                 ->leftJoin(Sizes::model()->tableName() . ' s', 's.id = ps.size_id')
                 ->leftJoin(ProductGrade::model()->tableName() . ' pg', 'pd.id = pg.product_details_id')
                 ->leftJoin(Grade::model()->tableName() . ' g', 'g.id = pg.grade_id')
+                ->leftJoin(CustomerDetails::model()->tableName() . ' cd', 'cd.id = t.customer_id')
                 ->offset($offset)
                 ->limit($this->pageSize)
                 ->order($order)
                 ->group('t.cart_id, t.id')
         ;
 
-        $sub_command = Yii::app()->db->createCommand()
-                ->select('count( DISTINCT t.cart_id )')
-                ->from($this->tableName() . ' t')
-                ->join(Cart::model()->tableName() . ' c', 'c.id = t.cart_id')
-                ->join(CartItems::model()->tableName() . ' ci', 'c.id = ci.cart_id')
-                ->join(ProductDetails::model()->tableName() . ' pd', 'pd.id = ci.product_details_id')
-                ->leftJoin(ProductColor::model()->tableName() . ' pc', 'pd.id = pc.product_details_id')
-                ->leftJoin(Color::model()->tableName() . ' cl', 'cl.id = pc.color_id')
-                ->leftJoin(ProductSize::model()->tableName() . ' ps', 'pd.id = ps.product_details_id')
-                ->leftJoin(Sizes::model()->tableName() . ' s', 's.id = ps.size_id')
-                ->leftJoin(ProductGrade::model()->tableName() . ' pg', 'pd.id = pg.product_details_id')
-                ->leftJoin(Grade::model()->tableName() . ' g', 'g.id = pg.grade_id')
-                ->where('t.cart_id IS NOT NULL')
-        ;
-
         $filter_keys = array_keys($this->dataGridFilters());
         if (isset($params['where']) && !empty($params['where'])) {
-            $new_command_objs = DataGridHelper::processFilterableVars($command, $params['where'], $filter_keys, 't', $sub_command);
+            $new_command_objs = DataGridHelper::processFilterableVars($command, $params['where'], $filter_keys, 't');
             $command = $new_command_objs[0];
-            $sub_command = $new_command_objs[1];
         }
 
         $command->select(
@@ -880,12 +866,16 @@ class ProductStockSales extends CActiveRecord {
                 GROUP_CONCAT(cl.name) as color_name,
                 GROUP_CONCAT(g.name) as grade_name,
                 GROUP_CONCAT(s.name) as size_name,
+                CONCAT_WS("-", cd.customer_name, cd.customer_contact1) as customer_info,
                 t.billnumber, c.grand_total,
-                c.discount, c.vat,
-                (' . $sub_command->getText() . ') AS total_rows'
+                c.discount, c.vat
+                ', 'SQL_CALC_FOUND_ROWS'
         );
+        
+        $data = $command->queryAll();
+        $total = Yii::app()->db->createCommand('SELECT FOUND_ROWS() as total')->queryScalar();
 
-        return $command->queryAll();
+        return [$data, $total];
     }
 
 }
