@@ -6,11 +6,12 @@
         $c = 0;
         $k = 0;
         $i_purchase_row_ids = array();
-        foreach ($purchaseRecords as $purchaseRecord) {
+        foreach ($purchaseRecords as $pr) {
             ?>
             <tr>
                 <?php
-                foreach ($purchaseRecord as $pr) {
+                $i_td_cnt = count($pr);
+                for ($i = 0; $i < $i_td_cnt; $i++) {
                     $rev_purchase_price = str_replace('.00', '', $pr['purchase_price']);
                     $dotless_rev_purchase_price = strrev($rev_purchase_price);
                     ?>

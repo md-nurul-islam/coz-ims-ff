@@ -1,6 +1,6 @@
 <?php
 
-if (strpos($_SERVER['SERVER_ADDR'], '192.168.') !== FALSE) {
+if ( (strpos($_SERVER['SERVER_ADDR'], '192.168.') !== FALSE) || (strpos($_SERVER['SERVER_ADDR'], '127.0.') !== FALSE) ) {
 
     $log = array(
         'class' => 'CLogRouter',

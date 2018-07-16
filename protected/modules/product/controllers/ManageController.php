@@ -293,7 +293,7 @@ class ManageController extends Controller {
 
         $modPurchase = new PurchaseCartItems();
         $purchaseRecords = $modPurchase->itemListForBarcode();
-
+        
         $barcode['filetype'] = 'PNG';
         $barcode['dpi'] = 300;
         $barcode['scale'] = 1;
@@ -337,13 +337,13 @@ class ManageController extends Controller {
                 ->join(ProductStockAvail::model()->tableName() . ' ps', 't.id = ps.product_details_id')
                 ->where('t.id = :pid', array(':pid' => $product_details_id))
                 ->queryRow();
-
+        
         $criteria = new CDbCriteria();
         $criteria->select = 't.id, t.product_details_id, t.reference_number';
         $criteria->condition = 't.purchase_cart_item_id = 0 OR t.purchase_cart_item_id = "" OR t.purchase_cart_item_id IS NULL';
         $criteria->compare('t.product_details_id', $product_details_id);
         $ref_num = ReferenceNumbers::model()->find($criteria);
-
+        
         if (!empty($ref_num)) {
             $ref_num->left_number_of_usage = $num_barcode;
             $ref_num->updated_date = $now;
@@ -373,7 +373,7 @@ class ManageController extends Controller {
         }
 
         $_data = array_chunk($_data, Settings::$_num_barcode_column_per_page);
-
+        
         require_once 'vendor/autoload.php';
         $generator = new Picqer\Barcode\BarcodeGeneratorHTML();
 

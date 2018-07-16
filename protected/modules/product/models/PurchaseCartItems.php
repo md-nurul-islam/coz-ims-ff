@@ -148,7 +148,7 @@ class PurchaseCartItems extends CActiveRecord {
 
             $_data['id'] = $row['id'];
             $_data['product_details_id'] = $row['product_details_id'];
-
+            
             $_data['code'] = (empty($row['reference_number'])) ? Settings::getUniqueId($_data['id']) : $row['reference_number'];
             $_data['purchase_price'] = $row['cost'];
             $_data['selling_price'] = $row['price'];
@@ -158,8 +158,10 @@ class PurchaseCartItems extends CActiveRecord {
 
             $formatted_data[] = $_data;
             
-            $this->setReferenceNumber($_data);
+//            $this->setReferenceNumber($_data);
         }
+        
+        
 
         return $formatted_data;
     }
@@ -173,6 +175,9 @@ class PurchaseCartItems extends CActiveRecord {
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
         }
+        
+        var_dump($data);
+                    exit;
 
         $ref_numbers = new ReferenceNumbers;
         $ref_numbers->reference_number = $ref_num;
