@@ -158,11 +158,9 @@ class PurchaseCartItems extends CActiveRecord {
 
             $formatted_data[] = $_data;
             
-//            $this->setReferenceNumber($_data);
+            $this->setReferenceNumber($_data);
         }
         
-        
-
         return $formatted_data;
     }
 
@@ -175,10 +173,7 @@ class PurchaseCartItems extends CActiveRecord {
         if (!Yii::app()->user->isSuperAdmin) {
             $store_id = Yii::app()->user->storeId;
         }
-        
-        var_dump($data);
-                    exit;
-
+                
         $ref_numbers = new ReferenceNumbers;
         $ref_numbers->reference_number = $ref_num;
         $ref_numbers->purchase_cart_item_id = $data['id'];
